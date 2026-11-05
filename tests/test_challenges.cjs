@@ -1,0 +1,62 @@
+'use strict';
+const assert=require('node:assert/strict'), fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const dir=path.resolve(__dirname,'..');const engine=require('../tycoon_challenges.js');
+let passed=0;const test=(n,fn)=>{fn();passed++;console.log('PASS '+n);};
+test('eight distinct story missions and endless rotating tasks',()=>{assert.equal(engine.campaign.length,8);assert.equal(engine.missionAt(0).title,'الافتتاح الرسمي');assert.equal(engine.missionAt(8).kind,'daily');assert.equal(engine.missionAt(11).title,engine.missionAt(8).title);});
+test('progression requires actual NEW service since baseline',()=>{const st={served:200,serviceCounts:{books:32,print:20,study:30,research:10},staff:5,level:17,satisfaction:95,cleanliness:96,eventsResolved:10,staffAtPost:{1:true},cleanerInZone:true};const b=engine.snapshot(st);assert(!engine.progress(0,st,b).done);st.serviceCounts.books+=3;assert(engine.progress(0,st,b).done);});
+test('staff mission requires hired worker, correct work post and books',()=>{const base={books:0};const m={staff:1,staffAtPost:{1:false},serviceCounts:{books:5}};assert(!engine.progress(1,m,base).done);m.staffAtPost[1]=true;assert(engine.progress(1,m,base).done);});
+test('cleaning challenge requires zone, employed staff and cleanliness',()=>{const s={staff:3,cleanerInZone:false,cleanliness:99,served:3};assert(!engine.progress(3,s,{served:0}).done);s.cleanerInZone=true;assert(engine.progress(3,s,{served:0}).done);});
+test('incident options are finite and within game budget',()=>{assert.equal(engine.events.length,4);for(const e of engine.events){assert(e.options.length>=2);for(const opt of e.options){assert(Number.isFinite(opt.cash)&&Number.isFinite(opt.satisfaction)&&Number.isFinite(opt.cleanliness));assert(opt.cash<=0);}}});
+test('invalid or extreme challenge input is bounded',()=>{assert.equal(engine.missionAt(-999).index,0);assert.equal(engine.missionAt(2e8).index,100000);assert.equal(engine.snapshot({served:'err'}).served,0);});
+test('mission module does not write game saves or expose network',()=>{const txt=fs.readFileSync(path.join(dir,'tycoon_challenges.js'),'utf8');assert(!/localStorage\.|fetch\(|XMLHttpRequest|https?:\/\//.test(txt));});
+test('inline main script is valid JavaScript',()=>{const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(a=>a[1]);assert(inline.some(t=>t.includes('function simulation(dt)')));for(const code of inline)new vm.Script(code);});
+test('campaign and decision effects wired to game save',()=>{const s=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert(s.includes('function claimChallenge()'));assert(s.includes('function resolveIncident(choice)'));assert(s.includes('eventsTick();'));assert(s.includes('save();refreshUI();'));assert(s.includes('challenge:null'));});
+test('all five roles fixed, cleaner movement confined to work zone',()=>{const s=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert(s.includes('STAFF_STATIONS=['));assert(s.includes("uniform:'central-library-navy-gold'"));assert(s.includes('const stops=[{x:0.7,z:10.7},{x:-0.7,z:10.6},{x:0,z:9.6},{...a.station}]'));assert(!s.includes('let stops=[{x:0,z:12},{x:0,z:0},{x:0,z:-11}'));});
+test('staff outfit uniform in 3D and original fallback',()=>{const r=fs.readFileSync(path.join(dir,'r22.js'),'utf8');const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert(r.includes("const shirt = staff ? STAFF_SHIRT"));assert(r.includes("STAFF_SHIRT = '#193f59'"));assert(html.includes("const navy=staff?'#193f59':a.col"));});
+test('approved official branding remains externally loaded, not fabricated',()=>{const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert(html.includes('id="ltLogoLibrary"'));assert(html.includes('tycoon_brand_assets.js'));const cfg=fs.readFileSync(path.join(dir,'tycoon_brand_assets.js'),'utf8');assert.match(cfg,/LT_APPROVED_BRAND_ASSETS = null/);});
+console.log(`${passed}/${passed} challenge + staff checks PASS`);
+// Exercise the REAL game functions isolated with a test-only state and clock.
+const gameSource=fs.readFileSync(path.join(dir,'index.html'),'utf8');
+const snippet=gameSource.slice(gameSource.indexOf('// V2.4 campaign, staff work posts and events.'),gameSource.indexOf('const allQueue=()=>'));
+test('game challenge functions award once, persist, and use active time cooldown',()=>{
+ const state={cash:260,level:0,staff:0,served:0,satisfaction:88,cleanliness:92,serviceCounts:{books:0,print:0,study:0,research:0},playSeconds:0,challenge:null};
+ let saves=0,refreshes=0;
+ const context=vm.createContext({state,window:{LibraryTycoonChallenges:engine,LibraryTycoonDirector:require('../tycoon_director.js')},rooms:[{kind:'books',unlock:0,ar:'الخوارزمي',x:-10,z:10}],staffAgents:[],STAFF_TYPES:['أمين استعارة','موظف الطباعة','عامل نظافة','مساعد بحث علمي','مشرف قاعة مطالعة'],paused:false,notify:()=>{},save:()=>saves++,refreshUI:()=>refreshes++,cash:n=>String(n),Math,Number});
+ vm.runInContext(snippet,context);
+ assert.equal(state.challenge.index,0);
+ assert.equal(vm.runInContext('claimChallenge()',context),false);
+ state.serviceCounts.books=3;
+ assert.equal(vm.runInContext('claimChallenge()',context),true);
+ assert.equal(state.cash,350);
+ assert.equal(state.challenge.index,1);
+ assert.equal(vm.runInContext('claimChallenge()',context),false);
+ for(let i=0;i<3;i++){
+  const correct=engine.sortingCases[i].correct;
+  assert.equal(vm.runInContext(`answerShelf(${correct})`,context),true);
+ }
+ assert.equal(state.challenge.shelf.completed,1);
+ assert.equal(state.cash,460);
+ assert.equal(vm.runInContext('answerShelf(0)',context),false);
+ assert.equal(vm.runInContext('startShelfRound()',context),false);
+ state.playSeconds=99;
+ assert.equal(vm.runInContext('startShelfRound()',context),true);
+ assert.equal(state.challenge.shelf.step,0);
+ assert(saves>=5&&refreshes>=4);
+});
+test('incident one-shot and delayed reappearance',()=>{
+ const state={cash:250,level:0,staff:0,served:0,satisfaction:80,cleanliness:90,serviceCounts:{books:0,print:0,study:0,research:0},playSeconds:149,challenge:null};
+ const context=vm.createContext({state,window:{LibraryTycoonChallenges:engine,LibraryTycoonDirector:require('../tycoon_director.js')},rooms:[{kind:'books',unlock:0,ar:'الخوارزمي',x:-10,z:10}],staffAgents:[],STAFF_TYPES:[],paused:false,notify:()=>{},save:()=>{},refreshUI:()=>{},cash:n=>String(n),Math,Number});
+ vm.runInContext(snippet,context);
+ vm.runInContext('eventsTick()',context);
+ assert.equal(state.challenge.pending,null);
+ state.playSeconds=150;vm.runInContext('eventsTick()',context);
+ assert.equal(state.challenge.pending.type,0);
+ assert.equal(vm.runInContext('resolveIncident(999)',context),false);
+ assert.equal(vm.runInContext('resolveIncident(0)',context),true);
+ assert.equal(state.cash,225);assert.equal(state.satisfaction,83);
+ assert.equal(vm.runInContext('resolveIncident(0)',context),false);
+ assert.equal(state.challenge.eventsResolved,1);assert.equal(state.challenge.nextIncidentAt,315);
+ state.playSeconds=315;vm.runInContext('eventsTick()',context);
+ assert.equal(state.challenge.pending.type,1);
+});
+console.log('V2.4 gameplay scenarios PASS');

@@ -1,0 +1,8 @@
+{
+  "name": "library-tycoon",
+  "version": "2.5.0",
+  "private": true,
+  "description": "University of Technology Central Library Tycoon game",
+  "scripts": {"test": "node --test tests/*.cjs"},
+  "license": "UNLICENSED"
+}

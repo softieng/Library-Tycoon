@@ -1,0 +1,133 @@
+/* Library Tycoon V2.2. Institutional-inspired theme proposal.
+   Original university/library logos remain external, owner-approved assets.
+   No third-party fonts, logos or external URLs are loaded. */
+:root {
+  --lt-navy:#18374d;
+  --lt-navy-deep:#102638;
+  --lt-cream:#faf8f1;
+  --lt-panel:#fffdf7;
+  --lt-green:#236e62;
+  --lt-gold:#c69d58;
+  --lt-gold-soft:#f1e5cc;
+  --lt-ink:#183244;
+  --lt-muted:#566d73;
+  --lt-outline:#d7ded9;
+  --lt-focus:#b47b28;
+  --lt-shadow:0 12px 30px rgba(19,43,52,.17);
+  font-family:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;
+  color-scheme:light;
+}
+:root[data-lt-theme="daylight"] {
+  --lt-navy:#275163;--lt-navy-deep:#204251;--lt-cream:#f5f4ed;
+  --lt-panel:#fffefa;--lt-green:#2e7667;--lt-gold:#ae8245;
+  --lt-gold-soft:#f4eadb;--lt-ink:#254355;--lt-muted:#546e71;
+  --lt-outline:#dce0d9;--lt-focus:#965e17;
+}
+:root[data-lt-theme="contrast"] {
+  --lt-navy:#0a2031;--lt-navy-deep:#081622;--lt-cream:#f6f8f7;
+  --lt-panel:#ffffff;--lt-green:#145548;--lt-gold:#90600b;
+  --lt-gold-soft:#fff1d1;--lt-ink:#071c2b;--lt-muted:#394d55;
+  --lt-outline:#798d95;--lt-focus:#8d4b00;
+}
+html,body,button {font-family:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif}
+.stage {background:radial-gradient(ellipse at 52% 28%,#e6ede9 0%,#cbd8d2 48%,#9badab 100%)!important}
+/* Header identity: authentic wording, not a substituted institutional logo. */
+.hud .brand {
+  background:linear-gradient(115deg,var(--lt-navy-deep),var(--lt-navy))!important;
+  border:1px solid #b0b6a35f!important;border-bottom:3px solid #deb97b!important;
+  color:#fff!important;box-shadow:var(--lt-shadow)!important;
+  padding:9px 14px;gap:10px;max-width:420px;min-width:0;
+}
+.hud .brand strong {font-size:19px!important;line-height:1.4;color:#fff!important;letter-spacing:0}
+.hud .brand small {font-size:10px;line-height:1.65;color:#e7ece6!important}
+.hud .brand .logo {display:none!important}
+.lt-brand-identity {display:flex;gap:8px;align-items:center;min-width:0}
+.lt-brand-seal {display:flex;align-items:center;justify-content:center;min-width:46px;height:46px;
+  padding:4px 6px;border:1px solid #e4cf9a66;border-radius:10px;background:#fffdf612;
+  color:#f7e5bb;font:800 10px/1.35 Tahoma,Arial,sans-serif;text-align:center}
+.lt-brand-seal img {display:block;max-width:40px;max-height:40px;object-fit:contain}
+.lt-brand-text {min-width:0}
+.lt-brand-text strong {display:block!important}
+.lt-brand-english {display:block;color:#d9e6e1!important;font:700 9px/1.4 'Segoe UI',Arial,sans-serif!important;letter-spacing:.35px}
+.lt-brand-institution {font-size:11px!important;font-weight:800;color:#fff7e4!important}
+.lt-creator-mini {font:600 9px/1.45 'Segoe UI',Arial,sans-serif!important;color:#e9dbbd!important;
+  display:block;direction:ltr;text-align:right;unicode-bidi:isolate}
+.hud .status {background:#fffdf5f2!important;color:var(--lt-ink)!important;
+  border:1px solid var(--lt-outline)!important;border-top:3px solid var(--lt-gold)!important;
+  box-shadow:var(--lt-shadow)!important;backdrop-filter:blur(14px)}
+.hud .status .value small {color:var(--lt-muted)!important;font-weight:700}
+.hud .status .value b,.hud .status .value .num {color:var(--lt-ink)!important;font-variant-numeric:tabular-nums}
+.hud .status .value:first-child b {color:#8b5d20!important;font-weight:900}
+/* Management UI intentionally takes a small footprint and does not cover the world. */
+.panel {background:var(--lt-panel)!important;color:var(--lt-ink)!important;
+  border:1px solid var(--lt-outline)!important;border-top:4px solid var(--lt-gold)!important;
+  box-shadow:var(--lt-shadow)!important;width:342px;max-height:min(70vh,680px);overflow-y:auto;scrollbar-gutter:stable;
+  border-radius:16px;padding:15px}
+.panel h3 {color:var(--lt-ink)!important;font-size:17px!important;line-height:1.5}
+.panel p,.panel .notice,.panel .info {color:var(--lt-muted)!important}
+.panel .topline {border-color:var(--lt-outline)!important;padding-bottom:8px}
+.panel .tag,.panel .guidance {background:#e8f3ed!important;color:#174f45!important;border:1px solid #b8d7c9!important}
+.panel .service-job,.panel .service-job:not(:disabled),.panel .subtools button {
+  color:var(--lt-ink)!important;background:#eff4f0!important;border:1px solid #cfdfd7!important;
+  border-radius:9px;transition:background-color .16s ease,border-color .16s ease}
+.panel .service-job.ready,.panel .service-job.ready:not(:disabled) {color:#0b4b3b!important;
+  background:#dff3e9!important;border-color:#7eae96!important}
+.panel .service-job .count {background:#fff!important;color:#304f50!important}
+.panel .btn {border:1px solid var(--lt-outline)!important;background:#f1f2ee!important;color:var(--lt-ink)!important;
+  border-radius:10px;min-height:44px;font-weight:800}
+.panel .btn.primary {background:var(--lt-green)!important;color:#fff!important;border-color:var(--lt-green)!important}
+.panel .btn.secondary {background:var(--lt-navy)!important;color:#fff!important;border-color:var(--lt-navy)!important}
+.panel .btn.primary strong,.panel .btn.secondary strong {color:#fff!important}
+.panel .btn:hover:not(:disabled),.panel .subtools button:hover:not(:disabled) {filter:brightness(.96)}
+.panel .reputation {background:var(--lt-gold-soft)!important;border-color:#cfb887!important;color:#59401c!important}
+.panel .reputation .progressbar i {background:#9d7436!important}
+.panel .statline {background:#f2f4ed!important;border-color:var(--lt-outline)!important;color:var(--lt-ink)!important}
+.panel .statline b {color:var(--lt-green)!important}
+.panel-collapse {background:#e6ede8!important;border:1px solid #c0d4c8!important;color:#183c3b!important;
+  min-height:35px}
+.panel.collapsed {max-height:62px}
+.legend>div,.foot .corner {background:#fffcf6eb!important;color:var(--lt-ink)!important;
+  border-color:var(--lt-outline)!important;box-shadow:0 5px 18px #1c3c4322!important}
+.foot .corner button {background:#eaf0eb!important;color:var(--lt-ink)!important;border:1px solid var(--lt-outline)!important}
+.roomlabel,.npc-hint {text-shadow:0 1px 2px #19293277}
+#buildAnnouncement {background:var(--lt-navy)!important;border-color:#e6c27f!important;color:#fff!important}
+#loading {display:flex;flex-direction:column;text-align:center;gap:8px;background:var(--lt-cream)!important;color:var(--lt-navy)!important}
+.lt-loading-credit {font:600 11px/1.7 'Segoe UI',Arial,sans-serif;color:#6d5a36;direction:ltr}
+/* Owner credit/modal integrated with existing gameplay layout. */
+.lt-about {position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;
+  padding:20px;background:rgba(6,23,33,.76);backdrop-filter:blur(5px)}
+.lt-about[aria-hidden="false"] {display:flex}
+.lt-about-card {background:var(--lt-panel);color:var(--lt-ink);max-width:510px;width:min(100%,510px);
+  border-radius:17px;padding:22px;border-top:5px solid var(--lt-gold);
+  box-shadow:0 25px 90px #091e2480;max-height:80vh;overflow-y:auto}
+.lt-about-card h2 {margin:0 0 12px;font-size:20px;color:var(--lt-navy)}
+.lt-about-card p {margin:6px 0;line-height:1.85;font-size:13px;color:var(--lt-ink)}
+.lt-about-credit {background:#f4efdf;border-radius:10px;padding:12px;margin:14px 0;
+  border:1px solid #d8c79d;text-align:center;direction:ltr;font:600 12px/1.7 'Segoe UI',Arial,sans-serif}
+.lt-about-credit strong {font-size:14px;color:#203e52}
+.lt-about-action {background:var(--lt-navy);color:#fff;border-radius:9px;padding:10px 18px;min-height:44px}
+.lt-decor-hr {height:3px;width:72px;background:var(--lt-gold);border-radius:5px;margin:9px 0 12px}
+:root[data-lt-theme="contrast"] .panel .guidance,:root[data-lt-theme="contrast"] .panel .tag {background:#e3eee8!important;color:#083a2c!important}
+:where(button,a,input,[tabindex]):focus-visible {outline:3px solid var(--lt-focus)!important;outline-offset:3px!important}
+button:disabled {cursor:not-allowed;opacity:.5}
+@media(max-width:950px){
+ .hud .brand {max-width:340px;padding:7px 10px}
+ .hud .brand strong {font-size:16px!important}
+ .lt-creator-mini {display:none}
+ .panel {max-height:60vh;width:325px}
+}
+@media(max-width:850px){
+ .hud {gap:5px!important}
+ .hud .brand {max-width:none;width:100%;min-height:43px;padding:5px 8px}
+ .lt-brand-seal {height:32px;min-width:32px;font-size:8px}
+ .lt-brand-seal img {max-height:29px;max-width:29px}
+ .lt-brand-institution {font-size:9px!important}
+ .hud .brand strong {font-size:13px!important}
+ .lt-brand-english {font-size:8px!important}
+ .hud .status {padding:5px 8px!important;min-height:40px}
+ .hud .status .value b {font-size:14px!important}
+ .panel:not(.collapsed) {width:calc(100% - 16px);max-height:min(49vh,390px);padding:10px}
+ .panel.collapsed {max-height:50px;min-height:44px;padding:6px 9px}
+ .lt-about-card {padding:16px}
+}
+@media(prefers-reduced-motion:reduce){.panel .btn,.panel .service-job,.panel .subtools button {transition:none!important}.buylabel{animation:none!important}}

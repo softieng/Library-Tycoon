@@ -1,0 +1,34 @@
+/* V2.4 challenges. Official library/university logos stay as external, unchanged assets. */
+.lt-quest-panel{position:fixed;z-index:7;left:22px;top:112px;width:min(375px,calc(100vw - 28px));max-height:calc(100vh - 205px);overflow-y:auto;overscroll-behavior:contain;background:rgba(255,252,243,.975);border:1px solid #d6c69c;border-radius:18px;box-shadow:0 22px 72px #0b253b66;padding:18px;color:#163950;font-family:inherit;direction:rtl}
+.lt-quest-panel[hidden],.lt-quest-incident[hidden]{display:none!important}
+.lt-quest-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-bottom:1px solid #e5dbc3;padding-bottom:12px}
+.lt-quest-top h2{margin:4px 0 0;font-size:17px;line-height:1.4;color:#153a51}
+.lt-quest-kicker{font-size:9px;font-weight:800;color:#a57629;letter-spacing:.6px}
+#ltQuestClose{border:0;background:#e9e8df;color:#173d4e;border-radius:9px;padding:7px 12px;font-size:15px}
+.lt-quest-progress{font-size:11px;font-weight:800;color:#8e6424;margin:13px 0 5px}
+#ltQuestCampaign h3,.lt-quest-incident h3{font-size:15px;margin:7px 0;color:#15394f}
+#ltQuestCampaign>p:not(.lt-quest-progress),.lt-quest-incident p,.lt-quest-staff p{font-size:11px;line-height:1.8;color:#5b6f75;margin:5px 0 12px}
+.lt-quest-tasks{display:grid;gap:7px;margin:12px 0}
+.lt-quest-task,.lt-quest-position{display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:9px;background:#f2f2e9;padding:8px 10px;font-size:11px;color:#244953}
+.lt-quest-task.is-complete{background:#e1ede5;color:#18644c}.lt-quest-task b,.lt-quest-position b{white-space:nowrap;font-size:10px;font-variant-numeric:tabular-nums}
+.lt-quest-claim{width:100%;border:0;border-radius:10px;background:#173f57;color:white;font-weight:800;padding:11px 10px;font-size:11px;line-height:1.6}
+.lt-quest-claim:not(:disabled):hover{background:#255e72}.lt-quest-claim:disabled{opacity:.65}
+.lt-quest-incident{padding:12px;margin:14px 0 0;background:#fff5dc;border:1px solid #dfc082;border-radius:13px}
+.lt-quest-choices{display:grid;gap:7px}.lt-quest-choices button{border:1px solid #bd993f;color:#3f392a;background:#fffaf0;border-radius:8px;padding:9px;font-size:11px;font-weight:800;text-align:right}.lt-quest-choices button:disabled{opacity:.4}
+.lt-quest-staff{border-top:1px solid #dfd9c9;margin-top:16px;padding-top:12px}.lt-quest-staff>strong{display:block;font-size:13px;color:#173e56}.lt-quest-position{padding:6px 9px;margin:5px 0;background:#e8eeef}
+.lt-quest-footnote{font-size:10px;line-height:1.7;color:#6b787b;margin:14px 0 0}
+#ltQuestToggle.lt-quest-alert{outline:2px solid #d49e3d;background:#fff0ca;color:#6b4a0d;animation:ltQuestPulse 1.8s ease-in-out infinite}
+@keyframes ltQuestPulse{50%{outline-offset:4px}}
+@media(max-width:850px){.lt-quest-panel{left:8px;top:66px;max-height:calc(100vh - 265px);width:min(350px,calc(100vw - 16px));padding:13px}.lt-quest-top h2{font-size:14px}}
+@media(prefers-reduced-motion:reduce){#ltQuestToggle.lt-quest-alert{animation:none}}
+body.photo-mode .lt-quest-panel{display:none!important}
+
+.lt-quest-sorting{margin-top:15px;padding:13px;border:1px solid #c8d8d7;border-radius:12px;background:#f1f7f3}
+.lt-quest-sorting h3{font-size:14px;color:#153e57;margin:2px 0 8px}
+.lt-quest-sorting>p{font-size:11px;line-height:1.7;margin:4px 0 9px;color:#536b73}
+.lt-sort-score{font-weight:850;color:#24745c!important}.lt-sort-question{display:block;font-size:12px;line-height:1.7;color:#223f52;margin:10px 0}
+.lt-sort-restart{width:100%;padding:10px;border:0;border-radius:10px;background:#1a526a;color:white;font-weight:800;font-size:11px}.lt-sort-restart:disabled{opacity:.6}
+[data-lt-theme="contrast"] .lt-quest-panel{background:#102a3a;color:#fff;border-color:#eed59a}
+[data-lt-theme="contrast"] .lt-quest-panel h2,[data-lt-theme="contrast"] .lt-quest-panel h3,[data-lt-theme="contrast"] .lt-quest-staff>strong{color:#fff}
+[data-lt-theme="contrast"] .lt-quest-task,[data-lt-theme="contrast"] .lt-quest-position,[data-lt-theme="contrast"] .lt-quest-sorting{background:#1e4051;color:#fff}
+[data-lt-theme="contrast"] .lt-quest-sorting p,[data-lt-theme="contrast"] .lt-quest-panel p,[data-lt-theme="contrast"] .lt-sort-question{color:#e6f2ef!important}
