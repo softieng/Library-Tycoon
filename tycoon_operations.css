@@ -1,0 +1,28 @@
+/* Operational dashboard. Uses existing institutional palette tokens.
+   Brand logos and guardian sprite are never targeted by this stylesheet. */
+.lt-ops-panel[hidden]{display:none!important}
+.lt-ops-toggle-box{white-space:nowrap}
+.lt-ops-panel{position:fixed;z-index:8;left:22px;bottom:89px;width:min(352px,calc(100vw - 44px));
+ max-height:min(63vh,520px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;
+ background:var(--lt-panel,#fffaf0);color:var(--lt-ink,#21394a);
+ border:1px solid var(--lt-outline,#ccb984);border-top:4px solid var(--lt-gold,#ba9544);
+ border-radius:15px;padding:15px;box-shadow:0 14px 45px #0c223d5c;font:500 13px/1.6 'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif}
+.lt-ops-heading{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.lt-ops-heading h2{font-size:17px;margin:0;color:var(--lt-navy,#173647)}
+.lt-ops-heading small{font-size:10px;color:var(--lt-muted,#65797d);direction:ltr}
+#ltOpsClose{background:var(--lt-navy,#173647);color:white;border-radius:9px;min-width:36px;min-height:36px}
+.lt-ops-sub{font-size:11px;margin:5px 0 11px;color:var(--lt-muted,#65797d)}
+.lt-ops-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.lt-ops-metrics>div{background:#eff2ed;border:1px solid #d1ded7;border-radius:8px;padding:7px 9px;font-size:11px;display:flex;justify-content:space-between;gap:5px}
+.lt-ops-metrics b{color:var(--lt-navy,#173647);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lt-ops-panel h3{font-size:13px;color:var(--lt-navy,#173647);margin:13px 0 7px}
+.lt-ops-services{display:grid;gap:6px}
+.lt-ops-service{padding:7px 10px;border:1px solid #d2dfd6;border-radius:9px;background:#f5f6ee;display:flex;justify-content:space-between;align-items:center;gap:5px}
+.lt-ops-service strong{font-size:11px;color:#13644f;text-align:left}
+.lt-ops-service.lt-locked{background:#e9ebe9;color:#767e7d}
+.lt-ops-service.lt-locked strong{color:#707979}
+.lt-ops-next{font-size:12px;background:#f9f0dd;border-inline-start:3px solid var(--lt-gold,#ba9544);border-radius:6px;margin-top:12px;padding:8px 10px}
+.lt-ops-health{font-size:11px;line-height:1.6;color:var(--lt-muted,#607879);margin:8px 0 1px}
+body.photo-mode .lt-ops-panel,body.photo-mode .lt-ops-toggle-box{display:none!important}
+@media(max-width:850px){.lt-ops-panel{left:8px;bottom:190px;max-height:42vh;width:min(330px,calc(100vw - 16px));padding:10px}.lt-ops-toggle-box{display:none}}
+@media(prefers-reduced-motion:reduce){.lt-ops-panel *{scroll-behavior:auto!important;transition:none!important}}
