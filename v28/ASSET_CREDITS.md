@@ -10,6 +10,8 @@
 - License confirmation: https://kenney.nl/support and repository README.
 - Integrity: exact Git blob SHA matches were verified when copying each asset into `softieng/Library-Tycoon`.
 
+- **Kenney Nature Kit**, 3 standalone GLB models: tree-detailed, plant-bushdetailed, flower-yellowb. All CC0-1.0, mirrored from `packs/nature-kit/*.glb` in the same source repository.
+
 ## Game engine
 
 - Babylon.js engine and glTF loader: https://github.com/BabylonJS/Babylon.js , Apache-2.0.

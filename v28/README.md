@@ -4,7 +4,7 @@ This is a deliberately independent **real-GLB** Babylon.js vertical slice in `/v
 
 ## Actual imported third-party artwork
 
-Source: [Hidencod/tge-assets](https://github.com/Hidencod/tge-assets), redistributing 22 CC0 Kenney GLB models from `furniture-kit` and `mini-characters`. Assets are copied to `v28/assets/`, not hotlinked to an outside account. Four humanoid models have been verified to include 32 animation groups with `idle`, `walk`, and `sit`. GLB blobs were SHA-verified against the original source repository during upload.
+Source: [Hidencod/tge-assets](https://github.com/Hidencod/tge-assets), redistributing 25 CC0 Kenney GLB models from `furniture-kit` and `mini-characters`. Assets are copied to `v28/assets/`, not hotlinked to an outside account. Four humanoid models have been verified to include 32 animation groups with `idle`, `walk`, and `sit`. GLB blobs were SHA-verified against the original source repository during upload.
 
 The architectural room, brass railings, marble walls, carpet, windows, decorative signage, lighting and gameplay effects are original procedural Babylon.js code. **This slice does not contain Blender-generated high-detail art**, nor does it imply it meets the approved final render.
 

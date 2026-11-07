@@ -25,7 +25,10 @@
     "character-male-b",
     "character-male-e",
     "character-female-a",
-    "character-female-e"
+    "character-female-e",
+    "tree-detailed",
+    "plant-bushdetailed",
+    "flower-yellowb"
   ],
   "protected_brand_assets_included": false
 }

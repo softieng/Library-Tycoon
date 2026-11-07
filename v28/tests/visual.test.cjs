@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const ROOT=path.resolve(__dirname,'..');const S=require('../world.js');
 const read=n=>fs.readFileSync(path.join(ROOT,n),'utf8');
-test('21 GLB assets are explicitly enumerated',()=>assert.equal(Object.keys(S.ASSETS).length,22));
+test('25 GLB assets are explicitly enumerated',()=>assert.equal(Object.keys(S.ASSETS).length,25));
 test('real assets are all GLB models in local project, not placeholders',()=>{for(const k of Object.keys(S.ASSETS))assert.match(S.sourceURL(k),/^\.\/assets\/.+\.glb$/)});
 test('four unique bookshelf search positions',()=>assert.deepEqual(S.RACKS,['A','B','C','D']));
 test('assigned workstations not occupied by patrol route',()=>{const staff=Object.values(S.FIXED_STAFF);const points=S.VISITOR_ROUTES.flat();for(const s of staff)for(const p of points)assert.ok(Math.hypot(s.x-p.x,s.z-p.z)>.7)});
