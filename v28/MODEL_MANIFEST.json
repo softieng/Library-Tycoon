@@ -1,0 +1,31 @@
+{
+  "version": "2.8.0",
+  "source": "https://github.com/Hidencod/tge-assets",
+  "license": "CC0-1.0",
+  "derived_from": "Kenney Furniture Kit / Mini Characters",
+  "glb": [
+    "bookcaseopen",
+    "bookcaseopenlow",
+    "bookcaseclosedwide",
+    "books",
+    "table",
+    "desk",
+    "chaircushion",
+    "chairdesk",
+    "chairrounded",
+    "laptop",
+    "computerscreen",
+    "pottedplant",
+    "plantsmall2",
+    "lamproundtable",
+    "bench",
+    "rugrectangle",
+    "trashcan",
+    "tablecoffee",
+    "character-male-b",
+    "character-male-e",
+    "character-female-a",
+    "character-female-e"
+  ],
+  "protected_brand_assets_included": false
+}
