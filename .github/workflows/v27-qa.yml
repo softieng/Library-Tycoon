@@ -1,0 +1,27 @@
+name: Library Tycoon V2.7 3D QA
+on:
+  push:
+    paths:
+      - "v27/**"
+      - ".github/workflows/v27-qa.yml"
+  pull_request:
+    paths:
+      - "v27/**"
+      - ".github/workflows/v27-qa.yml"
+permissions:
+  contents: read
+jobs:
+  gameplay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript syntax
+        run: |
+          node --check v27/world.js
+          node --check v27/gameplay.js
+          node --check v27/app.js
+      - name: Run deterministic gameplay tests
+        run: node --test v27/tests/gameplay.test.cjs
