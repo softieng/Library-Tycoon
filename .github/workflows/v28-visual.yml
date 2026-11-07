@@ -43,7 +43,7 @@ jobs:
           "$BROWSER" --version
           mkdir -p /tmp/visual
           timeout 120 "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --enable-webgl --use-gl=angle --use-angle=swiftshader --window-size=1600,1000 --virtual-time-budget=30000 --dump-dom http://127.0.0.1:8765/v28/ >/tmp/visual/dom.html 2>/tmp/visual/chrome.log
-          if ! grep -Eq '22 / 22|22/22' /tmp/visual/dom.html; then
+          if ! grep -Eq '25 / 25|25/25' /tmp/visual/dom.html; then
             echo "GLB load progress not complete"; tail -c 1200 /tmp/visual/dom.html; exit 1
           fi
           if grep -q 'تعذّر عرض المشهد' /tmp/visual/dom.html; then echo "WebGL scene failed"; exit 1; fi
