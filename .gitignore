@@ -6,3 +6,6 @@ node_modules/
 .env.*
 __pycache__/
 .DS_Store
+v30/node_modules/
+v30/dist/
+v30/test-results/
