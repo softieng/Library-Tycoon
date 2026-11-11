@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "note": "Exact pre-existing V3 Git blobs, reused without edits. Gameplay reference assets only, not owner visual approval.",
+  "origin": "https://github.com/softieng/Library-Tycoon/tree/feature/v30-professional-library-tycoon/v30/public/assets/models",
+  "licenses": "See v30/THIRD_PARTY_NOTICES.md and v30/ASSET_MANIFEST.json; branding and mascot remain protected institutional assets.",
+  "models": {
+    "shelf.glb": {
+      "git_blob_sha1": "7df7b3a063309dc34628f3d6c3836e62b7d50448",
+      "source_path": "v30/public/assets/models/shelf.glb",
+      "unity_path": "Assets/StreamingAssets/Models/shelf.glb"
+    },
+    "table.glb": {
+      "git_blob_sha1": "c48fca41164d3ab04dd4957728be6027554821e1",
+      "source_path": "v30/public/assets/models/table.glb",
+      "unity_path": "Assets/StreamingAssets/Models/table.glb"
+    },
+    "chair_read.glb": {
+      "git_blob_sha1": "5d527614b3d3bb47ffde2bb3278dfb29edb33f69",
+      "source_path": "v30/public/assets/models/chair_read.glb",
+      "unity_path": "Assets/StreamingAssets/Models/chair_read.glb"
+    },
+    "counter.glb": {
+      "git_blob_sha1": "6d023396cf0623b5cca7112904f8c88f3cc34f49",
+      "source_path": "v30/public/assets/models/counter.glb",
+      "unity_path": "Assets/StreamingAssets/Models/counter.glb"
+    },
+    "refdesk.glb": {
+      "git_blob_sha1": "ba508eb7b928da13efa90ba24523ccb0d218b3a2",
+      "source_path": "v30/public/assets/models/refdesk.glb",
+      "unity_path": "Assets/StreamingAssets/Models/refdesk.glb"
+    },
+    "lamp_table.glb": {
+      "git_blob_sha1": "016da4eeb281f51882e133ba6342c0ce10a3235a",
+      "source_path": "v30/public/assets/models/lamp_table.glb",
+      "unity_path": "Assets/StreamingAssets/Models/lamp_table.glb"
+    },
+    "plant_tall.glb": {
+      "git_blob_sha1": "80275a7f78088ddce5ab94854742654fa8128b22",
+      "source_path": "v30/public/assets/models/plant_tall.glb",
+      "unity_path": "Assets/StreamingAssets/Models/plant_tall.glb"
+    },
+    "lowshelf.glb": {
+      "git_blob_sha1": "2acc97803103e5616a40f64d6a15e494ae6eaa0b",
+      "source_path": "v30/public/assets/models/lowshelf.glb",
+      "unity_path": "Assets/StreamingAssets/Models/lowshelf.glb"
+    },
+    "mascot.glb": {
+      "git_blob_sha1": "15dbf6ddc51c5f02d259e49e8ffb8a93eef073b8",
+      "source_path": "v30/public/assets/models/mascot.glb",
+      "unity_path": "Assets/StreamingAssets/Models/mascot.glb"
+    },
+    "book_stack.glb": {
+      "git_blob_sha1": "119a83adce334d452ac4af145f569b9c03262dbf",
+      "source_path": "v30/public/assets/models/book_stack.glb",
+      "unity_path": "Assets/StreamingAssets/Models/book_stack.glb"
+    },
+    "printer.glb": {
+      "git_blob_sha1": "df6c8bfabd70f821a4b52ced4017f126ca913580",
+      "source_path": "v30/public/assets/models/printer.glb",
+      "unity_path": "Assets/StreamingAssets/Models/printer.glb"
+    },
+    "character-female-a.glb": {
+      "git_blob_sha1": "dc94d308984605963779180b8cb891f5aac04fc4",
+      "source_path": "v30/public/assets/models/characters/character-female-a.glb",
+      "unity_path": "Assets/StreamingAssets/Models/character-female-a.glb"
+    },
+    "character-male-b.glb": {
+      "git_blob_sha1": "d007708fdcec68d32668852276a83bf5307f98db",
+      "source_path": "v30/public/assets/models/characters/character-male-b.glb",
+      "unity_path": "Assets/StreamingAssets/Models/character-male-b.glb"
+    },
+    "character-male-c.glb": {
+      "git_blob_sha1": "8add211babadcf4a72484430850675b2e9704b53",
+      "source_path": "v30/public/assets/models/characters/character-male-c.glb",
+      "unity_path": "Assets/StreamingAssets/Models/character-male-c.glb"
+    },
+    "character-female-e.glb": {
+      "git_blob_sha1": "f25f618b95e22bcb9e3320386fffee6a4265c2cf",
+      "source_path": "v30/public/assets/models/characters/character-female-e.glb",
+      "unity_path": "Assets/StreamingAssets/Models/character-female-e.glb"
+    }
+  }
+}

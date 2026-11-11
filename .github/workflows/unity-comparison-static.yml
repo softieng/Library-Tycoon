@@ -1,0 +1,18 @@
+name: Unity comparison static asset verification (not an Editor build)
+on:
+  push:
+    branches: ['feature/unity-63-reading-hall-poc']
+    paths: ['UnityComparison/**', '.github/workflows/unity-comparison-static.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate imported models and C# source paths
+        run: python3 UnityComparison/Tools/verify_source_assets.py
