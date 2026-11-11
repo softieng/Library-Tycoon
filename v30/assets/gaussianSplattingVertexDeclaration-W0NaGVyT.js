@@ -1,0 +1,1 @@
+export{Cn as gaussianSplattingVertexDeclarationWGSL}from"./SceneHost-DfxO_yGh.js";

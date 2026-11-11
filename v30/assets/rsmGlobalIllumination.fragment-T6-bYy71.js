@@ -1,0 +1,1 @@
+export{x as rsmGlobalIlluminationPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

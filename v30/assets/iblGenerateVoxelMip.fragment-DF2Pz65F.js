@@ -1,0 +1,1 @@
+export{ot as iblGenerateVoxelMipPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

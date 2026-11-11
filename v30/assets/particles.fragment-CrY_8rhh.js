@@ -1,0 +1,1 @@
+export{er as particlesPixelShader}from"./SceneHost-DfxO_yGh.js";

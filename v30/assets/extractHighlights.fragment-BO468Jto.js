@@ -1,0 +1,1 @@
+export{oi as extractHighlightsPixelShader}from"./SceneHost-DfxO_yGh.js";

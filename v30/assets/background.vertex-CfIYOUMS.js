@@ -1,0 +1,1 @@
+export{vn as backgroundVertexShaderWGSL}from"./SceneHost-DfxO_yGh.js";

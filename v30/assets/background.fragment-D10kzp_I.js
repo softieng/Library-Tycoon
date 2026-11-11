@@ -1,0 +1,1 @@
+export{ki as backgroundPixelShader}from"./SceneHost-DfxO_yGh.js";

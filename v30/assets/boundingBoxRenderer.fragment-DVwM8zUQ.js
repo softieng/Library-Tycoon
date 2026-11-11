@@ -1,0 +1,1 @@
+export{Ci as boundingBoxRendererPixelShader}from"./SceneHost-DfxO_yGh.js";

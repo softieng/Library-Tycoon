@@ -1,0 +1,1 @@
+export{vi as colorVertexShader}from"./SceneHost-DfxO_yGh.js";

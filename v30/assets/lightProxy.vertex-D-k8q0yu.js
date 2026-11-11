@@ -1,0 +1,1 @@
+export{fr as lightProxyVertexShader}from"./SceneHost-DfxO_yGh.js";

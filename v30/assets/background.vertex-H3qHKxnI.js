@@ -1,0 +1,1 @@
+export{Oi as backgroundVertexShader}from"./SceneHost-DfxO_yGh.js";

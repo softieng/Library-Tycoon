@@ -1,0 +1,1 @@
+export{tr as outlineVertexShader}from"./SceneHost-DfxO_yGh.js";

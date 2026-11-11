@@ -1,0 +1,1 @@
+export{G as lightProxyPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

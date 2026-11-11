@@ -1,0 +1,1 @@
+export{Ni as gaussianSplattingVertexDeclaration}from"./SceneHost-DfxO_yGh.js";
