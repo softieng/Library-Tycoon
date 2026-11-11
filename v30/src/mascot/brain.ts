@@ -16,7 +16,8 @@ export function makeMascot(): Mascot {
     anim: 'idle', animT: 0, task: null, lastRewardAt: 0, rewardsClaimed: 0, idleT: 0 };
 }
 export function play(m: Mascot, anim: MascotState) { m.anim = anim; m.animT = MASCOT_CLIP_TIME[anim]; }
-export const mascotBusy = (m: Mascot) => m.task !== null && m.task.kind !== 'home';
+/** Only guiding and searching are uninterruptible; greeting and walking home give way to player requests. */
+export const mascotBusy = (m: Mascot) => m.task?.kind === 'guide' || m.task?.kind === 'search';
 /** React with a one-shot clip if the mascot is free (never interrupts guiding/searching). */
 export function react(m: Mascot, anim: MascotState) { if (!mascotBusy(m) && !m.path) play(m, anim); }
 
@@ -88,7 +89,7 @@ export function sendGuide(ctx: Ctx, visitorId: number, zoneId: string): boolean 
 }
 export function sendGreet(ctx: Ctx) {
   const m = ctx.s.mascot;
-  if (mascotBusy(m) || m.path || m.animT > 0) return;
+  if (m.task || m.path || m.animT > 0) return;
   if (Math.hypot(m.x - MASCOT_GREET.x, m.z - MASCOT_GREET.z) < 0.3) { play(m, 'welcome'); return; }
   if (goTo(ctx, m, MASCOT_GREET, MASCOT_GREET.yaw)) m.task = { kind: 'greet' };
 }

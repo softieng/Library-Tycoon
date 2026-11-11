@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { GameController } from '../app/controller';
+import { PROP_BY_ID, STATIONS } from '../config/layout';
 import type { SceneHost } from '../engine/SceneHost';
 
 export type SceneStatus = { phase: 'loading'; done: number; total: number } | { phase: 'ready' } | { phase: 'error'; message: string };
@@ -21,7 +22,11 @@ export function GameCanvas({ controller, onStatus, onUiRequest }: { controller: 
         const h = await SceneHost.create(ref.current!, controller, (done, total) => cb.current.onStatus({ phase: 'loading', done, total }));
         if (cancelled) { h.dispose(); return; }
         host = h; h.onUiRequest = (r) => cb.current.onUiRequest(r);
-        (window as any).__TYCOON__ = { controller, host, ready: true };
+        (window as any).__TYCOON__ = {
+          controller, host, ready: true, layout: { PROP_BY_ID, STATIONS },
+          /** QA: advance the simulation without waiting for rendered frames (software WebGL is slow). */
+          fastForward: (seconds: number) => { for (let i = 0; i < seconds * 10; i++) (controller as any).handle(controller.sim.step([])); controller.notify(); },
+        };
         cb.current.onStatus({ phase: 'ready' });
       } catch (err) {
         console.error('3D scene failed', err);

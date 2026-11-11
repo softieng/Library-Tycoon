@@ -1,0 +1,33 @@
+{
+  "loadMs": 4900,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "presets": {
+    "low": {
+      "fps": 1.96,
+      "drawCalls": 222,
+      "triangles": 149053,
+      "activeMeshes": 365,
+      "visitors": 6
+    },
+    "medium": {
+      "fps": 0.94,
+      "drawCalls": 377,
+      "triangles": 290788,
+      "activeMeshes": 369,
+      "visitors": 7
+    },
+    "high": {
+      "fps": 1.37,
+      "drawCalls": 609,
+      "triangles": 440683,
+      "activeMeshes": 369,
+      "visitors": 7
+    }
+  },
+  "memory": {
+    "heapMB_start": 117,
+    "heapMB_after_3_game_days": 117,
+    "sceneMeshes_start": 659,
+    "sceneMeshes_after": 688
+  }
+}

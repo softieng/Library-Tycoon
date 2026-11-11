@@ -1,0 +1,46 @@
+name: V3.0 CI (tests, build, browser QA)
+on:
+  push:
+    branches: [feature/v30-professional-library-tycoon]
+    paths: ["v30/**", ".github/workflows/v30-ci.yml"]
+  pull_request:
+    paths: ["v30/**", ".github/workflows/v30-ci.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults: { run: { working-directory: v30 } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: v30/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run assets:verify
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with: { name: library-tycoon-v30-dist, path: v30/dist, retention-days: 7 }
+  browser-qa:
+    needs: test-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults: { run: { working-directory: v30 } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: v30/package-lock.json }
+      - run: npm ci
+      - run: npm install --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Real-browser WebGL QA (SwiftShader) with screenshots
+        run: |
+          npx vite preview --port 4173 --strictPort &
+          sleep 4
+          SHOT_QUALITY=medium OUT=qa-out node tests/e2e/run.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: library-tycoon-v30-browser-qa, path: v30/qa-out, retention-days: 14 }

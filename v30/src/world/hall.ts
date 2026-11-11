@@ -30,27 +30,24 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
   const P = (n: string) => lib.palette.get(n)!;
   const W = HALL.maxX - HALL.minX, D = HALL.maxZ - HALL.minZ;
 
+  const statics: { m: Mesh; cast: boolean }[] = [];
   const box = (name: string, w: number, h: number, d: number, x: number, y: number, z: number, mat: PBRMaterial, cast = false) => {
     const m = MeshBuilder.CreateBox(name, { width: w, height: h, depth: d }, scene);
     m.position.set(x, y, z); m.material = mat; m.parent = root; m.receiveShadows = true; m.isPickable = false;
-    if (cast) shadowCasters.push(m);
+    statics.push({ m, cast });
     return m;
   };
   const pbr = (name: string, hex: string, rough: number, metal = 0) => { const m = new PBRMaterial(name, scene); m.albedoColor = lin(hex); m.roughness = rough; m.metallic = metal; return m; };
 
   /* ---------------- floor: polished ivory marble tiles, brass inlay, navy carpets ---------------- */
-  const floorMat = pbr('floor_marble', '#ffffff', 0.16);
-  const ft = new Texture(TEXTURE_DIR + 'marble_albedo.jpg', scene); ft.uScale = W / 4; ft.vScale = D / 4; floorMat.albedoTexture = ft;
-  const fr = new Texture(TEXTURE_DIR + 'marble_rough.jpg', scene); fr.uScale = W / 4; fr.vScale = D / 4;
-  floorMat.metallicTexture = fr; floorMat.useRoughnessFromMetallicTextureGreen = true; floorMat.useMetallnessFromMetallicTextureBlue = false; floorMat.metallic = 0; floorMat.roughness = 0.55;
-  floorMat.environmentIntensity = 1.15;
+  const floorMat = pbr('floor_marble', '#d9d1c0', 0.5);
+  const ft = new Texture(TEXTURE_DIR + 'floor_tiles.jpg', scene); ft.uScale = W / 4; ft.vScale = D / 4; floorMat.albedoTexture = ft; ft.anisotropicFilteringLevel = 8;
+  const fr = new Texture(TEXTURE_DIR + 'floor_rough.jpg', scene); fr.uScale = W / 4; fr.vScale = D / 4;
+  floorMat.metallicTexture = fr; floorMat.useRoughnessFromMetallicTextureGreen = true; floorMat.useRoughnessFromMetallicTextureAlpha = false; floorMat.useMetallnessFromMetallicTextureBlue = false; floorMat.metallic = 0; floorMat.roughness = 1;
+  floorMat.environmentIntensity = 0.85;
   const floor = MeshBuilder.CreateGround('floor', { width: W, height: D }, scene);
   floor.material = floorMat; floor.receiveShadows = true; floor.parent = root; floor.isPickable = true; floor.metadata = { pick: { kind: 'floor', id: 'floor' } };
   pickables.push(floor);
-  // tile joints + brass border inlay
-  const joint = pbr('joint', '#c9bfa9', 0.5);
-  for (let x = HALL.minX + 2; x < HALL.maxX; x += 2) box('jx', 0.018, 0.004, D, x, 0.002, 0, joint);
-  for (let z = HALL.minZ + 2; z < HALL.maxZ; z += 2) box('jz', W, 0.004, 0.018, 0, 0.002, z, joint);
   const brass = P('brass');
   for (const [w, d, x, z] of [[W - 1.2, 0.05, 0, HALL.minZ + 0.6], [W - 1.2, 0.05, 0, HALL.maxZ - 0.6], [0.05, D - 1.2, HALL.minX + 0.6, 0], [0.05, D - 1.2, HALL.maxX - 0.6, 0]] as const) box('inlay', w, 0.006, d, x, 0.003, z, brass);
 
@@ -64,9 +61,9 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
   };
   ct.uScale = 5; ct.vScale = 3.2; cn.uScale = 5; cn.vScale = 3.2;
   carpet('rug_reading', 0.55, 2.6, 9.2, 6.6);
-  carpet('rug_lounge', -8.6, -7.4, 4.4, 2.6);
+  carpet('rug_lounge', -5.7, -7.5, 5.0, 2.5);
   carpet('rug_runner', 10, -6.2, 2.2, 4.6);
-  carpet('rug_ref', -9.5, -2.6, 2.4, 3.0);
+  carpet('rug_borrow', -7.4, -4.4, 5.8, 1.1);
 
   /* ---------------- back walls (north + west): plaster, walnut wainscot, brass rail ---------------- */
   const plaster = pbr('plaster', '#efe6d2', 0.9); const wood = P('wood'), woodDark = P('wood_dark'), navy = P('navy');
@@ -125,7 +122,7 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
   // outside apron so the building does not float in space
   const apronMat = pbr('apron', '#22304f', 0.95); apronMat.environmentIntensity = 0.2;
   const apron = MeshBuilder.CreateGround('apron', { width: 90, height: 90 }, scene); apron.position.y = -0.06; apron.material = apronMat; apron.parent = root; apron.isPickable = false; apron.receiveShadows = true;
-  box('plinth', W + 1.6, 0.1, D + 1.6, 0, -0.03, 0, pbr('plinth', '#d8ccb2', 0.8));
+  box('plinth', W + 1.6, 0.1, D + 1.6, 0, -0.07, 0, pbr('plinth', '#d8ccb2', 0.8));
 
   /* ---------------- signage: hall name + official logo (image file used unmodified) ---------------- */
   const title = makeSign(scene, 'hall_title', { w: 4.6, h: 0.82, text: HALL_NAME_AR, sub: 'AL-KHWARIZMI HALL', px: 256, emissive: 0.5 }, root);
@@ -144,7 +141,8 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
     pickables.push(m); return m;
   };
   const place = (model: Parameters<AssetLibrary['place']>[0], parent: TransformNode, x = 0, y = 0, z = 0, yaw = 0, s = 1) => { const n = lib.place(model, parent); n.position.set(x, y, z); n.rotation.y = yaw; n.scaling.setAll(s); cast(n); return n; };
-  const signPost = (parent: TransformNode, text: string, icon: string, y = 2.25, w = 2.2) => {
+  const signPost = (parent0: TransformNode, text: string, icon: string, y = 2.25, w = 2.2, xOff = 0) => {
+    const parent = new TransformNode('signpost', scene); parent.parent = parent0; parent.position.x = xOff;
     for (const sx of [-1, 1]) { const post = MeshBuilder.CreateCylinder('post', { diameter: 0.05, height: y - 0.9 }, scene); post.material = brass; post.parent = parent; post.position.set(sx * (w / 2 - 0.1), (y + 0.9) / 2 - 0.15, 0.2); post.isPickable = false; }
     const board = box('sign_board', w + 0.12, 0.56, 0.06, 0, 0, 0, navy); board.parent = parent; board.position.set(0, y, 0.2);
     const s = makeSign(scene, 'sign', { w, h: 0.46, text, icon, px: 128, emissive: 0.55 }, parent); s.position.set(0, y, 0.2 - 0.04); s.rotation.y = 0;
@@ -184,26 +182,30 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
         break;
       }
       case 'counter': {
-        place('counter', node); signPost(node, p.label!, '📚', 2.35, 2.6);
-        const mon = place('monitor', node, -0.9, 1.06, -0.2, Math.PI, 1); void mon; place('keyboard', node, -0.9, 1.06, -0.42, Math.PI, 1.4);
+        place('counter', node); signPost(node, p.label!, '📚', 2.5, 1.9, -1.9);
+        const mon = place('monitor', node, -1.0, 1.06, -0.2, Math.PI, 1); void mon; place('keyboard', node, -1.0, 1.06, -0.42, Math.PI, 1.4);
         place('lamp_table', node, 2.05, 1.06, -0.1, 0, 1);
         pickBox(p.id, 'station', p, 1.3, node).metadata = { pick: { kind: 'station', id: 'borrow' } };
         break;
       }
       case 'refdesk': {
-        place('refdesk', node); signPost(node, p.label!, '🔎', 2.25, 1.9);
+        place('refdesk', node); signPost(node, p.label!, '🔎', 2.4, 1.3, 0.75);
         place('monitor', node, 0.6, 1.0, -0.2, Math.PI, 1); place('lamp_table', node, -0.2, 1.0, -0.15, 0, 0.9);
         pickBox(p.id, 'station', p, 1.3, node).metadata = { pick: { kind: 'station', id: 'research' } };
         break;
       }
       case 'digitaldesk': {
-        place('digitaldesk', node); signPost(node, p.label!, '🖨️', 2.25, 1.9);
+        place('digitaldesk', node); signPost(node, p.label!, '🖨️', 2.4, 1.5, 0.6);
         place('laptop', node, 0.4, 0.98, -0.1, Math.PI, 1.3); place('plant_small', node, -0.8, 0.98, 0, 0, 1);
         pickBox(p.id, 'station', p, 1.3, node).metadata = { pick: { kind: 'station', id: 'print' } };
         break;
       }
       case 'printer': { place('printer', node); pickBox(p.id, 'device', p, 1.4, node); break; }
       case 'podium': place('podium', node); break;
+      case 'display': place('display', node); break;
+      case 'kiosk': place('kiosk', node); break;
+      case 'armchair': place('armchair', node); break;
+      case 'floorlamp': place('lamp_floor', node, 0, 0, 0, 0, 1.05); break;
       case 'cart': { place('cart', node); pickBox(p.id, 'cart', p, 1.3, node); break; }
       case 'cleancart': place('cleancart', node); break;
       case 'bench': place('bench', node); break;
@@ -241,6 +243,17 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
   // floor markers for the queue positions (subtle brass discs)
   for (const q of Object.values(QUEUES)) q.forEach((s, i) => { const d = MeshBuilder.CreateDisc('qmark', { radius: i === 0 ? 0.2 : 0.11, tessellation: 24 }, scene); d.rotation.x = Math.PI / 2; d.position.set(s.x, 0.026, s.z); d.material = brass; d.parent = root; d.isPickable = false; });
 
+  // Merge the static architecture per material: hundreds of boxes become a handful of draw calls.
+  const groups = new Map<string, Mesh[]>();
+  for (const { m, cast } of statics) {
+    if (m.parent !== root || m.isDisposed()) { if (cast) shadowCasters.push(m); continue; }
+    const key = `${m.material!.uniqueId}_${cast ? 1 : 0}`; (groups.get(key) ?? groups.set(key, []).get(key)!).push(m);
+  }
+  for (const [key, list] of groups) {
+    const merged = list.length > 1 ? Mesh.MergeMeshes(list, true, true)! : list[0];
+    merged.parent = root; merged.receiveShadows = true; merged.isPickable = false; merged.name = `static_${key}`;
+    if (key.endsWith('_1')) shadowCasters.push(merged);
+  }
   const printerLight = P('lamp_glow').clone('printer_light');
   return { root, propNodes, pickables, shadowCasters, screens, printerLight };
 }

@@ -60,6 +60,27 @@ save(col, 'marble_albedo.jpg', pub, q=88)
 rough = 60 + vein * 50 + cloud * 25
 save(np.dstack([rough] * 3), 'marble_rough.jpg', pub, q=85)
 
+# ---- floor: 2×2 marble tiles (ivory / warm beige checker) with joints and small navy+brass cabochons ----
+half = n // 2
+tile = np.zeros((n, n, 3))
+soft = col * 0.45 + col.mean(axis=(0, 1)) * 0.55
+warm = soft * np.array([0.955, 0.925, 0.86]) ; cool = soft * np.array([1.0, 0.99, 0.965])
+for ty in range(2):
+    for tx in range(2):
+        src = warm if (tx + ty) % 2 else cool
+        sy, sx = (ty * 311) % half, (tx * 173) % half
+        tile[ty * half:(ty + 1) * half, tx * half:(tx + 1) * half] = np.roll(np.roll(src, sy, 0), sx, 1)[:half, :half]
+jy, jx = np.mgrid[0:n, 0:n]
+joint = (np.minimum(jx % half, half - jx % half) < 2) | (np.minimum(jy % half, half - jy % half) < 2)
+tile[joint] = np.array([176, 163, 138])
+for cy in (0, half):
+    for cx in (0, half):
+        d = np.abs(((jx - cx + half // 2) % n) - half // 2) + np.abs(((jy - cy + half // 2) % n) - half // 2)
+        tile[d < 30] = np.array([201, 162, 58]); tile[d < 24] = np.array([28, 44, 86])
+save(tile, 'floor_tiles.jpg', pub, q=90)
+frough = np.full((n, n), 52.0) + (cloud - 0.5) * 30; frough[joint] = 190
+save(np.dstack([frough] * 3), 'floor_rough.jpg', pub, q=85)
+
 # ---- walnut wood grain (tileable): long straight fibres with gentle figure ----
 u = np.linspace(0, 1, n, endpoint=False); X, Y = np.meshgrid(u, u)
 warp = tile_noise(n, 3, 31, 0.4, stretch=(6.0, 1.0))

@@ -3,7 +3,7 @@ export const MODEL_DIR = 'assets/models/';
 export const TEXTURE_DIR = 'assets/textures/';
 export const PROP_MODELS = [
   'shelf', 'lowshelf', 'table', 'counter', 'refdesk', 'digitaldesk', 'pcdesk', 'printer', 'podium', 'cart', 'cleancart', 'bench', 'totem',
-  'backshelf', 'stanchion', 'book_closed', 'book_open', 'planter', 'spill',
+  'backshelf', 'display', 'kiosk', 'armchair', 'stanchion', 'book_closed', 'book_open', 'planter', 'spill',
   'chair_read', 'chair_pc', 'monitor', 'keyboard', 'mouse', 'laptop', 'plant_tall', 'plant_small', 'plant_small_b', 'lamp_table', 'lamp_floor',
   'sofa', 'coffeetable', 'trashcan', 'book_stack',
 ] as const;

@@ -41,7 +41,7 @@ const EFFECTS: Record<string, (ctx: Ctx, run: MissionRun) => void> = {
     run.data.title = book.title; run.data.code = book.code;
     const z = ZONES.find((q) => q.id === 'reference')!;
     const v = spawnVisitor(ctx, { need: 'research', lostWant: 'ref' });
-    v.state = 'lost'; goTo(ctx, v, { x: z.guide.x, z: z.guide.z }, Math.PI / 2);
+    v.state = 'lost'; goTo(ctx, v, { x: z.guide.x, z: z.guide.z }, z.guide.yaw);
     run.data.visitor = v.id;
   },
   spawnLost(ctx, run) {

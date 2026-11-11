@@ -1,0 +1,29 @@
+# Publishes the V3.0 build to GitHub Pages. MANUAL ONLY: the owner starts it from the Actions tab
+# after approving the preview (see v30/UPDATE_POLICY.md). Requires Pages source = "GitHub Actions".
+name: V3.0 Pages preview (manual, owner-approved)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "publish" to confirm the owner approved this preview'
+        required: true
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency: { group: pages, cancel-in-progress: false }
+jobs:
+  deploy:
+    if: ${{ inputs.confirm == 'publish' }}
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url }}" }
+    defaults: { run: { working-directory: v30 } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: v30/package-lock.json }
+      - run: npm ci && npm test && npm run assets:verify && npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: v30/dist }
+      - id: deploy
+        uses: actions/deploy-pages@v4

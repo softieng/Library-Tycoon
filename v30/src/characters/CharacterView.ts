@@ -5,8 +5,8 @@ import { angDiff } from '../navigation/movement';
 
 /** Which Kenney clip shows each simulation state. One place to retarget when better clips arrive. */
 export type CharClip = 'idle' | 'walk' | 'sit' | 'pick-up' | 'interact-right' | 'emote-yes' | 'emote-no' | 'holding-right' | 'holding-both' | 'jump';
-export const CHARACTER_HEIGHT = 1.55;
-const RAW_HEIGHT = 0.69;
+export const CHARACTER_HEIGHT = 1.5;
+const HEAD_SCALE = 0.72;
 
 export function clipForVisitor(v: Visitor): CharClip {
   if (v.gesture === 'pickup') return 'pick-up';
@@ -31,12 +31,13 @@ export function clipForStaff(s: Staff): CharClip {
 
 export class CharacterView {
   readonly root: TransformNode;
-  readonly pick: Mesh;
+  readonly pick: Mesh; private body!: TransformNode;
   private entries: InstantiatedEntries;
   private clips = new Map<string, AnimationGroup>();
   private current: AnimationGroup | null = null; private currentName = '';
   private book: TransformNode | null = null;
   meshes: Mesh[] = [];
+  private head: TransformNode | null = null;
   private armR: TransformNode | null = null; private armL: TransformNode | null = null;
   private t = Math.random() * 10;
   activity: string | null = null;
@@ -44,15 +45,19 @@ export class CharacterView {
   constructor(scene: Scene, lib: AssetLibrary, model: number, staff: boolean, kind: 'visitor' | 'staff', id: number) {
     this.root = new TransformNode(`${kind}_${id}`, scene);
     this.entries = lib.character(model, staff);
-    const s = CHARACTER_HEIGHT / RAW_HEIGHT * (staff ? 1.04 : 1);
-    for (const r of this.entries.rootNodes) { r.parent = this.root; (r as TransformNode).scaling.scaleInPlace(s); this.meshes.push(...(r.getChildMeshes(false) as Mesh[])); }
+    for (const r of this.entries.rootNodes) { r.parent = this.root; this.meshes.push(...(r.getChildMeshes(false) as Mesh[])); }
+    // Normalisation: the mini-figure head is scaled to 72% for more natural proportions, and the whole
+    // figure to 1.5 m (raw rig: body 0.346 + head 0.433 units).
+    const raw = 0.69, s = (CHARACTER_HEIGHT / (0.346 + 0.433 * HEAD_SCALE)) * (staff ? 1.03 : 1);
+    this.body = new TransformNode(`${kind}_${id}_body`, scene); this.body.parent = this.root; this.body.scaling.setAll(s);
+    for (const r of this.entries.rootNodes) r.parent = this.body;
     for (const g of this.entries.animationGroups) { g.stop(); this.clips.set(g.name, g); }
     const nodes = this.root.getChildTransformNodes(false);
-    this.armR = nodes.find((n) => n.name === 'arm-right') ?? null; this.armL = nodes.find((n) => n.name === 'arm-left') ?? null;
+    this.armR = nodes.find((n) => n.name === 'arm-right') ?? null; this.armL = nodes.find((n) => n.name === 'arm-left') ?? null; this.head = nodes.find((n) => n.name === 'head') ?? null;
     this.pick = MeshBuilder.CreateCylinder(`pick_${kind}_${id}`, { diameter: 0.85, height: 1.75 }, scene);
     this.pick.parent = this.root; this.pick.position.y = 0.87; this.pick.isVisible = false; this.pick.isPickable = true; this.pick.metadata = { pick: { kind, id } };
     // carried book, attached to the right arm
-    if (this.armR) { const b = lib.place('book_closed', this.armR, { shadows: false }); b.scaling.setAll(0.42 / s * 1.45); b.position.set(0.0, -0.13, 0.03); b.rotation.set(Math.PI / 2, 0, 0); b.setEnabled(false); this.book = b; }
+    if (this.armR) { const bk = lib.place('book_closed', this.armR, { shadows: false }); const b = bk; const k = 1 / s; b.scaling.setAll(k * 1.1); b.position.set(0.0, -0.13 * (raw / 0.69), 0.03 * (raw / 0.69)); b.rotation.set(Math.PI / 2, 0, 0); b.setEnabled(false); this.book = b; }
     this.play('idle');
   }
   play(name: CharClip, speed = 1) {
@@ -72,6 +77,7 @@ export class CharacterView {
   /** Procedural upper-body layer on top of the "sit" clip so reading, writing and typing look different. */
   layer(dt: number) {
     this.t += dt;
+    this.head?.scaling.setAll(HEAD_SCALE);
     if (!this.armR || !this.armL || this.currentName !== 'sit' || !this.activity) return;
     const t = this.t;
     const a = this.activity === 'write' ? { r: -1.15 + Math.sin(t * 9) * 0.07, l: -0.75 } : this.activity === 'computer' ? { r: -1.2 + Math.sin(t * 13) * 0.06, l: -1.2 + Math.cos(t * 11) * 0.06 } : { r: -1.0 + Math.sin(t * 0.7) * 0.03, l: -1.0 + Math.sin(t * 0.7) * 0.03 };

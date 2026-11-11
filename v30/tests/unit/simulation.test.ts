@@ -153,12 +153,11 @@ describe('staff rules', () => {
     expect(sim.state.money).toBe(0);
   });
   it('a trained employee serves faster', () => {
-    const time = (level: number) => {
+    const avgServiceTime = (level: number) => {
       const sim = makeSim(4); sim.state.staff[0].level = level;
-      sim.state.rush = { until: 1e9, mult: 5 }; // saturate the counter so staff speed is the bottleneck
-      run(sim, 220); return sim.state.ledger.byService.borrow;
+      run(sim, 220); expect(sim.state.staff[0].servedTotal).toBeGreaterThan(5); return sim.state.staff[0].serviceTime;
     };
-    expect(time(5)).toBeGreaterThan(time(1));
+    expect(avgServiceTime(5)).toBeLessThan(avgServiceTime(1) * 0.8);
   });
 });
 

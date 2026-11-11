@@ -1,12 +1,13 @@
 import { BALANCE } from '../config/balance';
-import { DOOR, QUEUES, SEATS, SHELVES, type SeatInfo } from '../config/layout';
+import { CLEANER_ZONE, DOOR, QUEUES, SEATS, SHELVES, type SeatInfo } from '../config/layout';
 import { SERVICES } from '../config/services';
 import type { Ctx } from '../gameplay/ctx';
 import { clamp, pick, rand, randInt, randRange } from '../gameplay/rng';
 import type { EmoteKind, Need, Visitor } from '../gameplay/types';
 import { goTo, near, stepMover } from '../navigation/movement';
 
-export const VISITOR_MODELS = 12;
+/** Student models (indices into CHARACTER_MODELS); the uniformed 'male-c' figure is not used for students. */
+export const VISITOR_MODEL_IDS = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
 export type QueueId = 'borrow' | 'print' | 'research';
 
 export function emote(v: { emote: Visitor['emote'] }, kind: EmoteKind, t = 2.6) { v.emote = { kind, t }; }
@@ -22,7 +23,7 @@ export function chooseNeed(ctx: Ctx): Need {
 export function spawnVisitor(ctx: Ctx, opts: Partial<Visitor> = {}): Visitor {
   const s = ctx.s;
   const v: Visitor = {
-    id: s.nextId++, model: randInt(s, VISITOR_MODELS), need: chooseNeed(ctx), state: 'enter',
+    id: s.nextId++, model: VISITOR_MODEL_IDS[randInt(s, VISITOR_MODEL_IDS.length)], need: chooseNeed(ctx), state: 'enter',
     x: DOOR.outside.x + randRange(s, -0.5, 0.5), z: DOOR.outside.z, yaw: 0,
     path: null, pathI: 0, moving: false, turning: false, blockedT: 0, speed: randRange(s, 1.55, 1.95),
     timer: 0, patience: BALANCE.patience * (ctx.owned.has('waiting_area') ? 1.3 : 1), waited: 0,
@@ -210,10 +211,10 @@ export function spawnDirt(ctx: Ctx, forceZone?: boolean) {
   const s = ctx.s;
   if (s.dirt.length >= 9) return;
   // Imported lazily to avoid a config cycle.
-  const Z = { minX: -5, maxX: 9.6, minZ: -1.2, maxZ: 7.2 };
+  const Z = CLEANER_ZONE;
   const inZone = forceZone ?? rand(s) < 0.72;
   for (let i = 0; i < 40; i++) {
-    const x = inZone ? randRange(s, Z.minX + 0.6, Z.maxX - 0.6) : randRange(s, -11.5, 11.5);
+    const x = inZone ? randRange(s, Z.minX + 0.6, Z.maxX - 0.6) : randRange(s, 1, 11.5);
     const z = inZone ? randRange(s, Z.minZ + 0.6, Z.maxZ - 0.6) : randRange(s, -8, -1.8);
     if (!ctx.nav.walkable(x, z)) continue;
     const inside = x > Z.minX + 0.3 && x < Z.maxX - 0.3 && z > Z.minZ + 0.3 && z < Z.maxZ - 0.3;

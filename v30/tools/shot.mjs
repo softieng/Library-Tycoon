@@ -6,6 +6,7 @@ console.log(JSON.stringify(await page.evaluate(() => ({ ready: window.__TYCOON__
 await page.evaluate((q) => window.__TYCOON__.controller.updateSettings({ quality: q }), process.env.Q ?? 'medium');
 if (process.env.SPEED) await page.evaluate((s) => window.__TYCOON__.controller.setSpeed(Number(s)), process.env.SPEED);
 if (process.env.JS) console.log('eval:', JSON.stringify(await page.evaluate(process.env.JS)));
+if (process.env.FF) await page.evaluate((s) => window.__TYCOON__.fastForward(Number(s)), process.env.FF);
 await page.waitForTimeout(Number(secs) * 1000);
 if (process.env.JS2) console.log('eval2:', JSON.stringify(await page.evaluate(process.env.JS2)));
 console.log('stats', JSON.stringify(await page.evaluate(() => window.__TYCOON__.controller.world?.stats())));

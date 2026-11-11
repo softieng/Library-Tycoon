@@ -51,19 +51,19 @@ export class SceneHost {
     scene.clearColor = new Color4(0.075, 0.105, 0.19, 1);
     scene.skipPointerMovePicking = true; scene.autoClear = true;
     scene.imageProcessingConfiguration.toneMappingEnabled = true; scene.imageProcessingConfiguration.toneMappingType = ImageProcessingConfiguration.TONEMAPPING_ACES;
-    scene.imageProcessingConfiguration.exposure = 1.18; scene.imageProcessingConfiguration.contrast = 1.12;
+    scene.imageProcessingConfiguration.exposure = 1.0; scene.imageProcessingConfiguration.contrast = 1.18;
     createEnvironment(scene);
     this.cam = new IsoCamera(scene);
     this.instr = new SceneInstrumentation(scene); this.instr.captureFrameTime = true;
 
     // Warm architectural lighting: soft ambient + a low sun through the west windows + lamp pools.
     const hemi = new HemisphericLight('ambient', new Vector3(0.2, 1, -0.1), scene);
-    hemi.intensity = 0.62; hemi.diffuse = new Color3(1, 0.95, 0.86); hemi.groundColor = new Color3(0.42, 0.36, 0.32);
+    hemi.intensity = 0.5; hemi.diffuse = new Color3(1, 0.95, 0.86); hemi.groundColor = new Color3(0.42, 0.36, 0.32);
     this.sun = new DirectionalLight('sun', new Vector3(0.62, -1, 0.3).normalize(), scene);
-    this.sun.position = new Vector3(-22, 34, -12); this.sun.intensity = 2.5; this.sun.diffuse = new Color3(1, 0.92, 0.78);
+    this.sun.position = new Vector3(-22, 34, -12); this.sun.intensity = 1.7; this.sun.diffuse = new Color3(1, 0.92, 0.78);
     this.sun.shadowMinZ = 5; this.sun.shadowMaxZ = 90; this.sun.autoUpdateExtends = true;
-    for (const [x, z, i] of [[0.5, 2.6, 0.7], [3.5, -5.8, 0.6], [8.5, 7.2, 0.5], [-9.5, -4.4, 0.5]] as const) {
-      const p = new PointLight('lamp', new Vector3(x, 2.4, z), scene); p.diffuse = new Color3(1, 0.82, 0.55); p.intensity = i * 14; p.range = 9; p.specular = Color3.Black();
+    for (const [x, z, i] of [[0.5, 2.6, 0.7], [-9.5, -4.4, 0.6], [8.5, 6.6, 0.5], [-2.4, -5, 0.5], [9, -6, 0.5]] as const) {
+      const p = new PointLight('lamp', new Vector3(x, 2.4, z), scene); p.diffuse = new Color3(1, 0.82, 0.55); p.intensity = i * 9; p.range = 9; p.specular = Color3.Black();
     }
 
     this.lib = new AssetLibrary(scene);
@@ -98,7 +98,7 @@ export class SceneHost {
       project: (x, y, z) => this.project(x, y, z),
     };
     this.controller.world = this.api = api;
-    scene.onAfterAnimationsObservable.add(() => { for (const a of this.visitors.values()) a.view.layer(engine.getDeltaTime() / 1000); });
+    scene.onAfterAnimationsObservable.add(() => { for (const a of [...this.visitors.values(), ...this.staff.values()]) a.view.layer(engine.getDeltaTime() / 1000); });
     engine.runRenderLoop(() => {
       if (this.disposed) return;
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
@@ -118,7 +118,7 @@ export class SceneHost {
     if (q !== 'low') {
       const sg = this.shadow = new ShadowGenerator(q === 'high' ? 4096 : 1536, this.sun);
       sg.usePercentageCloserFiltering = true; sg.filteringQuality = q === 'high' ? ShadowGenerator.QUALITY_HIGH : ShadowGenerator.QUALITY_MEDIUM;
-      sg.bias = 0.0012; sg.normalBias = 0.02; sg.darkness = 0.38;
+      sg.bias = 0.0012; sg.normalBias = 0.02; sg.darkness = 0.22;
       for (const m of this.hall.shadowCasters) sg.addShadowCaster(m, false);
       for (const m of this.mascot.meshes) sg.addShadowCaster(m, false);
       for (const a of [...this.visitors.values(), ...this.staff.values()]) for (const m of a.view.meshes) sg.addShadowCaster(m, false);
@@ -133,7 +133,7 @@ export class SceneHost {
         s.radius = 1.4; s.totalStrength = 0.95; s.base = 0.12; s.samples = 16; s.maxZ = 200; s.minZAspect = 0.5; s.expensiveBlur = true;
       }
     }
-    this.sun.intensity = q === 'low' ? 2.0 : 2.5;
+    this.sun.intensity = q === 'low' ? 1.5 : 1.7;
   }
   /** 1 = native resolution; lower values render fewer pixels (for weaker GPUs). */
   setRenderScale(s: number) { this.engine.setHardwareScalingLevel(1 / Math.max(0.5, Math.min(1, s)) / Math.min(window.devicePixelRatio || 1, this.quality === 'low' ? 1 : 1.5)); this.engine.resize(); }
@@ -151,7 +151,7 @@ export class SceneHost {
     if (!a) {
       const view = new CharacterView(this.scene, this.lib, model, staff, staff ? 'staff' : 'visitor', id);
       view.root.position.set(x, 0, z); view.root.rotation.y = yaw;
-      const icon = this.icons.create(`emote_${id}`, view.root); icon.position.y = 2.15;
+      const icon = this.icons.create(`emote_${id}`, view.root); icon.position.y = 2.0;
       if (this.shadow) for (const m of view.meshes) this.shadow.addShadowCaster(m, false);
       a = { view, icon, iconKind: '', seen: 0 }; map.set(id, a);
     }
@@ -175,7 +175,7 @@ export class SceneHost {
       a.view.play(clipForVisitor(v), v.moving ? v.speed / 1.5 : 1);
       a.view.setCarrying(v.carrying && !sitting);
       this.setIcon(a, v.emote?.kind ?? null);
-      a.icon.position.y = 2.15 + Math.sin(t * 3 + v.id) * 0.05;
+      a.icon.position.y = 2.0 + Math.sin(t * 3 + v.id) * 0.05;
     }
     this.sweep(this.visitors);
     for (const st of s.staff) {

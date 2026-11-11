@@ -9,7 +9,7 @@ export class IsoCamera {
   readonly camera: FreeCamera;
   private target = new Vector3(0, 0, 0); private goal = new Vector3(0, 0, 0);
   private zoom = 10.5; private zoomGoal = 10.5;
-  static readonly MIN_ZOOM = 3.2; static readonly MAX_ZOOM = 13.5; static readonly HOME_ZOOM = 10.6;
+  static readonly MIN_ZOOM = 3.2; static readonly MAX_ZOOM = 14.5; static readonly HOME_ZOOM = 11.6;
   // View direction: from the south-east corner toward the north-west back walls, 36° above the floor.
   private static readonly DIR = new Vector3(1, 0.98, -1).normalize();
   private right = new Vector3(1, 0, 1).normalize(); private fwd = new Vector3(-1, 0, 1).normalize();
@@ -20,7 +20,7 @@ export class IsoCamera {
     this.camera.inputs.clear(); // no built-in controls: rotation can never be introduced by accident
     this.reset(true);
   }
-  reset(immediate = false) { this.goal.set(0.2, 0, -0.4); this.zoomGoal = IsoCamera.HOME_ZOOM; if (immediate) { this.target.copyFrom(this.goal); this.zoom = this.zoomGoal; this.apply(); } }
+  reset(immediate = false) { this.goal.set(0.6, 0, 0.9); this.zoomGoal = IsoCamera.HOME_ZOOM; if (immediate) { this.target.copyFrom(this.goal); this.zoom = this.zoomGoal; this.apply(); } }
   zoomBy(steps: number) { this.zoomGoal = Math.min(IsoCamera.MAX_ZOOM, Math.max(IsoCamera.MIN_ZOOM, this.zoomGoal * Math.pow(0.86, steps))); }
   /** Pan by screen pixels. */
   panPixels(dx: number, dy: number) {

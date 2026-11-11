@@ -231,6 +231,6 @@ describe('mascot reward (25,000 IQD / 15 minutes)', () => {
     const sim = makeSim(3);
     run(sim, 150);
     const m = sim.state.mascot;
-    if (!m.task && !m.path) expect(Math.hypot(m.x - 11.9, m.z + 6.4)).toBeLessThan(1.5);
+    if (!m.task && !m.path) expect(Math.hypot(m.x - 11.3, m.z + 3.4)).toBeLessThan(1.5);
   });
 });

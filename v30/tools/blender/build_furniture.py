@@ -56,7 +56,7 @@ class Model:
         for v in vs: v.co = Vector((v.co.x * s[0], v.co.y * s[1], v.co.z * s[2]))
         if bevel and min(s) > bevel * 2.5:
             es = list({e for v in vs for e in v.link_edges})
-            r = bmesh.ops.bevel(b, geom=es, offset=bevel, segments=2, affect='EDGES', clamp_overlap=True)
+            r = bmesh.ops.bevel(b, geom=es, offset=bevel, segments=1 if m == 'books' else 2, affect='EDGES', clamp_overlap=True)
             vs = list({v for f in r['faces'] for v in f.verts} | {v for v in vs if v.is_valid})
         R = (rot.to_matrix() if rot else Matrix.Identity(3))
         faces = {f for v in vs for f in v.link_faces}
@@ -293,6 +293,28 @@ def book_open():
         m.box('paper', (sx * 0.097, 0, 0.022), (0.185, 0.25, 0.016), bevel=0.004, rot=Euler((0, sx * math.radians(-7), 0)))
     return m.export()
 
+def display():
+    m = Model('display')   # round "new arrivals" island
+    m.cyl('wood_dark', (0, 0, 0.05), 0.62, 0.10, seg=32); m.cyl('wood', (0, 0, 0.45), 0.55, 0.72, seg=32); m.cyl('brass', (0, 0, 0.12), 0.565, 0.03, seg=32)
+    m.cyl('marble', (0, 0, 0.83), 0.82, 0.05, seg=40); m.cyl('wood', (0, 0, 1.0), 0.34, 0.3, seg=28); m.cyl('marble', (0, 0, 1.17), 0.4, 0.04, seg=32)
+    cols = [(0.12, 0.19, 0.4), (0.5, 0.14, 0.13), (0.14, 0.33, 0.25), (0.62, 0.47, 0.2), (0.33, 0.2, 0.12), (0.45, 0.25, 0.33), (0.2, 0.3, 0.45), (0.55, 0.32, 0.14)]
+    for i in range(8):
+        a = i * math.pi / 4; x, y = math.cos(a) * 0.6, math.sin(a) * 0.6
+        m.box('books', (x, y, 0.98), (0.2, 0.035, 0.27), bevel=0.004, rot=Euler((math.radians(-14), 0, a + math.pi / 2)), color=cols[i])
+        m.box('brass', (x * 0.93, y * 0.93, 0.862), (0.16, 0.1, 0.012), bevel=0, rot=Euler((0, 0, a + math.pi / 2)))
+    for i in range(3):
+        m.box('books', (0, 0, 1.21 + 0.045 * i), (0.26, 0.19, 0.04), bevel=0.004, rot=Euler((0, 0, 0.5 * i)), color=cols[i + 2])
+    return m.export()
+
+def kiosk():
+    m = Model('kiosk')     # self-service catalogue terminal
+    m.box('wood_dark', (0, 0, 0.04), (0.6, 0.5, 0.08), bevel=0.008); m.box('navy', (0, 0.03, 0.6), (0.46, 0.2, 1.1), bevel=0.02)
+    m.box('brass', (0, -0.075, 0.6), (0.3, 0.008, 0.7), bevel=0); m.box('navy', (0, -0.08, 0.6), (0.27, 0.01, 0.67), bevel=0)
+    m.box('dark', (0, -0.06, 1.3), (0.56, 0.06, 0.42), bevel=0.012, rot=Euler((math.radians(-18), 0, 0)))
+    m.box('screen', (0, -0.095, 1.31), (0.5, 0.008, 0.36), bevel=0, rot=Euler((math.radians(-18), 0, 0)))
+    m.box('brass', (0, 0.03, 1.16), (0.5, 0.22, 0.02), bevel=0.004)
+    return m.export()
+
 def planter():
     m = Model('planter')
     m.cyl('terracotta', (0, 0, 0.26), 0.2, 0.52, seg=24, r2=0.27); m.cyl('brass', (0, 0, 0.52), 0.275, 0.03, seg=24); m.cyl('wood_dark', (0, 0, 0.5), 0.24, 0.02, seg=24)
@@ -309,7 +331,7 @@ KENNEY = {  # out name: (source, target height in metres, yaw degrees so that th
     'chair_read': ('chaircushion', 0.95, 0), 'chair_pc': ('chairdesk', 1.02, 0), 'monitor': ('computerscreen', 0.46, 0), 'keyboard': ('computerkeyboard', 0.03, 0),
     'mouse': ('computermouse', 0.03, 0), 'laptop': ('laptop', 0.24, 0), 'plant_tall': ('pottedplant', 1.55, 0), 'plant_small': ('plantsmall2', 0.34, 0),
     'plant_small_b': ('plantsmall1', 0.34, 0), 'lamp_table': ('lamproundtable', 0.5, 0), 'lamp_floor': ('lamproundfloor', 1.7, 0), 'sofa': ('loungesofa', 0.95, 0),
-    'coffeetable': ('tablecoffee', 0.42, 0), 'trashcan': ('trashcan', 0.62, 0), 'book_stack': ('books', 0.2, 0),
+    'coffeetable': ('tablecoffee', 0.42, 0), 'armchair': ('loungechair', 0.95, 0), 'trashcan': ('trashcan', 0.62, 0), 'book_stack': ('books', 0.2, 0),
 }
 def normalise(out, src, height, yaw):
     reset(); bpy.ops.import_scene.gltf(filepath=os.path.join(SRC, src + '.glb'))
@@ -335,7 +357,7 @@ def normalise(out, src, height, yaw):
 
 if __name__ == '__main__':
     print('custom furniture:')
-    built = [f() for f in (shelf, lowshelf, table, counter, refdesk, digitaldesk, pcdesk, printer, podium, cart, cleancart, bench, totem, backshelf, stanchion, book_closed, book_open, planter, dirt_decal)]
+    built = [f() for f in (shelf, lowshelf, table, counter, refdesk, digitaldesk, pcdesk, printer, podium, cart, cleancart, bench, totem, backshelf, stanchion, book_closed, book_open, planter, dirt_decal, display, kiosk)]
     print('normalised Kenney props:')
     for out, (src, h, yaw) in KENNEY.items(): normalise(out, src, h, yaw)
     print('FURNITURE_OK')
