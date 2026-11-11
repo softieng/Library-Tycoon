@@ -1,0 +1,61 @@
+# Non-destructive V3 alpha browser preview deployment.
+# Runs only on this branch; publishes compiled /v30 files to the existing
+# GitHub Pages preview source branch. Older demos and main remain unchanged.
+name: V3 alpha live preview (preserve older previews)
+on:
+  push:
+    branches: [feature/v30-professional-library-tycoon]
+    paths:
+      - '.github/workflows/v30-preview-publish.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: library-tycoon-v30-preview-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout V3 source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v30/package-lock.json
+      - name: Verify and compile V3 standalone demo
+        working-directory: v30
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npm run assets:verify
+          npm run build
+          test -f dist/index.html
+      - name: Publish only compiled v30 folder to the current Pages preview branch
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAGE_BRANCH='feature/v26-isometric-preview'
+          git fetch origin "$PAGE_BRANCH"
+          WT="$RUNNER_TEMP/tycoon-pages-preview"
+          git worktree add --detach "$WT" "origin/$PAGE_BRANCH"
+          mkdir -p "$WT/v30"
+          find "$WT/v30" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          cp -a v30/dist/. "$WT/v30/"
+          git -C "$WT" add -- v30
+          if git -C "$WT" diff --cached --quiet; then
+            echo 'V3 compiled preview already identical.'
+            exit 0
+          fi
+          git -C "$WT" -c user.name='library-tycoon-preview[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "preview: publish V3 alpha at /v30/ (preserve V2 demos)"
+          git -C "$WT" push origin "HEAD:refs/heads/$PAGE_BRANCH"
+      - name: Show the preview URL
+        run: echo 'Preview URL is https://softieng.github.io/Library-Tycoon/v30/ . This workflow only publishes static files; wait for GitHub Pages to finish the branch deployment before claiming the URL is live.'

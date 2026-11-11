@@ -1,0 +1,1472 @@
+{
+  "schema": 1,
+  "generatedBy": "tools/build-manifest.mjs",
+  "note": "Integrity hashes are SHA-256 of the file bytes. Run `npm run assets:verify` after any asset change.",
+  "assets": [
+    {
+      "path": "assets-src/branding/central-library-logo.original.png",
+      "bytes": 727901,
+      "sha256": "da6dd6995ff79cb57c073f5ba0ae18c08605b557211a27a7a34027ba4f57af26",
+      "name": "Official identity asset — central-library-logo.original.png",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "displayed unmodified in the UI and on in-world signage"
+    },
+    {
+      "path": "assets-src/branding/mascot.original.jpg",
+      "bytes": 159135,
+      "sha256": "d2325f445a3050192469264300f5fab2554e926e3fe33343bf5d4aed7ad30954",
+      "name": "Official identity asset — mascot.original.jpg",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "art reference only (not shipped in the build)"
+    },
+    {
+      "path": "assets-src/branding/mascot.owner-reference.jpeg",
+      "bytes": 538403,
+      "sha256": "7b15188d46940cb7b16421749962705247487199da83688badca429740dd695f",
+      "name": "Official identity asset — mascot.owner-reference.jpeg",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "art reference only (not shipped in the build)"
+    },
+    {
+      "path": "assets-src/branding/university-logo.original.jpg",
+      "bytes": 44572,
+      "sha256": "07768aae4ae5ea6d8a3fb3757425673d88a8833a1859f92f82748bf088a86fca",
+      "name": "Official identity asset — university-logo.original.jpg",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "displayed unmodified in the UI and on in-world signage"
+    },
+    {
+      "path": "assets-src/kenney/books.glb",
+      "bytes": 6864,
+      "sha256": "b8dc56e5d29f6fc1f4727fccb1b9642627fee9942c48060a00034e98df02701c",
+      "name": "Kenney furniture-kit — books",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/books.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/chaircushion.glb",
+      "bytes": 12588,
+      "sha256": "33544228984857f2cb502b58452fed72157335f9b1caf29e96da5c9094c53fdc",
+      "name": "Kenney furniture-kit — chaircushion",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/chaircushion.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/chairdesk.glb",
+      "bytes": 39016,
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+      "name": "Kenney furniture-kit — chairdesk",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/chairdesk.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-a.glb",
+      "bytes": 279936,
+      "sha256": "7a7f1015ebbb22d515babf6ce36fc41f5b0ce91c4886d5d963764585f709faa6",
+      "name": "Kenney mini-characters — character-female-a",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-a.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-b.glb",
+      "bytes": 258632,
+      "sha256": "fcba60b319a70c37745e50da2b1425fdd48777a494a6cef36c6bcd3e59db9e4d",
+      "name": "Kenney mini-characters — character-female-b",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-b.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-c.glb",
+      "bytes": 258532,
+      "sha256": "c5d377275e2227dd4c883062c6ddbc7de1349a2cd866c9c189746eb9aedec920",
+      "name": "Kenney mini-characters — character-female-c",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-c.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-d.glb",
+      "bytes": 265240,
+      "sha256": "d9d629df6a6a79233bda530bbc9fdf3a9f7cfad9b81a7539589c8d90ac2377c8",
+      "name": "Kenney mini-characters — character-female-d",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-d.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-e.glb",
+      "bytes": 254504,
+      "sha256": "e1a5814b059cde7425b2c33a5638f27341a42c549ac61c19f34139e5ddb28e32",
+      "name": "Kenney mini-characters — character-female-e",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-e.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-female-f.glb",
+      "bytes": 265976,
+      "sha256": "63280065daeac1e9a555566f1e9c78e5afe8820cec20bd22deac9e94cd34bfcd",
+      "name": "Kenney mini-characters — character-female-f",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-f.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-a.glb",
+      "bytes": 253400,
+      "sha256": "b9e4a5e2c7761f08c759ca9e013a2f57b986ac4e46961569f634d80084c3e5d7",
+      "name": "Kenney mini-characters — character-male-a",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-a.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-b.glb",
+      "bytes": 253828,
+      "sha256": "d4e7a5dd72a3f7d618d4a2407ab43934c0bad1227fdc0b6f12c90dde2097b3be",
+      "name": "Kenney mini-characters — character-male-b",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-b.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-c.glb",
+      "bytes": 269588,
+      "sha256": "7f50a8347a0e91fa0406637169ae0a42d1e5bb48b8001dd141652f107405ac8a",
+      "name": "Kenney mini-characters — character-male-c",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-c.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-d.glb",
+      "bytes": 251668,
+      "sha256": "989511ccea18f47b2e660aa057b930e9b3c15b6d1b9989117e98a5e2783ab0cc",
+      "name": "Kenney mini-characters — character-male-d",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-d.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-e.glb",
+      "bytes": 249188,
+      "sha256": "74c7868e7387beea4c7bd0afdc6753751bc2da785928ae9cb6d69e863c6b4f76",
+      "name": "Kenney mini-characters — character-male-e",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-e.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/character-male-f.glb",
+      "bytes": 255876,
+      "sha256": "e9d82a9625ea1be68929839bf7ea7f7e70400ed05b2f616a4edc68f68b7211dd",
+      "name": "Kenney mini-characters — character-male-f",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-f.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/colormap.extracted.png",
+      "bytes": 21379,
+      "sha256": "c3003a99cb5359a526f4b2972500fdaa31580638b2e9573b92fac2deb50f29fb",
+      "name": "Kenney Mini Characters swatch sheet",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "extracted unmodified from character-female-a.glb"
+      ],
+      "use": "source for character palette textures"
+    },
+    {
+      "path": "assets-src/kenney/computerkeyboard.glb",
+      "bytes": 3476,
+      "sha256": "9d9135789de2120e9f41ce3f0a56dd1b15f40adcc7888739bb842a2d820da322",
+      "name": "Kenney furniture-kit — computerkeyboard",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computerkeyboard.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/computermouse.glb",
+      "bytes": 5868,
+      "sha256": "d3ad1a923f0f7707ef367bb969eb94c9076e211c98c830ba52e133fadc5cdfc0",
+      "name": "Kenney furniture-kit — computermouse",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computermouse.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/computerscreen.glb",
+      "bytes": 6404,
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+      "name": "Kenney furniture-kit — computerscreen",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computerscreen.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/lamproundfloor.glb",
+      "bytes": 6600,
+      "sha256": "50fe1b5b588edf15bfa9cc880f71a02a4fda6036350b24733d0ef4de5cc5e908",
+      "name": "Kenney furniture-kit — lamproundfloor",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/lamproundfloor.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/lamproundtable.glb",
+      "bytes": 6604,
+      "sha256": "75bb644caaa3da003b4fcad7a931722dd61cd2858aab70cf660021d5061fa1b2",
+      "name": "Kenney furniture-kit — lamproundtable",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/lamproundtable.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/laptop.glb",
+      "bytes": 5540,
+      "sha256": "5fa8a1f4a71ab8d82ef64da77a6973ffd350c6d4557516069a4ffd4bb8d808af",
+      "name": "Kenney furniture-kit — laptop",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/laptop.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/loungechair.glb",
+      "bytes": 9648,
+      "sha256": "ddfe6bc4b3451bca61666d7b614552d6ed2a03d82fc76244b72ae3155874dc6c",
+      "name": "Kenney furniture-kit — loungechair",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/loungechair.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/loungesofa.glb",
+      "bytes": 9644,
+      "sha256": "1886b811c0d3ad0d8525a4fd43adf4112c497c8e0ed906f06877ca3517f4c7dd",
+      "name": "Kenney furniture-kit — loungesofa",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/loungesofa.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/plantsmall1.glb",
+      "bytes": 8224,
+      "sha256": "2b9c022feb47be857b2c4fdc29f36522766ba9b70c578c31d7c05d71b4377d15",
+      "name": "Kenney furniture-kit — plantsmall1",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/plantsmall1.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/plantsmall2.glb",
+      "bytes": 12996,
+      "sha256": "d7c8ff42c66dd4f9238a73570549813d1ca6c5f6f661d7af9cb764c4fce314b9",
+      "name": "Kenney furniture-kit — plantsmall2",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/plantsmall2.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/pottedplant.glb",
+      "bytes": 7576,
+      "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15",
+      "name": "Kenney furniture-kit — pottedplant",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/pottedplant.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/tablecoffee.glb",
+      "bytes": 8256,
+      "sha256": "e38bea760fbd514efbb75528d09b4752c91af44677bbb97e6d4386c263525179",
+      "name": "Kenney furniture-kit — tablecoffee",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/tablecoffee.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/kenney/trashcan.glb",
+      "bytes": 6452,
+      "sha256": "e0ccc1fe50cbd05386477fdff527171d1cf7c0de2ba7ff3233f8d9561feb2561",
+      "name": "Kenney furniture-kit — trashcan",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/trashcan.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "none — byte-identical to the source repository file"
+      ],
+      "use": "source for the normalisation pipeline / runtime characters"
+    },
+    {
+      "path": "assets-src/textures/felt_normal.png",
+      "bytes": 63726,
+      "sha256": "854d88901c55a4570525a52743211cc004caa642777fb952365aa40c7b1c3472",
+      "name": "Procedural texture — felt_normal",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "texture embedded in mascot.glb"
+    },
+    {
+      "path": "assets-src/textures/mascot_pendant.png",
+      "bytes": 61343,
+      "sha256": "4f07936e3bfb0ca735826fcc83a23c8c01882781956d02f6e56e54aceb7764c2",
+      "name": "Mascot pendant texture",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "assets-src/branding/central-library-logo.original.png",
+      "modifications": [
+        "official logo cropped to its bounding box and resampled onto an ivory card; artwork not edited"
+      ],
+      "use": "texture embedded in mascot.glb"
+    },
+    {
+      "path": "assets-src/textures/mascot_sash.png",
+      "bytes": 42435,
+      "sha256": "6501477db9a7a1858764a69fa770656eca8e420d25649f4d1253392c99f64b2a",
+      "name": "Mascot sash texture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/render-sash.mjs",
+      "modifications": [
+        "inscriptions typeset exactly as on the approved master: المكتبة المركزية / CENTRAL LIBRARY, الجامعة التكنولوجية / UNIVERSITY OF TECHNOLOGY (Cairo typeface, OFL-1.1)"
+      ],
+      "use": "texture embedded in mascot.glb"
+    },
+    {
+      "path": "assets-src/textures/plush_albedo.png",
+      "bytes": 323560,
+      "sha256": "a1ff363696168ea543b9479f7b254deb1fcc27545508280d573ad06b3f10e888",
+      "name": "Procedural texture — plush_albedo",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "texture embedded in mascot.glb"
+    },
+    {
+      "path": "assets-src/textures/plush_normal.png",
+      "bytes": 668525,
+      "sha256": "c8aae18d82e38e9a58a7263f7e0363a4bc473bf1355b9098859f5f62a1b3c990",
+      "name": "Procedural texture — plush_normal",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "texture embedded in mascot.glb"
+    },
+    {
+      "path": "public/assets/branding/central-library-logo.png",
+      "bytes": 727901,
+      "sha256": "da6dd6995ff79cb57c073f5ba0ae18c08605b557211a27a7a34027ba4f57af26",
+      "name": "Official identity asset — central-library-logo.png",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "displayed unmodified in the UI and on in-world signage"
+    },
+    {
+      "path": "public/assets/branding/university-logo.jpg",
+      "bytes": 44572,
+      "sha256": "07768aae4ae5ea6d8a3fb3757425673d88a8833a1859f92f82748bf088a86fca",
+      "name": "Official identity asset — university-logo.jpg",
+      "creator": "Central Library, University of Technology, Baghdad (institutional owner)",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "supplied by the project owner (softieng/Central-Library-Scene-Studio and softieng/LibraryVisitorStats)",
+      "modifications": [
+        "none — byte-identical to the owner-supplied file"
+      ],
+      "use": "displayed unmodified in the UI and on in-world signage"
+    },
+    {
+      "path": "public/assets/models/armchair.glb",
+      "bytes": 9700,
+      "sha256": "7c3becd8346c334e5b23d03d63dea1529afb0203598e627a05d7f975bda7118c",
+      "name": "armchair (normalised Kenney Furniture Kit — loungechair)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/loungechair.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/backshelf.glb",
+      "bytes": 456804,
+      "sha256": "9355a55e873c60a11f2db606aaf02cc821eb4d20db8a9be44d3c0ee756a39f66",
+      "name": "backshelf — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/bench.glb",
+      "bytes": 18244,
+      "sha256": "3ca2e9eeb7e6ae06ae650bd1480142ceea43477b66e0936047d488e4eb24dcff",
+      "name": "bench — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/book_closed.glb",
+      "bytes": 6344,
+      "sha256": "14c3691386d8c302b66e3239e3ac88318122f2f2839603d831d877d87afb13fc",
+      "name": "book_closed — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/book_open.glb",
+      "bytes": 14768,
+      "sha256": "ef380a047a7c10e00f2db14af44dc2c179db2d84df22723a2caa85c6b166597b",
+      "name": "book_open — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/book_stack.glb",
+      "bytes": 7504,
+      "sha256": "ccaf1e9ca82d3199fac39f7aaf99784f1937713de479b35cfca2dc2de9bb9e09",
+      "name": "book_stack (normalised Kenney Furniture Kit — books)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/books.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/cart.glb",
+      "bytes": 188648,
+      "sha256": "846a9e1d69faeb6a438cacc2425de2945ad454b1f1afd1594015ef26ddc61606",
+      "name": "cart — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/chair_pc.glb",
+      "bytes": 35748,
+      "sha256": "29b2f03904f8d278c35d0dd3dff46d675e60e36562efaae99d8a15880216b68a",
+      "name": "chair_pc (normalised Kenney Furniture Kit — chairdesk)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/chairdesk.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/chair_read.glb",
+      "bytes": 12532,
+      "sha256": "86d95ab0c862e8006985175ba87cb55dd5ae9b0bb18d1950a879f7eb4094a0fa",
+      "name": "chair_read (normalised Kenney Furniture Kit — chaircushion)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/chaircushion.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-a.glb",
+      "bytes": 279936,
+      "sha256": "7a7f1015ebbb22d515babf6ce36fc41f5b0ce91c4886d5d963764585f709faa6",
+      "name": "Kenney Mini Characters — character-female-a",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-a.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-b.glb",
+      "bytes": 258632,
+      "sha256": "fcba60b319a70c37745e50da2b1425fdd48777a494a6cef36c6bcd3e59db9e4d",
+      "name": "Kenney Mini Characters — character-female-b",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-b.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-c.glb",
+      "bytes": 258532,
+      "sha256": "c5d377275e2227dd4c883062c6ddbc7de1349a2cd866c9c189746eb9aedec920",
+      "name": "Kenney Mini Characters — character-female-c",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-c.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-d.glb",
+      "bytes": 265240,
+      "sha256": "d9d629df6a6a79233bda530bbc9fdf3a9f7cfad9b81a7539589c8d90ac2377c8",
+      "name": "Kenney Mini Characters — character-female-d",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-d.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-e.glb",
+      "bytes": 254504,
+      "sha256": "e1a5814b059cde7425b2c33a5638f27341a42c549ac61c19f34139e5ddb28e32",
+      "name": "Kenney Mini Characters — character-female-e",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-e.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-female-f.glb",
+      "bytes": 265976,
+      "sha256": "63280065daeac1e9a555566f1e9c78e5afe8820cec20bd22deac9e94cd34bfcd",
+      "name": "Kenney Mini Characters — character-female-f",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-female-f.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-a.glb",
+      "bytes": 253400,
+      "sha256": "b9e4a5e2c7761f08c759ca9e013a2f57b986ac4e46961569f634d80084c3e5d7",
+      "name": "Kenney Mini Characters — character-male-a",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-a.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-b.glb",
+      "bytes": 253828,
+      "sha256": "d4e7a5dd72a3f7d618d4a2407ab43934c0bad1227fdc0b6f12c90dde2097b3be",
+      "name": "Kenney Mini Characters — character-male-b",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-b.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-c.glb",
+      "bytes": 269588,
+      "sha256": "7f50a8347a0e91fa0406637169ae0a42d1e5bb48b8001dd141652f107405ac8a",
+      "name": "Kenney Mini Characters — character-male-c",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-c.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-d.glb",
+      "bytes": 251668,
+      "sha256": "989511ccea18f47b2e660aa057b930e9b3c15b6d1b9989117e98a5e2783ab0cc",
+      "name": "Kenney Mini Characters — character-male-d",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-d.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-e.glb",
+      "bytes": 249188,
+      "sha256": "74c7868e7387beea4c7bd0afdc6753751bc2da785928ae9cb6d69e863c6b4f76",
+      "name": "Kenney Mini Characters — character-male-e",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-e.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/characters/character-male-f.glb",
+      "bytes": 255876,
+      "sha256": "e9d82a9625ea1be68929839bf7ea7f7e70400ed05b2f616a4edc68f68b7211dd",
+      "name": "Kenney Mini Characters — character-male-f",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/mini-characters/character-male-f.glb",
+      "originalPackUrl": "https://kenney.nl/assets/mini-characters",
+      "modifications": [
+        "none — byte-identical copy; scale, head proportion and palette texture are applied at runtime"
+      ],
+      "use": "student and staff characters (rigged, 32 clips)"
+    },
+    {
+      "path": "public/assets/models/cleancart.glb",
+      "bytes": 35160,
+      "sha256": "48df90f60494003b154267b20005ab45c828c4bf91b67463753ded1b34ee374c",
+      "name": "cleancart — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/coffeetable.glb",
+      "bytes": 7732,
+      "sha256": "637fc7ab5ca165dcde30362fc82620bfdff7feb9dcaa8c8dafafba89ac742538",
+      "name": "coffeetable (normalised Kenney Furniture Kit — tablecoffee)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/tablecoffee.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/counter.glb",
+      "bytes": 80856,
+      "sha256": "f485d671d5919ae58c82679ecb79997dbfe5d7bf5352343bbf6fa2cdc7b6e19a",
+      "name": "counter — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/digitaldesk.glb",
+      "bytes": 22108,
+      "sha256": "40566122b0393d5925eacac4a7aecd549a8ccdc0353fd6f762224ca7eff0e45f",
+      "name": "digitaldesk — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/display.glb",
+      "bytes": 83448,
+      "sha256": "394c6d82ccc057bce28db43760bf1450f094711294b50ed32d61448ffb8d5dc1",
+      "name": "display — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/keyboard.glb",
+      "bytes": 3832,
+      "sha256": "8726f23ef9dc95525795787f70a98ce95c91e2e1e3d571a1d73ee65f719268e8",
+      "name": "keyboard (normalised Kenney Furniture Kit — computerkeyboard)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computerkeyboard.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/kiosk.glb",
+      "bytes": 17032,
+      "sha256": "eded69cfd78db1d5e4d6c0a96797213fa68255dea9ed855d7c73bc5c71117093",
+      "name": "kiosk — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/lamp_floor.glb",
+      "bytes": 6404,
+      "sha256": "4410143d0824db49410acf3194678630744962dd4eaa5eccdcae3942cfc3b041",
+      "name": "lamp_floor (normalised Kenney Furniture Kit — lamproundfloor)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/lamproundfloor.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/lamp_table.glb",
+      "bytes": 6388,
+      "sha256": "678b3c60f8dfb0af793d31e03f27dc4d331c134c83c7a8bd18d000d79d7174ce",
+      "name": "lamp_table (normalised Kenney Furniture Kit — lamproundtable)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/lamproundtable.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/laptop.glb",
+      "bytes": 6444,
+      "sha256": "a5d1e62c140863f7c3e2275bafbe6d1fb0fc301507bde5a8114415fc11ec403a",
+      "name": "laptop (normalised Kenney Furniture Kit — laptop)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/laptop.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/lowshelf.glb",
+      "bytes": 697152,
+      "sha256": "5eb85057d5ecf08f1a13a93758a308868f56abb8592f72093372d8745d1edd7d",
+      "name": "lowshelf — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/mascot.glb",
+      "bytes": 2220488,
+      "sha256": "d8cc60f90b64fc269486cc65a242221235347dd42ed06a77aa7f0043c0998589",
+      "name": "Central Library mascot — rigged 3D model (pseudoscorpion, 8 legs, 2 pedipalps, 12 clips)",
+      "creator": "Modelled for this project from the owner-approved master (tools/blender/build_mascot.py); identity owned by the Central Library",
+      "license": "Protected institutional identity — not licensed for reuse; must not be modified or regenerated",
+      "sourceUrl": "assets-src/branding/mascot.original.jpg",
+      "modifications": [
+        "original 3D interpretation of the approved 2D master; pending owner visual approval"
+      ],
+      "use": "in-game mascot character"
+    },
+    {
+      "path": "public/assets/models/monitor.glb",
+      "bytes": 6236,
+      "sha256": "25a34a178ff25c08e3e297ffc0bdd78d83ab0b10170d4e20dde4097c91a775d1",
+      "name": "monitor (normalised Kenney Furniture Kit — computerscreen)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computerscreen.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/mouse.glb",
+      "bytes": 5284,
+      "sha256": "71c252afca13a82e6993e52200c3c4b29677c385f3534826e99ede924cb0bb82",
+      "name": "mouse (normalised Kenney Furniture Kit — computermouse)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/computermouse.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/pcdesk.glb",
+      "bytes": 21408,
+      "sha256": "9c64b1ba27c56b9ced73a4d2ea6c48f941981f38bec6b3250185e5dbcb506b94",
+      "name": "pcdesk — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/plant_small.glb",
+      "bytes": 12384,
+      "sha256": "873d4ad7a85cddcfc075f736e9f990ecf9523e6245ee14de816aee3fdafcd8a4",
+      "name": "plant_small (normalised Kenney Furniture Kit — plantsmall2)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/plantsmall2.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/plant_small_b.glb",
+      "bytes": 7820,
+      "sha256": "6493f0cfe63f691a0997e80ae7a60045dff5e4ad2624f083ec780f5293ee320e",
+      "name": "plant_small_b (normalised Kenney Furniture Kit — plantsmall1)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/plantsmall1.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/plant_tall.glb",
+      "bytes": 7180,
+      "sha256": "656663cda4fb79e47bb4f29b0f679ec3b95a9786f1daf82af7d24c500bcb8da6",
+      "name": "plant_tall (normalised Kenney Furniture Kit — pottedplant)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/pottedplant.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/planter.glb",
+      "bytes": 13468,
+      "sha256": "c043ca4f20c067f0a70e86945e7ff321a6593b496a31b018ec6e5835ba28df35",
+      "name": "planter — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/podium.glb",
+      "bytes": 15900,
+      "sha256": "40350d23b4cea9fa1e2cc8a129cc3192ee4c93699bad69086992e3fb721098c1",
+      "name": "podium — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/printer.glb",
+      "bytes": 21464,
+      "sha256": "2d2a7df1436696f7a7398cccbc5d49ce017f63e68ee2922c3eea1bab11373293",
+      "name": "printer — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/refdesk.glb",
+      "bytes": 37324,
+      "sha256": "234287bd13bb2f5f825676de1d78c9808f99032568f0cc069c905e3ac093cb06",
+      "name": "refdesk — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/shelf.glb",
+      "bytes": 681184,
+      "sha256": "1060822118c21ba4c1f1784e1a6545673fdad98d864c302aa2590444fff55c80",
+      "name": "shelf — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/sofa.glb",
+      "bytes": 9788,
+      "sha256": "6734d5f15b5272e560a57a4423060268f720d61bb1fe6a070b84d01bffb7ef61",
+      "name": "sofa (normalised Kenney Furniture Kit — loungesofa)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/loungesofa.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/spill.glb",
+      "bytes": 17424,
+      "sha256": "e3cf0bcccda1d2a80cf2d70d29e40faf46ad9e7c3bc77273f207412b59808d4e",
+      "name": "spill — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/stanchion.glb",
+      "bytes": 23396,
+      "sha256": "45fe54e78e7d13745a574d4a7b08abbd7120c22e2e303446b4b7c22aacb9c149",
+      "name": "stanchion — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/table.glb",
+      "bytes": 49368,
+      "sha256": "87f36f462ba066e8ed9a4723dc270c24dba59fc5d7f9d46d7f43d3fd216cecf6",
+      "name": "table — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/totem.glb",
+      "bytes": 12924,
+      "sha256": "7d997e2894bed5e2e7deba4b1354247ef4bd85ac1ffe1fb3aca6cf3d63a5bc35",
+      "name": "totem — custom library furniture",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/blender/build_furniture.py",
+      "modifications": [
+        "original procedural model built with Blender (bpy)"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/models/trashcan.glb",
+      "bytes": 6592,
+      "sha256": "5dc377b2d90690cfb3ac271d210725afc1c84addfc667596c1df90a52aecc7aa",
+      "name": "trashcan (normalised Kenney Furniture Kit — trashcan)",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "https://github.com/Hidencod/tge-assets/blob/main/packs/furniture-kit/trashcan.glb",
+      "originalPackUrl": "https://kenney.nl/assets/furniture-kit",
+      "modifications": [
+        "re-scaled to real-world metres",
+        "origin moved to footprint centre on the floor",
+        "materials remapped to the shared project palette",
+        "re-exported from Blender by tools/blender/build_furniture.py"
+      ],
+      "use": "library furniture / props"
+    },
+    {
+      "path": "public/assets/textures/carpet_albedo.jpg",
+      "bytes": 38582,
+      "sha256": "3032b1fead0c1d4be75a27ba5e918c4527d5e5e0e42fa2502b43f6fe238ee48a",
+      "name": "Procedural texture — carpet_albedo",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/carpet_normal.jpg",
+      "bytes": 110590,
+      "sha256": "c1d139e10d1715cdb77d9d8741d996473890bda6ff7289664de382d5c529c3ec",
+      "name": "Procedural texture — carpet_normal",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/char_staff.png",
+      "bytes": 6186,
+      "sha256": "3bc4b7ac3b3d7c202b518e842703e98da62fa3bcf75372aa2d8a0ad761af54e9",
+      "name": "Character palette — char_staff",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "assets-src/kenney/colormap.extracted.png",
+      "modifications": [
+        "clothing swatches recoloured to the navy / ivory staff uniform",
+        "generated by tools/textures/make_textures.py"
+      ],
+      "use": "runtime character texture"
+    },
+    {
+      "path": "public/assets/textures/char_students.png",
+      "bytes": 13043,
+      "sha256": "ea03f4f4b50fadb3fa32b7ecc76d1027788ac3d2f6457f8ad4cea771006d0236",
+      "name": "Character palette — char_students",
+      "creator": "Kenney (kenney.nl)",
+      "license": "CC0-1.0 (Creative Commons Zero 1.0 Universal)",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sourceUrl": "assets-src/kenney/colormap.extracted.png",
+      "modifications": [
+        "clothing swatches slightly desaturated to fit the project palette",
+        "generated by tools/textures/make_textures.py"
+      ],
+      "use": "runtime character texture"
+    },
+    {
+      "path": "public/assets/textures/floor_rough.jpg",
+      "bytes": 37029,
+      "sha256": "7a98f8e9cef00f7e895ea44516876b74ddc791361fd85a1d1f3e9c6501a28987",
+      "name": "Procedural texture — floor_rough",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/floor_tiles.jpg",
+      "bytes": 61246,
+      "sha256": "dad7d41eabd65764f6db387fcec03440579a38447e7860d65e6c0a5f3841f0a8",
+      "name": "Procedural texture — floor_tiles",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/marble_albedo.jpg",
+      "bytes": 56314,
+      "sha256": "a708a4e3828543459e1313806f0c1af9971a88bba0e9c02bc46524bb300597f5",
+      "name": "Procedural texture — marble_albedo",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/marble_rough.jpg",
+      "bytes": 53503,
+      "sha256": "68e6306edeee04d3de3212b379e8a1205362ff8bfdd706cef1911b9927039f2b",
+      "name": "Procedural texture — marble_rough",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/wood_albedo.jpg",
+      "bytes": 54778,
+      "sha256": "368937c23d94f73fcf64b0db119ef308de8e3e88583f20e405eeb12eabab5373",
+      "name": "Procedural texture — wood_albedo",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    },
+    {
+      "path": "public/assets/textures/wood_normal.jpg",
+      "bytes": 56432,
+      "sha256": "52960748c852024048a2be72b67dfdaa36077f4bd9f18b41403fc5ff1779dbc9",
+      "name": "Procedural texture — wood_normal",
+      "creator": "Library Tycoon project (generated by scripts in this repository)",
+      "license": "Project-owned original work (repository is UNLICENSED / all rights reserved by the project owner)",
+      "sourceUrl": "tools/textures/make_textures.py",
+      "modifications": [
+        "generated procedurally (no third-party imagery)"
+      ],
+      "use": "runtime material texture"
+    }
+  ]
+}
