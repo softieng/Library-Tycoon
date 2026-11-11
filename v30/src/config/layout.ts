@@ -13,7 +13,7 @@ export const DOOR = { minX: 9, maxX: 11, z: -9, outside: { x: 10, z: -10.4 }, in
 
 export type PropType =
   | 'shelf' | 'lowshelf' | 'table' | 'counter' | 'refdesk' | 'digitaldesk' | 'printer' | 'pcdesk'
-  | 'podium' | 'cart' | 'cleancart' | 'bench' | 'plant' | 'sofa' | 'coffeetable' | 'totem' | 'backshelf' | 'halldoor' | 'gate';
+  | 'podium' | 'rope' | 'staffonly' | 'cart' | 'cleancart' | 'bench' | 'plant' | 'sofa' | 'coffeetable' | 'totem' | 'backshelf' | 'halldoor' | 'gate';
 
 export interface Prop {
   id: string;
@@ -82,6 +82,7 @@ P({ id: 'hall_door_jabir', type: 'halldoor', x: 3.3, z: 8.9, rot: 0, w: 1.6, d: 
 
 /* ---- Service points ---- */
 P({ id: 'counter', type: 'counter', x: 3.5, z: -6.2, rot: 2, w: 5, d: 0.9, solid: true, label: 'الإعارة والإرجاع' });
+P({ id: 'rope', type: 'rope', x: 2.9, z: -2.75, rot: 1, w: 4.6, d: 0.1, solid: true });
 P({ id: 'backshelf', type: 'backshelf', x: 3.5, z: -8.62, rot: 2, w: 4.4, d: 0.5, solid: true });
 P({ id: 'cart', type: 'cart', x: -0.2, z: -6.2, rot: 2, w: 0.7, d: 1.1, solid: true, label: 'عربة الكتب المُرجَعة' });
 P({ id: 'refdesk', type: 'refdesk', x: -9.5, z: -4.6, rot: 2, w: 2.6, d: 0.9, solid: true, label: 'المراجع' });
@@ -91,6 +92,11 @@ P({ id: 'podium', type: 'podium', x: -4.3, z: -1.4, rot: 2, w: 0.7, d: 0.6, soli
 P({ id: 'cleancart', type: 'cleancart', x: 9.0, z: 0.2, rot: 0, w: 0.7, d: 1.0, solid: true });
 P({ id: 'totem', type: 'totem', x: 7.4, z: -7.7, rot: 0, w: 0.9, d: 0.4, solid: true, label: 'الاستعلامات' });
 P({ id: 'gate', type: 'gate', x: 10, z: -9, rot: 0, w: 2, d: 0.2, solid: false });
+
+/* Staff-only aisles behind the desks: invisible, but closed to visitors and the mascot. */
+P({ id: 'staff_borrow', type: 'staffonly', x: 3.5, z: -7.5, rot: 0, w: 5, d: 1.7, solid: true });
+P({ id: 'staff_ref', type: 'staffonly', x: -9.5, z: -5.7, rot: 0, w: 2.6, d: 1.3, solid: true });
+P({ id: 'staff_digital', type: 'staffonly', x: 12.45, z: 3.8, rot: 0, w: 1.0, d: 2.2, solid: true });
 
 /* ---- Comfort & décor ---- */
 P({ id: 'bench_1', type: 'bench', x: 5.7, z: -3.7, rot: 1, w: 1.7, d: 0.6, solid: true, requires: 'waiting_area' });

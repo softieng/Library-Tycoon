@@ -193,7 +193,7 @@ export function stepVisitor(ctx: Ctx, v: Visitor, dt: number, others: Parameters
     case 'follow': {
       const m = s.mascot, d = Math.hypot(m.x - v.x, m.z - v.z);
       v.timer -= dt;
-      if (d > 1.5 && v.timer <= 0) { v.timer = 0.5; goTo(ctx, v, { x: m.x - Math.sin(m.yaw) * 0.9, z: m.z - Math.cos(m.yaw) * 0.9 }); }
+      if (d > 1.5 && v.timer <= 0) { v.timer = 0.5; const b = v.blockedT; goTo(ctx, v, { x: m.x - Math.sin(m.yaw) * 0.9, z: m.z - Math.cos(m.yaw) * 0.9 }); v.blockedT = b; }
       break;
     }
     case 'gone': break;
