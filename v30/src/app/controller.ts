@@ -25,9 +25,9 @@ function browserStorage(): StorageLike { try { const s = window.localStorage; s.
  */
 function isolatedPreviewStorage(base: StorageLike): StorageLike {
   if (typeof window === 'undefined') return base;
-  const path = window.location.pathname;
-  const preview = /(?:^|\\/)v31-shelves(?:\\/|$)/.test(path) ? 'v31-shelves'
-    : /(?:^|\\/)v31(?:\\/|$)/.test(path) ? 'v31' : null;
+  const segments = window.location.pathname.split('/').filter(Boolean);
+  const preview = segments.includes('v31-shelves') ? 'v31-shelves'
+    : segments.includes('v31') ? 'v31' : null;
   if (!preview) return base;
   // The v31 prefix remains identical to older previews, preserving those saves.
   // The shelves preview is an isolated trial, never modifying /v30/ or /v31/.
