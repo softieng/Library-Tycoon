@@ -1,8 +1,9 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { BALANCE } from '../config/balance';
-import { ACHIEVEMENTS, EVENT_BY_ID } from '../config/events';
+import { ACHIEVEMENTS, EVENT_BY_ID, type EventOption } from '../config/events';
+import { HALL_ROADMAP, hallExpansionCost, hallProgress } from '../config/hallRoadmap';
 import { FLAGS } from '../config/featureFlags';
-import { HALLS_AR, QUEUES, SEATS, SHELVES, ZONES, zoneAt } from '../config/layout';
+import { QUEUES, SEATS, SHELVES, ZONES, zoneAt } from '../config/layout';
 import { ROLES, SERVICES, type ServiceId } from '../config/services';
 import { UPGRADES } from '../config/upgrades';
 import { MISSION_BY_ID } from '../missions/definitions';
@@ -229,9 +230,24 @@ function Library() {
   const c = useGame(), s = c.state;
   return (
     <>
-      <Section title="قاعات المكتبة المركزية">
-        {HALLS_AR.map((h, i) => <div className="row slim" key={h}><span>{num(i + 1)}. {h}</span><Pill tone={i === 0 ? 'good' : 'muted'}>{i === 0 ? 'مفتوحة' : 'قريباً'}</Pill></div>)}
-        <p className="note">التوزيع الحالي «مخطط لعب» وليس إعادة بناء دقيقة للمبنى الحقيقي. تُضاف بقية القاعات بعد اعتماد القاعة الأولى.</p>
+      <Section title="خطة توسعة القاعات ثلاثية الأبعاد">
+        <p className="tip">🏛️ جميع القاعات مخطّط لها بنفس محرك اللعبة والتجسيم. تُضاف المجسمات والخدمات واحدة بعد الثانية، ولا يُسمح بشراء قاعة غير مكتملة.</p>
+        {HALL_ROADMAP.map((h, i) => {
+          const status = hallProgress(h.upgradeId, s.upgrades);
+          const cost = hallExpansionCost(h.upgradeId);
+          return (
+            <div key={h.id} className="card" data-testid={`hall-roadmap-${h.id}`}>
+              <div className="row">
+                <div><b>{h.icon} {num(i + 1)}. {h.nameAr}</b><small>{h.roleAr}</small></div>
+                <Pill tone={status === 'playable' ? 'good' : 'muted'}>
+                  {status === 'playable' ? 'متاحة للعب' : status === 'in-development' ? 'قيد البناء' : status === 'unlocked' ? 'تم شراؤها' : 'مقفلة'}
+                </Pill>
+              </div>
+              {h.upgradeId && <small>تكلفة الفتح المخططة: {iqd(cost)} · {status === 'in-development' ? 'لا تُخصم أي أموال قبل جاهزية القاعة.' : 'تتم إدارة التوسعة من الترقيات.'}</small>}
+            </div>
+          );
+        })}
+        <p className="note">هذا مخطط للعبة، وليس خريطة حقيقية لمبنى المكتبة. حالياً قاعة الخوارزمي وحدها مجسمة وقابلة للعب.</p>
       </Section>
       <Section title="مناطق قاعة الخوارزمي">
         {ZONES.map((z) => {
@@ -244,6 +260,16 @@ function Library() {
 }
 
 /* ------------------------------------------------------------------ Events */
+function eventOptionImpact(o: EventOption): string {
+  const effects: string[] = [];
+  if (o.money) effects.push(`الكلفة ${iqd(Math.abs(o.money))}`);
+  if (o.satisfaction) effects.push(`الرضا ${o.satisfaction > 0 ? '+' : ''}${num(o.satisfaction)}`);
+  if (o.reputation) effects.push(`المكانة ${o.reputation > 0 ? '+' : ''}${num(o.reputation)}`);
+  if (o.cleanliness) effects.push(`النظافة ${o.cleanliness > 0 ? '+' : ''}${num(o.cleanliness)}`);
+  if (o.visitors) effects.push(`زوار إضافيون حتى ${num(o.visitors)}`);
+  return effects.length ? effects.join(' · ') : 'بدون تأثير مباشر';
+}
+
 function Events() {
   const c = useGame(), s = c.state, ev = s.event ? EVENT_BY_ID[s.event.id] : null;
   const dev: Record<string, string> = { printer: 'الطابعة', pc_1: 'حاسبة ١', pc_2: 'حاسبة ٢', pc_3: 'حاسبة ٣', pc_4: 'حاسبة ٤' };
@@ -251,7 +277,12 @@ function Events() {
     <>
       <Section title="حدث يحتاج قرارك">
         {ev ? <div className="card"><b>{ev.icon} {ev.titleAr}</b><p>{ev.bodyAr}</p><small>يُحسم تلقائياً بعد {mmss(s.event!.t)}</small>
-          <div className="col">{ev.options.map((o, i) => <Btn key={i} kind={i === 0 ? 'gold' : 'ghost'} onClick={() => c.dispatch({ type: 'eventChoice', choice: i })}>{o.textAr}</Btn>)}</div></div>
+          <div className="col">{ev.options.map((o, i) => (
+            <div key={i} className="col" style={{ gap: 4 }}>
+              <Btn kind={i === 0 ? 'gold' : 'ghost'} disabled={!!o.money && o.money < 0 && s.money < -o.money} onClick={() => c.dispatch({ type: 'eventChoice', choice: i })}>{o.textAr}</Btn>
+              <small className="note" data-testid={`event-impact-${i}`}>{eventOptionImpact(o)}{o.money && o.money < 0 && s.money < -o.money ? ' · الرصيد لا يكفي' : ''}</small>
+            </div>
+          ))}</div></div>
           : <p className="note">لا يوجد حدث حالياً. الأحداث تظهر أثناء الدوام وتحتاج قراراً منك.</p>}
       </Section>
       <Section title="حالة الأجهزة">{Object.entries(dev).map(([id, label]) => <div className="row slim" key={id}><span>{label}</span><Pill tone={s.broken.includes(id as never) ? 'bad' : 'good'}>{s.broken.includes(id as never) ? 'عاطل — انقر عليه في القاعة' : 'يعمل'}</Pill></div>)}</Section>
