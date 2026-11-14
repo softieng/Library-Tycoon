@@ -70,7 +70,7 @@ export class GameController {
     for (const e of events) {
       if (e.type === 'toast') { this.toasts.push({ id: this.seq++, text: e.text, tone: e.tone, at: performance.now() }); if (this.toasts.length > 4) this.toasts.shift(); }
       else if (e.type === 'money') { this.floaters.push({ id: this.seq++, amount: e.amount, x: e.x, z: e.z, at: performance.now() }); if (this.floaters.length > 12) this.floaters.shift(); }
-      else if (e.type === 'mission' || e.type === 'upgrade' || e.type === 'dayEnd') this.save();
+      else if (e.type === 'mission' || e.type === 'upgrade' || e.type === 'directorGoal' || e.type === 'dayEnd') this.save();
       for (const l of this.worldListeners) l(e);
     }
   }
