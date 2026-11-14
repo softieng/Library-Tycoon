@@ -17,7 +17,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout V3.1 preview source
         uses: actions/checkout@v4
@@ -38,6 +38,21 @@ jobs:
           npm run assets:verify
           npm run build
           test -s dist/index.html
+      - name: Test real mobile WebGL scene, touch gestures and Arabic layout
+        working-directory: v30
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+          npx vite preview --port 4173 --strictPort &
+          sleep 4
+          MOBILE_OUT=qa-mobile node tests/e2e/mobile.mjs
+      - name: Save actual mobile QA screenshot and report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-tycoon-v31-mobile-qa
+          path: v30/qa-mobile
+          retention-days: 14
       - name: Publish only /v31/ on the existing GitHub Pages branch
         env:
           GIT_TERMINAL_PROMPT: '0'
