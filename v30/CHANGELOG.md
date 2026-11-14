@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased — visual polish
+- Character kit v2 (new Blender-authored rigged people, runtime faces/expressions, reading/writing/typing layer), procedural 8-leg mascot gait, brass-ringed floor insets, window light shafts. See `docs/VISUAL_POLISH.md`. No balance or save changes.
+
 ## 3.0.0-alpha.1 — 2026-11-11 (vertical slice, pending owner approval)
 
 Baseline: `feature/v28-real-assets-reading-hall` @ `e556240` (30 Node tests passing at branch time).

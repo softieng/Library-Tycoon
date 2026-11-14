@@ -1,6 +1,6 @@
 import { AssetContainer, Color3, LoadAssetContainerAsync, Mesh, PBRMaterial, Scene, Texture, TransformNode, type AbstractMesh, type InstantiatedEntries } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
-import { CHARACTER_MODELS, MASCOT_MODEL, MODEL_DIR, PROP_MODELS, TEXTURE_DIR, TOTAL_ASSETS, type PropModel } from './manifest';
+import { CHARACTER_MODELS, STAFF_MODEL, MASCOT_MODEL, MODEL_DIR, PROP_MODELS, TEXTURE_DIR, TOTAL_ASSETS, type PropModel } from './manifest';
 
 const C = (hex: string) => Color3.FromHexString(hex).toLinearSpace();
 
@@ -12,6 +12,8 @@ export class AssetLibrary {
   readonly palette = new Map<string, PBRMaterial>();
   private props = new Map<string, Mesh[]>();
   private characters: AssetContainer[] = [];
+  /** Character kit v2 (natural proportions, own rig). Falls back to the legacy mini-figures if a file is missing. */
+  private people: (AssetContainer | null)[] = []; private peopleStaff = new Map<number, AssetContainer>(); personMat!: PBRMaterial;
   mascot!: AssetContainer;
   studentMat!: PBRMaterial; staffMat!: PBRMaterial;
   failures: string[] = [];
@@ -48,9 +50,9 @@ export class AssetLibrary {
 
   async load(onProgress: (done: number, total: number) => void) {
     let done = 0;
-    const one = async (file: string) => {
+    const one = async (file: string, optional = false) => {
       try { return await LoadAssetContainerAsync(MODEL_DIR + file + '.glb', this.scene); }
-      catch (err) { console.error('asset failed', file, err); this.failures.push(file); return null; }
+      catch (err) { console.error('asset failed', file, err); if (!optional) this.failures.push(file); return null; }
       finally { onProgress(++done, TOTAL_ASSETS); }
     };
     const propC = await Promise.all(PROP_MODELS.map((n) => one(n)));
@@ -70,6 +72,10 @@ export class AssetLibrary {
     });
     const chars = await Promise.all(CHARACTER_MODELS.map((n) => one('characters/character-' + n)));
     this.characters = chars.map((c) => c!).filter(Boolean);
+    this.people = await Promise.all(CHARACTER_MODELS.map((n) => one('people/person-' + n, true)));
+    for (const [idx, mi] of [...new Set(Object.values(STAFF_MODEL))].map((i) => [i, i] as const)) { const c = await one(`people/person-${CHARACTER_MODELS[mi]}-staff`, true); if (c) this.peopleStaff.set(idx, c); }
+    this.personMat = new PBRMaterial('char_person', this.scene); this.personMat.albedoColor = Color3.White(); this.personMat.roughness = 0.72; this.personMat.metallic = 0; this.personMat.environmentIntensity = 0.6;
+    this.personMat.sheen.isEnabled = true; this.personMat.sheen.intensity = 0.25; this.personMat.sheen.roughness = 0.6;
     const mascot = await one(MASCOT_MODEL);
     if (mascot) this.mascot = mascot;
     if (this.failures.length) throw new Error('Missing 3D assets: ' + this.failures.join(', '));
@@ -93,10 +99,11 @@ export class AssetLibrary {
     return { root, meshes };
   }
   character(model: number, staff: boolean): InstantiatedEntries {
-    const c = this.characters[model % this.characters.length];
+    const v2 = (staff ? this.peopleStaff.get(model) : null) ?? this.people[model % this.people.length];
+    const c = v2 ?? this.characters[model % this.characters.length];
     const e = c.instantiateModelsToScene((n) => n, false, { doNotInstantiate: true });
-    const mat = staff ? this.staffMat : this.studentMat;
-    for (const root of e.rootNodes) for (const m of root.getChildMeshes(false)) { m.material = mat; m.isPickable = false; m.alwaysSelectAsActiveMesh = true; }
+    const mat = v2 ? this.personMat : staff ? this.staffMat : this.studentMat;
+    for (const root of e.rootNodes) for (const m of root.getChildMeshes(false)) { m.material = mat; m.isPickable = false; m.alwaysSelectAsActiveMesh = true; if (v2) { m.useVertexColors = true; m.hasVertexAlpha = false; } }
     return e;
   }
   instantiateMascot(): InstantiatedEntries {

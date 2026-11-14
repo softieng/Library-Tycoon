@@ -13,4 +13,4 @@ export const CHARACTER_MODELS = ['female-a', 'female-b', 'female-c', 'female-d',
 export const STAFF_MODEL: Record<string, number> = { borrowing: 0, digital: 6, cleaner: 10, research: 3, supervisor: 5 };
 export const MASCOT_MODEL = 'mascot';
 export const MASCOT_CLIPS = ['idle', 'walk', 'turn', 'welcome', 'guide', 'search', 'think', 'celebrate', 'sad', 'read', 'point', 'wave'] as const;
-export const TOTAL_ASSETS = PROP_MODELS.length + CHARACTER_MODELS.length + 1;
+export const TOTAL_ASSETS = PROP_MODELS.length + CHARACTER_MODELS.length * 2 + Object.keys(STAFF_MODEL).length + 1;

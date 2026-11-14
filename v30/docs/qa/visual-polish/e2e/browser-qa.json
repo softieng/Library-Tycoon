@@ -1,0 +1,192 @@
+{
+  "url": "http://localhost:4173/",
+  "summary": "all checks passed",
+  "loadMs": 4067,
+  "results": [
+    {
+      "name": "WebGL scene initialised",
+      "ok": true,
+      "detail": "WebGL2 · ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+    },
+    {
+      "name": "all 3D assets loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mascot has all 12 animation clips",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "document is Arabic RTL",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "canvas renders a non-trivial image",
+      "ok": true,
+      "detail": "134 distinct colour buckets"
+    },
+    {
+      "name": "Cairo webfont active for Arabic UI",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "HUD shows IQD balance and indicators",
+      "ok": true,
+      "detail": "{\"hud-money\":\"💰الرصيد٢٦٠٬٠٠٠ د.ع\",\"hud-time\":\"📅اليوم ١٠٨:٠١\",\"hud-satisfaction\":\"😊الرضا٨٦٪\",\"hud-cleanliness\":\"✨النظافة٩٤٪\",\"hud-reputation\":\"⭐السمعة٤٫٥\",\"hu"
+    },
+    {
+      "name": "11 management panels open with Arabic RTL content",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "an open panel leaves the 3D world dominant",
+      "ok": true,
+      "detail": "17.7% of the screen"
+    },
+    {
+      "name": "panels collapse",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "credits name present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "camera zooms and pans",
+      "ok": true,
+      "detail": "zoom 11.6→7.2"
+    },
+    {
+      "name": "camera rotation is locked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "zoom is clamped to useful limits",
+      "ok": true,
+      "detail": "max zoom 14.5"
+    },
+    {
+      "name": "visitors arrive and pursue different needs",
+      "ok": true,
+      "detail": "9 visitors: sit,toQueue,browse,toShelf"
+    },
+    {
+      "name": "services are completed by staff",
+      "ok": true,
+      "detail": "3 served"
+    },
+    {
+      "name": "borrowing librarian is exactly at the workstation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a student browses a real bookshelf",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the librarian serves a student at the counter",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mission starts from the mission tracker",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "waiting does not complete the mission",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clicking a shelf in the 3D world sends the mascot to search it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "two wrong shelves did not complete the mission and produced a hint",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mascot walk captured in the library",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "missing-book mission completed through world interaction",
+      "ok": true,
+      "detail": "3 shelves searched"
+    },
+    {
+      "name": "reward paid exactly once",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "completion card shown",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mascot walks back to its post on its own",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a completed main mission cannot be replayed for a second reward",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clicking the returns cart opens the Dewey mini-game",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mini-game is playable to the end",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mini-game score recorded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clicking the mascot pays the 25,000 IQD gift once per cooldown",
+      "ok": true,
+      "detail": "+25000, then +0"
+    },
+    {
+      "name": "progress survives a page reload",
+      "ok": true,
+      "detail": "{\"money\":1305000,\"day\":1,\"done\":1,\"gift\":1794634541725,\"src\":\"save\"}"
+    },
+    {
+      "name": "layout fits 1366×768",
+      "ok": true,
+      "detail": "{\"overflow\":false,\"tb\":true,\"dock\":true,\"canvas\":1366}"
+    },
+    {
+      "name": "layout fits 1024×700",
+      "ok": true,
+      "detail": "{\"overflow\":false,\"tb\":true,\"dock\":true,\"canvas\":1024}"
+    },
+    {
+      "name": "no runtime console errors",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
