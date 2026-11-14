@@ -1,0 +1,1 @@
+export{ki as backgroundPixelShader}from"./SceneHost-8hcDvDom.js";

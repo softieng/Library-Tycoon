@@ -1,0 +1,1 @@
+export{pn as boundingBoxRendererPixelShaderWGSL}from"./SceneHost-8hcDvDom.js";

@@ -1,0 +1,1 @@
+export{Tn as gaussianSplattingWGSL}from"./SceneHost-8hcDvDom.js";

@@ -1,0 +1,1 @@
+export{fn as boundingBoxRendererVertexShaderWGSL}from"./SceneHost-8hcDvDom.js";

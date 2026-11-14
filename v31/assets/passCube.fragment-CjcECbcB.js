@@ -1,0 +1,1 @@
+export{k as passCubePixelShaderWGSL}from"./SceneHost-8hcDvDom.js";

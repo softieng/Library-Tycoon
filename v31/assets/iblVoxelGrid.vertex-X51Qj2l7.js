@@ -1,0 +1,1 @@
+export{xr as iblVoxelGridVertexShader}from"./SceneHost-8hcDvDom.js";

@@ -1,0 +1,1 @@
+export{Oi as backgroundVertexShader}from"./SceneHost-8hcDvDom.js";

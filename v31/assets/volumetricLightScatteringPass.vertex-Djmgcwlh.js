@@ -1,0 +1,1 @@
+export{o as volumetricLightScatteringPassVertexShaderWGSL}from"./SceneHost-8hcDvDom.js";

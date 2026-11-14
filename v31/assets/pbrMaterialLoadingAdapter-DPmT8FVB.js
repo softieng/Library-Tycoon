@@ -1,0 +1,1 @@
+export{t as PBRMaterialLoadingAdapter}from"./SceneHost-8hcDvDom.js";

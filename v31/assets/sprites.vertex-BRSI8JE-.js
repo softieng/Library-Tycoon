@@ -1,0 +1,1 @@
+export{p as spritesVertexShaderWGSL}from"./SceneHost-8hcDvDom.js";

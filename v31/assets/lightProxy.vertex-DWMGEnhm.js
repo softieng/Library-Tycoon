@@ -1,0 +1,1 @@
+export{fr as lightProxyVertexShader}from"./SceneHost-8hcDvDom.js";

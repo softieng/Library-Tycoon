@@ -1,0 +1,1 @@
+export{fi as defaultVertexShader}from"./SceneHost-8hcDvDom.js";

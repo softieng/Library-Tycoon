@@ -1,0 +1,1 @@
+export{tn as defaultPixelShaderWGSL}from"./SceneHost-8hcDvDom.js";

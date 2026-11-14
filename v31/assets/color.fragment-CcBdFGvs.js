@@ -1,0 +1,1 @@
+export{yi as colorPixelShader}from"./SceneHost-8hcDvDom.js";

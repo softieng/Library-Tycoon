@@ -1,0 +1,1 @@
+export{M as particlesPixelShaderWGSL}from"./SceneHost-8hcDvDom.js";
