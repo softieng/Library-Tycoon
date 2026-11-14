@@ -1,0 +1,1 @@
+export{pn as boundingBoxRendererPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

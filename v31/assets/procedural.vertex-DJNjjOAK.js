@@ -1,0 +1,1 @@
+export{T as proceduralVertexShaderWGSL}from"./SceneHost--E08F2zE.js";

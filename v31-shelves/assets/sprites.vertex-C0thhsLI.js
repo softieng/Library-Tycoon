@@ -1,0 +1,1 @@
+export{p as spritesVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

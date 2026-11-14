@@ -1,0 +1,1 @@
+export{$ as iblVoxelGridVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

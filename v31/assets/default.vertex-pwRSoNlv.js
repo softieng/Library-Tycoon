@@ -1,0 +1,1 @@
+export{en as defaultVertexShaderWGSL}from"./SceneHost--E08F2zE.js";

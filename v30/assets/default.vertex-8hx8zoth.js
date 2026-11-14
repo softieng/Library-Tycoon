@@ -1,0 +1,1 @@
+export{en as defaultVertexShaderWGSL}from"./SceneHost-DfxO_yGh.js";

@@ -1,0 +1,1 @@
+export{Ii as OptimizeIndices}from"./SceneHost-DfxO_yGh.js";

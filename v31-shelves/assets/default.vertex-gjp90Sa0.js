@@ -1,0 +1,1 @@
+export{en as defaultVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

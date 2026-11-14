@@ -1,0 +1,1 @@
+export{n as OpenPBRMaterialLoadingAdapter}from"./SceneHost-DfxO_yGh.js";

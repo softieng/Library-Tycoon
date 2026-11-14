@@ -1,0 +1,1 @@
+export{$ as iblVoxelGridVertexShaderWGSL}from"./SceneHost--E08F2zE.js";

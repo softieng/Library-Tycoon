@@ -1,0 +1,24 @@
+/* Library Tycoon V2.7: deterministic simulation, zero external dependencies. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.TycoonGameplay=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+const VERSION=27;
+const RACKS=Object.freeze(['A','B','C','D']);
+const MISSION_REWARDS=Object.freeze({book:5000,service:3000,exam:9000});
+const INITIAL_STAFF=Object.freeze({borrowing:[8.35,3.55],reference:[-8.2,3.55],cleanerZone:{minX:8.6,maxX:11,minZ:-7.6,maxZ:-4.7}});
+const DEFAULT_QUESTS=()=>({book:false,service:false,exam:false});
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function initialState(){return {version:VERSION,day:1,clock:0,money:72000,satisfaction:86,reputation:4.3,cleanliness:91,visitors:6,served:0,queue:6,upgrades:1,exam:null,bookGuesses:0,bookTarget:'B',quests:DEFAULT_QUESTS(),messages:[]};}
+function loadState(s){let a=initialState();if(!s||s.version!==VERSION||typeof s!=='object')return a;for(const k of ['day','clock','money','satisfaction','reputation','cleanliness','visitors','served','queue','upgrades','bookGuesses'])if(Number.isFinite(s[k]))a[k]=s[k];a.day=clamp(Math.floor(a.day),1,365);a.money=clamp(Math.floor(a.money),0,100000000);a.satisfaction=clamp(a.satisfaction,0,100);a.cleanliness=clamp(a.cleanliness,0,100);a.visitors=clamp(Math.floor(a.visitors),0,100000);a.served=clamp(Math.floor(a.served),0,a.visitors);a.queue=clamp(Math.floor(a.queue),0,35);a.upgrades=clamp(Math.floor(a.upgrades),1,4);a.reputation=clamp(a.reputation,1,5);a.clock=clamp(a.clock,0,1e8);a.bookTarget=RACKS.includes(s.bookTarget)?s.bookTarget:'B';for(const k of Object.keys(a.quests))a.quests[k]=s.quests?.[k]===true;if(s.exam&&Number.isFinite(s.exam.startServed)&&Number.isFinite(s.exam.startSatisfaction))a.exam={startServed:clamp(Math.floor(s.exam.startServed),0,a.served),startSatisfaction:clamp(s.exam.startSatisfaction,0,100)};return a;}
+function rewardOnce(s,key){if(s.quests[key])return false;s.quests[key]=true;s.money+=MISSION_REWARDS[key];return true;}
+function apply(s,action){if(!s||!action)return {changed:false,message:''};const a=String(action.type||'');let changed=false,message='';switch(a){
+case 'search':{if(s.quests.book){message='الكتاب رجع لمكانه بالفعل';break;}const rack=String(action.rack);if(!RACKS.includes(rack)){message='رف غير معروف';break;}s.bookGuesses++;changed=true;if(rack===s.bookTarget){rewardOnce(s,'book');message='لقيت الكتاب المفقود! +٥٬٠٠٠ د.ع';}else{message='هذا مو مكان الكتاب. جرّب رفاً ثانياً';s.satisfaction=clamp(s.satisfaction-1,0,100);}break;}
+case 'serve':{if(s.queue<1){message='الطابور فارغ حالياً';break;}s.queue--;s.served++;s.money+=330+s.upgrades*95;s.satisfaction=clamp(s.satisfaction+1,0,100);changed=true;message='استلم الطالب كتابه، خدمة ناجحة';if(s.served>=5&&rewardOnce(s,'service'))message='أنجزت أول ٥ خدمات! +٣٬٠٠٠ د.ع';if(s.exam&&s.served-s.exam.startServed>=8&&s.satisfaction>=75&&rewardOnce(s,'exam')){s.exam=null;message='اجتزت أسبوع الامتحانات! +٩٬٠٠٠ د.ع';}break;}
+case 'exam':{if(s.quests.exam){message='مهمة الامتحانات مكتملة';break;}if(s.exam){message='الامتحانات جارية حالياً';break;}s.exam={startServed:s.served,startSatisfaction:s.satisfaction};s.queue=clamp(s.queue+8,0,35);s.visitors+=8;s.satisfaction=clamp(s.satisfaction-3,0,100);changed=true;message='بدأ ضغط الامتحانات: أخدم ٨ طلبة وحافظ على الرضا';break;}
+case 'upgrade':{let cost=6000*s.upgrades;if(s.upgrades>=4){message='القاعة بأعلى مستوى';break;}if(s.money<cost){message='الرصيد ما يكفي للترقية';break;}s.money-=cost;s.upgrades++;s.satisfaction=clamp(s.satisfaction+3,0,100);changed=true;message='ترقية القاعة تمت، الأثاث يتطور بالمشهد';break;}
+case 'nextDay':{s.day++;s.clock=0;s.queue=clamp(s.queue+4,0,35);s.visitors+=4;s.cleanliness=clamp(s.cleanliness-3,0,100);changed=true;message='بداية يوم جامعي جديد';break;}
+default: return {changed:false,message:'إجراء غير معروف'};
+}if(changed){s.reputation=Math.round(clamp(1+s.satisfaction*.034+s.cleanliness*.006,1,5)*10)/10;s.messages.unshift(message);s.messages=s.messages.slice(0,7);}return {changed,message};}
+function advance(s,seconds){let delta=clamp(Number(seconds)||0,0,5);s.clock+=delta;let oldVisitors=s.visitors;let target=Math.floor(s.clock/14)+6+(s.day-1)*4;if(target>oldVisitors){let n=Math.min(3,target-oldVisitors);s.visitors+=n;s.queue=clamp(s.queue+n,0,35);}if(s.clock>390){s.day++;s.clock=0;s.queue=clamp(s.queue+4,0,35);s.visitors+=4;s.cleanliness=clamp(s.cleanliness-4,0,100);}return s;}
+function progress(s){return {book:s.quests.book?1:0,service:s.quests.service?1:Math.min(1,s.served/5),exam:s.quests.exam?1:(s.exam?Math.min(1,(s.served-s.exam.startServed)/8):0),completed:Object.values(s.quests).filter(Boolean).length};}
+return {VERSION,RACKS,INITIAL_STAFF,MISSION_REWARDS,initialState,loadState,apply,advance,progress};
+});

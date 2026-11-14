@@ -1,0 +1,1 @@
+export{fn as boundingBoxRendererVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

@@ -1,0 +1,1 @@
+export{fi as defaultVertexShader}from"./SceneHost-DfxO_yGh.js";

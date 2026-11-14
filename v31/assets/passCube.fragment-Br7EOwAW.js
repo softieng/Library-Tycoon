@@ -1,0 +1,1 @@
+export{k as passCubePixelShaderWGSL}from"./SceneHost--E08F2zE.js";

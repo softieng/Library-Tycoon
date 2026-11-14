@@ -1,0 +1,1 @@
+export{ui as depthVertexShader}from"./SceneHost-DfxO_yGh.js";

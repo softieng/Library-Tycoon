@@ -1,0 +1,1 @@
+export{t as PBRMaterialLoadingAdapter}from"./SceneHost-BiG9xGsd.js";

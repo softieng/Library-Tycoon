@@ -1,0 +1,24 @@
+name: Library Tycoon Isometric Preview QA
+on:
+  push:
+    branches: [feature/v26-isometric-preview]
+  pull_request:
+    paths:
+      - 'preview/**'
+      - '.github/workflows/preview-qa.yml'
+permissions:
+  contents: read
+jobs:
+  preview-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check preview/core.js
+          node --check preview/game.js
+      - name: Gameplay and save tests
+        run: node --test preview/tests/core.test.cjs

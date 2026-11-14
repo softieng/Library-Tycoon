@@ -1,0 +1,1 @@
+export{pn as boundingBoxRendererPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

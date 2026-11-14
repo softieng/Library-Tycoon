@@ -1,0 +1,1 @@
+export{Tn as gaussianSplattingWGSL}from"./SceneHost-DfxO_yGh.js";

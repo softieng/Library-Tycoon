@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101f35">
+<title>Library Tycoon | قاعة المطالعة الفنية V2.8</title>
+<link rel="stylesheet" href="visual.css">
+<script defer src="https://cdn.babylonjs.com/babylon.js"></script>
+<script defer src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+<script defer src="gameplay.js"></script>
+<script defer src="world.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<div id="app">
+<header class="masthead">
+ <div class="brand"><div class="protected-mark">موضع الشعار الأصلي<br>للجامعة</div><div class="brand-text"><div class="eyebrow">UNIVERSITY OF TECHNOLOGY · CENTRAL LIBRARY</div><h1>المكتبة المركزية</h1><p>LIBRARY TYCOON <span class="version">V2.8 ART PASS</span> · قاعة المطالعة</p></div></div>
+ <div class="stats"><div class="stat"><span class="stat-emoji">◈</span><div><small>الرصيد</small><b id="money">٧٢٬٠٠٠</b><sub>د.ع</sub></div></div><div class="stat"><span class="stat-emoji">♡</span><div><small>رضا الطلبة</small><b id="satisfaction">٨٦٪</b></div></div><div class="stat"><span class="stat-emoji">✦</span><div><small>السمعة</small><b id="reputation">٤.٣</b><sub>/ ٥</sub></div></div><div class="stat"><span class="stat-emoji">▤</span><div><small>الخدمات</small><b id="served">٠</b></div></div></div>
+ <div class="protected-mark">موضع الشعار الأصلي<br>للمكتبة</div>
+</header>
+<main>
+ <section class="world-panel" aria-label="قاعة مطالعة ثلاثية الأبعاد بموديلات حقيقية">
+  <canvas id="renderCanvas" aria-label="القاعة ثلاثية الأبعاد. اضغط الرفوف ومكتب الإعارة أو اسحب المشهد"></canvas>
+  <div class="scene-badge"><span class="live-indicator"></span> 3D ISOMETRIC <span class="scene-badge-sep">·</span> REAL CC0 ASSETS <span id="asset-count">0 / 0</span></div>
+  <div class="time-tray"><span>اليوم <b id="day">١</b></span><span class="clock" id="clock">08:30</span><button id="pause" title="إيقاف الوقت">Ⅱ</button><button id="speed" title="سرعة اللعبة">×١</button></div>
+  <div class="camera-tray"><button id="zoomIn" title="تقريب">＋</button><button id="zoomOut" title="إبعاد">−</button><button id="reset" title="إعادة تمركز">⌖</button></div>
+  <div class="world-tip">اسحب لتحريك المشهد · اضغط علامة الكتاب عند الرفوف · اضغط مكتب الإعارة لخدمة الزوار</div>
+  <div id="scene-callout" class="scene-callout" aria-live="polite">قاعة المطالعة | المكتبة المركزية</div>
+  <div id="loading" class="loading"><div class="loader-ring"></div><h2>تحميل نماذج الأثاث والشخصيات الأصلية...</h2><p>نسخة ثلاثية الأبعاد مبنية من أصول Kenney المرخّصة CC0، بدون توليد شعارات.</p><small id="load-status">جارٍ تجهيز المحرك</small></div>
+ </section>
+ <aside class="mission-panel">
+  <div class="mission-top"><small>THE DIRECTOR'S DESK</small><div class="title-line"><h2>مهمات المدير</h2><span id="missionProgress">٠ / ٣</span></div><p>اختر العناصر داخل القاعة لتنفيذ المهمات</p></div>
+  <article class="quest" id="mission-book"><div class="quest-top"><span class="quest-symbol">⌕</span><div><h3>الكتاب المفقود</h3><small>افحص الأرفف ولقِ الكتاب المطلوب</small></div><em>+٥٬٠٠٠</em></div><div class="meter"><i id="bar-book"></i></div><p id="status-book">اضغط علامة الكتاب فوق الرف</p></article>
+  <article class="quest" id="mission-service"><div class="quest-top"><span class="quest-symbol">▤</span><div><h3>خدمة الطلبة</h3><small>أنجز خمس معاملات استعارة</small></div><em>+٣٬٠٠٠</em></div><div class="meter"><i id="bar-service"></i></div><p id="status-service">اضغط على مكتب الخدمة</p></article>
+  <article class="quest" id="mission-exam"><div class="quest-top"><span class="quest-symbol">◷</span><div><h3>أسبوع الامتحانات</h3><small>اخدم ٨ طلبة مع الحفاظ على الرضا</small></div><em>+٩٬٠٠٠</em></div><div class="meter"><i id="bar-exam"></i></div><p id="status-exam">ابدأ التحدي</p></article>
+  <div class="control-box"><div class="control-title">إدارة القاعة</div><button id="exam" class="action gold">بدء ضغط الامتحانات <span>↙</span></button><button id="upgrade" class="action secondary">تطوير الأثاث <b id="upgradeCost">٦٬٠٠٠ د.ع</b></button></div>
+  <div class="staff-status"><div class="staff-badge">👔</div><div><b>الموظفون في مواقعهم</b><small>زي كحلي مؤسسي · عامل النظافة في منطقته</small></div><div class="staff-on"></div></div>
+ </aside>
+</main>
+<footer><div class="footer-nav"><span class="selected">▦ القاعة</span><span>▤ الإعارة</span><span>✦ المهمات</span><span>♟ الموظفون</span></div><div class="footer-note">نسخة اختبار فني · الأصول المستوردة CC0 · اللعب بدون توكنات</div><div class="credit">Concept · Systems Architecture · Project Direction<br>Ass. Lec. Eng. Samer Raad Azzawi</div></footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+</body>
+</html>

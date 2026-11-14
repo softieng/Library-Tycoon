@@ -1,0 +1,1 @@
+export{pi as defaultPixelShader}from"./SceneHost-DfxO_yGh.js";

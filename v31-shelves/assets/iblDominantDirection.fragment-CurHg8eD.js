@@ -1,0 +1,1 @@
+export{st as iblDominantDirectionPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

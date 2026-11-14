@@ -1,0 +1,1 @@
+export{j as particlesVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

@@ -1,0 +1,1 @@
+export{sn as colorPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

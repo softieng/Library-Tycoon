@@ -1,0 +1,1 @@
+export{Sn as shadowMapFragmentWGSL}from"./SceneHost-BiG9xGsd.js";

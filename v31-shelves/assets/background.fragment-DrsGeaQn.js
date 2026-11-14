@@ -1,0 +1,1 @@
+export{yn as backgroundPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

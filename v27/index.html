@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101f32">
+<title>Library Tycoon | القاعة الحيّة V2.7</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="https://cdn.babylonjs.com/babylon.js"></script>
+<script defer src="gameplay.js"></script>
+<script defer src="world.js"></script>
+<script defer src="app.js"></script>
+</head><body>
+<div id="app">
+  <header class="header">
+    <div class="identity"><div class="protected-mark" title="مساحة محفوظة للشعار الرسمي الأصلي">شعار الجامعة<br><small>الأصل فقط</small></div><div class="brand"><div class="en">UNIVERSITY OF TECHNOLOGY · CENTRAL LIBRARY</div><h1>المكتبة المركزية</h1><span class="subtitle">LIBRARY TYCOON <i>V2.7</i> · مشهد المطالعة الحيّ</span></div></div>
+    <div class="counters"><div class="counter"><span class="coicon">◈</span><small>الرصيد</small><strong id="money">٠</strong><em>د.ع</em></div><div class="counter"><span class="coicon">♡</span><small>رضا الطلبة</small><strong id="satisfaction">٠٪</strong></div><div class="counter"><span class="coicon">✦</span><small>السمعة</small><strong id="reputation">٠</strong><em>/ ٥</em></div><div class="counter"><span class="coicon">♟</span><small>الخدمات</small><strong id="served">٠</strong></div></div>
+    <div class="brandlogo"><div class="protected-mark" title="مساحة محفوظة للشعار الرسمي الأصلي">شعار المكتبة<br><small>الأصل فقط</small></div></div>
+  </header>
+  <main class="stage">
+    <section class="viewport" aria-label="قاعة المطالعة ثلاثية الأبعاد">
+      <canvas id="renderCanvas" tabindex="0" aria-label="مشهد المكتبة ثلاثي الأبعاد. اسحب لتحريك المشهد واستخدم العجلة للتقريب"></canvas>
+      <div class="lens"><span class="live-dot"></span> ISOMETRIC 3D <span class="sep">/</span> قاعة المطالعة <span class="scene-version">BABYLON.JS</span></div>
+      <div class="day-badge"><div>اليوم <b id="day">١</b></div><div class="clock" id="clock">08:30</div><button id="pause" aria-label="إيقاف أو تشغيل">Ⅱ إيقاف</button><button id="speed" aria-label="تسريع الوقت">×١</button></div>
+      <div class="camera-bar"><button id="zoomIn" aria-label="تقريب">＋</button><button id="zoomOut" aria-label="إبعاد">−</button><button id="reset" aria-label="إعادة تمركز">⌖</button></div>
+      <div class="scene-hint">اسحب لتغيير موقع الكاميرا · اضغط على الرفوف أو مكتب الموظف لتنفيذ مهمة</div>
+      <div id="loading" class="loading"><div class="loading-symbol">▦</div><h2>نجهّز عالم المكتبة...</h2><p>مشهد ثلاثي الأبعاد مستقل، بدون ملفات تميمة أو شعارات بديلة.</p></div>
+      <div id="hotspot-label" class="hotspot-label" hidden></div>
+    </section>
+    <aside class="side">
+      <div class="side-heading"><div><small>DIRECTOR'S DESK</small><h2>مهمات المدير</h2></div><span id="missionProgress">٠ / ٣</span></div>
+      <div class="mission-card" id="mission-book"><div class="mission-line"><span class="mission-icon">⌕</span><div><b>كتاب مفقود</b><small>فتّش الرف الصحيح بين الرفوف المضيئة</small></div><span class="reward">+٥٬٠٠٠</span></div><div class="progress"><i id="bar-book"></i></div><div id="status-book" class="mission-status">اضغط الرف المضيء داخل القاعة</div></div>
+      <div class="mission-card" id="mission-service"><div class="mission-line"><span class="mission-icon">▤</span><div><b>ساعد الطلبة</b><small>أنجز ٥ خدمات في مكتب الاستعارة</small></div><span class="reward">+٣٬٠٠٠</span></div><div class="progress"><i id="bar-service"></i></div><div id="status-service" class="mission-status">اضغط مكتب الموظف لخدمة الطابور</div></div>
+      <div class="mission-card" id="mission-exam"><div class="mission-line"><span class="mission-icon">◷</span><div><b>أسبوع الامتحانات</b><small>حافظ على الرضا ٧٥٪ مع خدمة ٨ طلبة</small></div><span class="reward">+٩٬٠٠٠</span></div><div class="progress"><i id="bar-exam"></i></div><div id="status-exam" class="mission-status">ابدأ التحدي من الأسفل</div></div>
+      <div class="side-section"><h3>إدارة القاعة</h3><div class="staff"><span class="avatar">👨🏻‍💼</span><div><b>موظف الاستعارة</b><small>ثابت بموقع العمل · زي موحد</small></div><span class="online">يعمل</span></div><div class="staff"><span class="avatar">🧑🏻‍🔧</span><div><b>عامل النظافة</b><small>يتحرك فقط بمنطقة التنظيف</small></div><span class="online">يعمل</span></div></div>
+      <div class="side-actions"><button id="exam" class="btn gold">ابدأ تحدي الامتحانات <span>◂</span></button><button id="upgrade" class="btn ghost">ترقية قاعة المطالعة <span id="upgradeCost">٦٬٠٠٠ د.ع</span></button></div>
+    </aside>
+  </main>
+  <footer class="footer"><div class="foot-nav"><div class="active"><span>▦</span> القاعة الحيّة</div><div><span>⚒</span> البناء</div><div><span>♟</span> الموظفون</div><div><span>◈</span> التطوير</div></div><div class="footer-note">نماذج أصلية تجريبية · جميع المبالغ افتراضية · <span>لا توجد خدمات ذكاء اصطناعي مدفوعة</span></div><div class="footer-identity">Created & Developed by Ass. Lec. Eng. Samer Raad Azzawi</div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+</body></html>

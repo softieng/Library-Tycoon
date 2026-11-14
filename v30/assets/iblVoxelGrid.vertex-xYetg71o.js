@@ -1,0 +1,1 @@
+export{xr as iblVoxelGridVertexShader}from"./SceneHost-DfxO_yGh.js";

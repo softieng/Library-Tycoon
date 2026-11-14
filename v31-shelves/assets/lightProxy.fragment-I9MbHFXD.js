@@ -1,0 +1,1 @@
+export{pr as lightProxyPixelShader}from"./SceneHost-BiG9xGsd.js";

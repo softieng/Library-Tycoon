@@ -1,0 +1,1 @@
+export{s as volumetricLightScatteringPassPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

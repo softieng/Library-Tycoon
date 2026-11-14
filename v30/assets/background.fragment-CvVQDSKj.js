@@ -1,0 +1,1 @@
+export{yn as backgroundPixelShaderWGSL}from"./SceneHost-DfxO_yGh.js";

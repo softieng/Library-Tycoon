@@ -1,0 +1,1 @@
+export{Ii as OptimizeIndices}from"./SceneHost-BiG9xGsd.js";

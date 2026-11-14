@@ -1,0 +1,1 @@
+export{Jn as postprocessVertexShader}from"./SceneHost-BiG9xGsd.js";

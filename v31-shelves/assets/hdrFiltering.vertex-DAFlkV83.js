@@ -1,0 +1,1 @@
+export{Ir as hdrFilteringVertexShader}from"./SceneHost-BiG9xGsd.js";

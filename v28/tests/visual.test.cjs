@@ -1,0 +1,15 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const ROOT=path.resolve(__dirname,'..');const S=require('../world.js');
+const read=n=>fs.readFileSync(path.join(ROOT,n),'utf8');
+test('25 GLB assets are explicitly enumerated',()=>assert.equal(Object.keys(S.ASSETS).length,25));
+test('real assets are all GLB models in local project, not placeholders',()=>{for(const k of Object.keys(S.ASSETS))assert.match(S.sourceURL(k),/^\.\/assets\/.+\.glb$/)});
+test('four unique bookshelf search positions',()=>assert.deepEqual(S.RACKS,['A','B','C','D']));
+test('assigned workstations not occupied by patrol route',()=>{const staff=Object.values(S.FIXED_STAFF);const points=S.VISITOR_ROUTES.flat();for(const s of staff)for(const p of points)assert.ok(Math.hypot(s.x-p.x,s.z-p.z)>.7)});
+test('cleaner bounds have finite positive area',()=>{const c=S.CLEAN_ZONE;assert.ok(c.maxX>c.minX&&c.maxZ>c.minZ);for(const v of Object.values(c))assert.ok(Number.isFinite(v));});
+test('visitor position stays on segment',()=>{const r=S.VISITOR_ROUTES[0];for(let t=0;t<=1;t+=.05){const p=S.routePosition(r,t);assert.ok(Number.isFinite(p.x)&&Number.isFinite(p.z));assert.ok(p.x>=-8.01&&p.x<=-3.69)}});
+test('HTML uses Babylon and official GLB loader',()=>{const h=read('index.html');assert.match(h,/babylonjs\.loaders/);assert.match(h,/world\.js/);assert.match(h,/canvas id="renderCanvas"/)});
+test('protected branding is reserved, not fabricated',()=>{const h=read('index.html');assert.match(h,/موضع الشعار الأصلي/);assert.doesNotMatch(h,/<svg[^>]+logo/i)});
+test('new preview save key does not overwrite older preview',()=>{const a=read('app.js');assert.match(a,/uot-library-tycoon-v28-art-first/);assert.doesNotMatch(a,/v27-reading-hall/);});
+test('bookshelf interaction and service only use typed actions',()=>{const w=read('world.js');assert.match(w,/pickBox\('search'/);assert.match(w,/pickBox\('serve'/)});
+test('3D characters use actual imported walk idle and sit animation groups',()=>{const w=read('world.js');for(const name of ["'walk'","'idle'","'sit'"])assert.ok(w.includes(name));assert.match(w,/animationGroups/);});
+test('render scene does not proceed with missing Babylon engine',()=>assert.match(read('world.js'),/Babylon\.js missing/));

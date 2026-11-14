@@ -1,0 +1,1 @@
+export{Ni as gaussianSplattingVertexDeclaration}from"./SceneHost-BiG9xGsd.js";

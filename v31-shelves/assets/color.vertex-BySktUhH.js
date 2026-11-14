@@ -1,0 +1,1 @@
+export{on as colorVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

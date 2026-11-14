@@ -1,0 +1,1 @@
+export{fr as lightProxyVertexShader}from"./SceneHost-BiG9xGsd.js";

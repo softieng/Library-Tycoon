@@ -1,0 +1,1 @@
+export{m as spritesPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

@@ -1,0 +1,1 @@
+export{vn as backgroundVertexShaderWGSL}from"./SceneHost--E08F2zE.js";

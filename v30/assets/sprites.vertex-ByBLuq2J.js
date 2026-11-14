@@ -1,0 +1,1 @@
+export{p as spritesVertexShaderWGSL}from"./SceneHost-DfxO_yGh.js";

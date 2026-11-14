@@ -1,0 +1,1 @@
+export{Qi as PBRMaterial,$i as RegisterPBRMaterial,ea as RegisterPbrMaterial}from"./SceneHost-BiG9xGsd.js";

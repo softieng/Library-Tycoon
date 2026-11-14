@@ -1,0 +1,1 @@
+export{Ci as boundingBoxRendererPixelShader}from"./SceneHost-BiG9xGsd.js";

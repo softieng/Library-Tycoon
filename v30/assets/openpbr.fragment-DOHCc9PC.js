@@ -1,0 +1,1 @@
+export{ir as openpbrPixelShader}from"./SceneHost-DfxO_yGh.js";

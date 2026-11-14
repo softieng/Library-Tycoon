@@ -1,0 +1,1 @@
+export{On as volumetricLightScatteringPassPixelShader}from"./SceneHost-BiG9xGsd.js";

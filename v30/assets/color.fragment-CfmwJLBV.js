@@ -1,0 +1,1 @@
+export{yi as colorPixelShader}from"./SceneHost-DfxO_yGh.js";

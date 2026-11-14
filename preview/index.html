@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#142d47">
+<title>Library Tycoon | معاينة القاعات والمهمات</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="core.js"></script>
+<script defer src="game.js"></script>
+</head>
+<body>
+<div id="app">
+  <header class="top-header">
+    <div class="brand-start">
+      <div class="protected-logo" title="يُعرض الشعار الأصلي عند تزويد ملفات الهوية المعتمدة">شعار الجامعة<br><span>الملف الأصلي</span></div>
+      <div class="title-wrap"><span class="eyebrow">UNIVERSITY OF TECHNOLOGY · CENTRAL LIBRARY</span><h1>المكتبة المركزية</h1><p>لعبة إدارة المكتبة <span class="dot">◆</span> معاينة تفاعلية V2.6</p></div>
+    </div>
+    <div class="top-actions"><span class="pill">طور مدير المكتبة</span><button id="saveBtn" class="small-icon" type="button" title="حفظ التقدم">💾</button><button id="helpBtn" class="small-icon" type="button" title="طريقة اللعب">ⓘ</button><div class="protected-logo" title="ملف الشعار الرسمي لم يوفّر في الحزمة">شعار المكتبة<br><span>الملف الأصلي</span></div></div>
+  </header>
+  <div class="stats-row" aria-label="مؤشرات المكتبة">
+    <div class="stat"><span class="stat-icon">🪙</span><div><small>الرصيد</small><strong id="stat-money">72,000</strong><em>د.ع</em></div></div>
+    <div class="stat"><span class="stat-icon">😊</span><div><small>رضا الطلبة</small><strong id="stat-satisfaction">86%</strong><div class="meter"><i id="bar-satisfaction"></i></div></div></div>
+    <div class="stat"><span class="stat-icon">🧹</span><div><small>النظافة</small><strong id="stat-cleanliness">91%</strong><div class="meter"><i id="bar-cleanliness"></i></div></div></div>
+    <div class="stat"><span class="stat-icon">⭐</span><div><small>سمعة المكتبة</small><strong id="stat-reputation">4.3</strong><em>/ 5</em></div></div>
+    <div class="stat"><span class="stat-icon">👥</span><div><small>الزوار / المنجز</small><strong><span id="stat-visitors">0</span><span class="divider-char"> / </span><span id="stat-served">0</span></strong></div></div>
+  </div>
+  <main class="main-layout">
+    <aside class="missions" aria-label="لوحة المهمات">
+      <div class="panel-header"><div><span class="section-eyebrow">DIRECTOR'S DESK</span><h2>📋 المهمات اليومية</h2></div><span id="mission-count" class="count-badge">0/4</span></div>
+      <div id="mission-list" class="mission-list"></div>
+      <section class="event-panel"><h3>⚡ أحداث المكتبة</h3><div id="event-info" class="event-info">ماكو حدث جاري حالياً</div><button id="rushBtn" class="action-btn primary" type="button">👥 ابدأ أسبوع الامتحانات</button><button id="inspectionBtn" class="action-btn secondary" type="button">📋 استقبل لجنة الجودة</button><button id="printerBtn" class="action-btn subtle" type="button">🖨️ اختبر عطل الطابعة</button></section>
+      <div class="tip-box">💡 اضغط علامات <b>🔍</b> فوق رفوف الكتب حتى تنفذ مهمة الكتاب المفقود.</div>
+    </aside>
+    <div id="gameArea" class="game-area">
+      <canvas id="world" aria-label="مكتبة أيزومترية، استخدم الماوس للتكبير والتنقل" role="img"></canvas>
+      <div class="time-card"><div><span class="mini">الفصل الدراسي</span><b>اليوم <span id="day">1</span></b></div><span class="clock">🕒 <span id="clock">08:30</span></span><div class="time-actions"><button id="pauseBtn" title="إيقاف وتشغيل">⏸</button><button id="speedBtn" title="تسريع اللعب">×1</button><button id="newDayBtn" title="اليوم التالي">↪</button></div></div>
+      <div class="camera-tools"><button id="zoomIn" aria-label="تقريب">＋</button><button id="zoomOut" aria-label="إبعاد">－</button><button id="resetCam" title="إعادة تمركز">⌖</button></div>
+      <div id="scene-event" class="scene-event">مرحباً بك، مدير المكتبة! 🎓</div>
+      <div class="scene-tip">اسحب لتغيير موقع الكاميرا · استخدم عجلة الماوس للتقريب</div>
+    </div>
+  </main>
+  <div class="bottom-hud">
+    <nav class="main-nav" aria-label="أقسام الإدارة">
+      <button class="nav-btn selected" data-panel="missions">🗂️<span>المهمات</span></button>
+      <button class="nav-btn" data-panel="upgrades">⬆️<span>الترقيات</span></button>
+      <button class="nav-btn" data-panel="staff">👔<span>الموظفون</span></button>
+      <button class="nav-btn" data-panel="quiz">📖<span>التصنيف</span></button>
+    </nav>
+    <div id="detail-panel" class="detail-panel"><div class="detail-label">الترقية المقترحة</div><div class="detail-content"><span class="shelf-emoji">📚</span><div><b>توسعة رفوف المقتنيات</b><small>ترفع مستوى القاعة وتزيد ديكور الكتب</small></div><button id="quickUpgrade" class="green-button">ترقية<br><small>6,000 د.ع</small></button></div></div>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="modal"><div class="modal-header"><h3 id="modal-title"></h3><button id="closeModal" class="icon-btn" aria-label="إغلاق">×</button></div><div id="modal-content"></div></dialog>
+</body>
+</html>

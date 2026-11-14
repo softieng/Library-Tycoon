@@ -1,0 +1,1 @@
+export{kn as volumetricLightScatteringPixelShader}from"./SceneHost-DfxO_yGh.js";

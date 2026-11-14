@@ -1,0 +1,1 @@
+export{vi as colorVertexShader}from"./SceneHost--E08F2zE.js";

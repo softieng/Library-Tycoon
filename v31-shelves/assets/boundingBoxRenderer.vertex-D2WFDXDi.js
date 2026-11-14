@@ -1,0 +1,1 @@
+export{Si as boundingBoxRendererVertexShader}from"./SceneHost-BiG9xGsd.js";

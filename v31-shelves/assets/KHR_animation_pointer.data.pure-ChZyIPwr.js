@@ -1,0 +1,1 @@
+export{i as _RegisterKHRAnimationPointerData}from"./SceneHost-BiG9xGsd.js";
