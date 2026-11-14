@@ -3,6 +3,7 @@ import { BALANCE } from '../config/balance';
 import { directorGoals } from '../gameplay/daily';
 import { ACHIEVEMENTS, EVENT_BY_ID, type EventOption } from '../config/events';
 import { HALL_ROADMAP, hallExpansionCost, hallProgress } from '../config/hallRoadmap';
+import { HALL_COLLECTIONS, searchShelfDirectory } from '../config/shelfDirectory';
 import { FLAGS } from '../config/featureFlags';
 import { QUEUES, SEATS, SHELVES, ZONES, zoneAt } from '../config/layout';
 import { ROLES, SERVICES, type ServiceId } from '../config/services';
@@ -249,14 +250,40 @@ function Visitors() {
 
 /* ------------------------------------------------------------------ Library overview */
 function Library() {
-  const c = useGame(), s = c.state;
+  const c = useGame(), s = c.state, [query, setQuery] = useState('');
+  const matches = searchShelfDirectory(query);
   return (
     <>
-      <Section title="خطة توسعة القاعات ثلاثية الأبعاد">
-        <p className="tip">🏛️ جميع القاعات مخطّط لها بنفس محرك اللعبة والتجسيم. تُضاف المجسمات والخدمات واحدة بعد الثانية، ولا يُسمح بشراء قاعة غير مكتملة.</p>
+      <Section title="📚 دليل الرفوف داخل قاعة الخوارزمي">
+        <p className="tip">اختر موضوعاً أو رقم تصنيف ديوي. اضغط على الرف حتى تتجه إليه الكاميرا وتعرف مكانه. أسماء الموضوعات دليل للعبة، ولا تمثل فهرس الكتب الحقيقي.</p>
+        <input type="search" className="shelf-search" aria-label="البحث عن رف أو تخصص"
+          value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث: ذكاء اصطناعي، برمجة، ٥٠٠..." data-testid="shelf-search" />
+        <small data-testid="shelf-match-count">عدد الرفوف المطابقة: {num(matches.length)} من {num(SHELVES.length)}</small>
+        {matches.map(entry => {
+          const sh = SHELVES.find(x => x.id === entry.shelfId);
+          if (!sh) return null;
+          const selected = c.selection?.kind === 'shelf' && c.selection.id === sh.id;
+          return (
+            <button type="button" key={entry.shelfId}
+              className={`shelf-directory-link ${selected ? 'is-selected' : ''}`}
+              data-testid={`shelf-directory-${entry.code}`}
+              aria-label={`حدد رف ${entry.code}: ${entry.titleAr}`}
+              onClick={() => { c.select({ kind: 'shelf', id: sh.id }); c.world?.focus(sh.access.x, sh.access.z, 5.4); }}>
+              <span className="shelf-code" style={{ borderColor: entry.accent }}>{entry.code}</span>
+              <span className="shelf-info"><b>{entry.titleAr}</b>
+                <small>{entry.topicsAr.join(' · ')}</small></span>
+              <span className="shelf-locate" aria-hidden="true">⌖</span>
+            </button>
+          );
+        })}
+        {!matches.length && <p className="note" data-testid="shelf-empty">ماكو رف يطابق البحث. جرّب اسم تخصص أو رمز ديوي آخر.</p>}
+      </Section>
+      <Section title="🏛️ توزيع المجموعات المقترح على القاعات الست">
+        <p className="tip">نفس التجسيم راح يُستخدم بالقاعات الجاية، لكن تفاصيل توزيع الكتب هنا تصور خاص باللعبة، وليس وصفاً موثقاً لمقتنيات أو ترتيب المكتبة الفعلي.</p>
         {HALL_ROADMAP.map((h, i) => {
           const status = hallProgress(h.upgradeId, s.upgrades);
           const cost = hallExpansionCost(h.upgradeId);
+          const collection = HALL_COLLECTIONS.find(x => x.id === h.id)!;
           return (
             <div key={h.id} className="card" data-testid={`hall-roadmap-${h.id}`}>
               <div className="row">
@@ -265,15 +292,18 @@ function Library() {
                   {status === 'playable' ? 'متاحة للعب' : status === 'in-development' ? 'قيد البناء' : status === 'unlocked' ? 'تم شراؤها' : 'مقفلة'}
                 </Pill>
               </div>
+              <div className="hall-subjects" data-testid={`hall-subjects-${h.id}`}>
+                {collection.subjectsAr.map(topic => <span key={topic}>{topic}</span>)}
+              </div>
+              <small>{collection.noteAr}</small>
               {h.upgradeId && <small>تكلفة الفتح المخططة: {iqd(cost)} · {status === 'in-development' ? 'لا تُخصم أي أموال قبل جاهزية القاعة.' : 'تتم إدارة التوسعة من الترقيات.'}</small>}
             </div>
           );
         })}
-        <p className="note">هذا مخطط للعبة، وليس خريطة حقيقية لمبنى المكتبة. حالياً قاعة الخوارزمي وحدها مجسمة وقابلة للعب.</p>
       </Section>
       <Section title="مناطق قاعة الخوارزمي">
-        {ZONES.map((z) => {
-          const n = s.visitors.filter((v) => zoneAt(v.x, v.z)?.id === z.id).length;
+        {ZONES.map(z => {
+          const n = s.visitors.filter(v => zoneAt(v.x, v.z)?.id === z.id).length;
           return <button key={z.id} className="row slim link" onClick={() => { c.select({ kind: 'zone', id: z.id }); c.world?.focus((z.minX + z.maxX) / 2, (z.minZ + z.maxZ) / 2); }}><span>{z.nameAr}</span><small>{z.kind === 'quiet' ? 'منطقة هادئة' : 'منطقة نشطة'} · {num(n)} زائر</small></button>;
         })}
       </Section>
