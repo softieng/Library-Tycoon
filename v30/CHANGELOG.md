@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — daily director challenges and open-source art details (review-only)
+- Three rotating in-game daily director goals, claimable exactly once per game day, with immediate saving and 25,000–45,000 virtual-IQD rewards. Seven goal definitions and Arabic dashboard controls.
+- Income objective counts only actual service transactions, not other reward sources. Restored sanitised per-service daily counters after reload.
+- New north-wall coffer panels, entrance relief inlays and GPU-instanced study props using existing GLB models and PBR palette, with no external assets or packages.
+- New deterministic tests and actual browser QA assertion. No save-schema change or edit to protected logos/mascot.
+- **Balance decision: BALANCE_VERSION 2** adds an optional new in-game reward source. Legacy service and mission prices and their rewards are unchanged.
+
 ## Unreleased — visual polish
 - Character kit v2 (new Blender-authored rigged people, runtime faces/expressions, reading/writing/typing layer), procedural 8-leg mascot gait, brass-ringed floor insets, window light shafts. See `docs/VISUAL_POLISH.md`. No balance or save changes.
 
