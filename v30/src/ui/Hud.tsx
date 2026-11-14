@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BALANCE } from '../config/balance';
-import { DEWEY } from '../config/dewey';
+import { SHELF_DIRECTORY_BY_ID } from '../config/shelfDirectory';
 import { EVENT_BY_ID } from '../config/events';
 import { SHELVES, ZONES, zoneAt } from '../config/layout';
 import { ROLE_BY_ID, SERVICES } from '../config/services';
@@ -50,7 +50,7 @@ export function MissionTracker({ open }: { open: (p: PanelId) => void }) {
       {!collapsed && (run ? (
         <div className="tracker__body">
           {d.objectives.map((o) => { const cur = o.kind === 'count' ? run.progress[o.id] : s[o.stat], max = o.kind === 'count' ? o.count : o.gte; return <Bar key={o.id} label={o.textAr} value={Math.min(100, (cur / max) * 100)} text={o.kind === 'count' ? `${num(cur)} / ${num(max)}` : pct(cur)} />; })}
-          {run.id === 'missing_book' && <p className="hint">📕 «{String(run.data.title)}» — مكانه الصحيح رف {String(run.data.home)}، لكنه وُضع على رف آخر.{run.data.hint ? ` آخر تلميح: ${String(run.data.hint)}` : ' انقر على رف لتفتيشه.'}</p>}
+          {run.id === 'missing_book' && <p className="hint">📕 «{String(run.data.title)}» — مكانه الصحيح رف {String(run.data.home)} ({SHELF_DIRECTORY_BY_ID[`shelf_${String(run.data.home)}`]?.titleAr ?? 'تصنيف ديوي'})، لكنه وُضع على رف آخر.{run.data.hint ? ` آخر تلميح: ${String(run.data.hint)}` : ' انقر على رف لتفتيشه.'}</p>}
           {run.id === 'find_reference' && <p className="hint">🔎 الطالبة تطلب: «{String(run.data.title)}». انقر على الرف ذي التصنيف المناسب.</p>}
           {run.id !== 'missing_book' && run.id !== 'find_reference' && <p className="hint">🧭 {d.howAr}</p>}
         </div>
@@ -83,8 +83,10 @@ export function Inspector() {
     lines = [`المستوى ${num(st.level)} · الكفاءة ${pct(efficiencyOf(st) * 100)}`, `المعنويات ${pct(st.morale)} · أنجز اليوم ${num(st.servedToday)}`, st.role === 'cleaner' ? 'يتحرك داخل منطقة التنظيف فقط' : 'ثابت في موقع عمله'];
     actions = st.level < BALANCE.maxStaffLevel ? <Btn kind="gold" disabled={s.money < trainCostOf(st)} onClick={() => c.dispatch({ type: 'train', staffId: st.id })}>تدريب {iqd(trainCostOf(st))}</Btn> : null;
   } else if (sel.kind === 'shelf') {
-    const sh = SHELVES.find((x) => x.id === sel.id); if (!sh) return null; const d = DEWEY.find((x) => x.code === sh.code)!;
-    title = `📚 رف ${d.code}`; lines = [d.nameAr, s.shelfUsers[sh.id] !== undefined ? 'طالب يتصفح هذا الرف الآن' : 'شاغر', s.missions.active?.id === 'missing_book' ? 'الحارس الصغير يفتّش الرف عند النقر عليه' : ''].filter(Boolean);
+    const sh = SHELVES.find((x) => x.id === sel.id); if (!sh) return null;
+    const directory = SHELF_DIRECTORY_BY_ID[sh.id]; if (!directory) return null;
+    title = `📚 رف ${directory.code} · ${directory.titleAr}`;
+    lines = [`موضوعات: ${directory.topicsAr.join('، ')}`, s.shelfUsers[sh.id] !== undefined ? 'طالب يتصفح هذا الرف الآن' : 'الرف متاح للتصفح', s.missions.active?.id === 'missing_book' ? 'الحارس الصغير يفتّش الرف عند النقر عليه' : ''].filter(Boolean);
   } else if (sel.kind === 'mascot') {
     const wait = c.mascotWait(); title = '🎓 الحارس الصغير — تميمة المكتبة المركزية';
     lines = [wait <= 0 ? 'هديته جاهزة: انقر عليه لتستلم ٢٥٬٠٠٠ د.ع' : `الهدية القادمة بعد ${mmss(wait)}`, `استلمت الهدية ${num(s.mascot.rewardsClaimed)} مرة`];
