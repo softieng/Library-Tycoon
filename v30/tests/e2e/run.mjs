@@ -179,7 +179,11 @@ check('clicking the mascot pays the 25,000 IQD gift once per cooldown', g1 - g0 
 /* ------------------------------------------------------------------ 8. save → reload → resume */
 await page.click('[data-testid=dock-settings]'); await page.click('[data-testid=save-now]');
 const before = await T(page, () => { const s = window.__TYCOON__.controller.state; return { money: s.money, day: s.day, done: s.missions.completed.missing_book, gift: s.mascot.lastRewardAt }; });
-await page.reload({ waitUntil: 'load' });
+// In CI, SwiftShader spends substantial time compiling WebGL shaders and loading GLBs.
+// 'load' is an unreliable navigation gate with Playwright's 30s default timeout.
+// Wait only for the new document to commit, then verify actual game readiness below.
+// This preserves the full save/load assertion and does not suppress reload failures.
+await page.reload({ waitUntil: 'commit', timeout: 180000 });
 await page.waitForFunction(() => window.__TYCOON__?.ready === true, null, { timeout: 180000 });
 const after = await T(page, () => { const s = window.__TYCOON__.controller.state; return { money: s.money, day: s.day, done: s.missions.completed.missing_book, gift: s.mascot.lastRewardAt, src: window.__TYCOON__.controller.loadSource }; });
 check('progress survives a page reload', after.src === 'save' && after.money === before.money && after.done === 1 && after.gift === before.gift, JSON.stringify(after));
