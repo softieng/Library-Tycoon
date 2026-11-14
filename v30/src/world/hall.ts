@@ -1,7 +1,7 @@
 import { Color3, Constants, DynamicTexture, Mesh, MeshBuilder, PBRMaterial, Scene, StandardMaterial, Texture, TransformNode, Vector3, VertexData } from '@babylonjs/core';
 import type { AssetLibrary } from '../assets/library';
 import { TEXTURE_DIR } from '../assets/manifest';
-import { DEWEY } from '../config/dewey';
+import { SHELF_DIRECTORY_BY_ID } from '../config/shelfDirectory';
 import { DOOR, HALL, HALL_NAME_AR, PROPS, QUEUES, SEATS, type Prop } from '../config/layout';
 import { makeImagePlane, makeSign } from './text';
 
@@ -194,13 +194,30 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
     switch (p.type) {
       case 'shelf': {
         place('shelf', node);
-        const c = DEWEY.find((d) => d.code === p.code)!;
-        const label = makeSign(scene, `label_${p.id}`, { w: 1.7, h: 0.3, text: `${c.code}  ${c.nameAr}`, px: 96, bg: c.color, fg: '#fff6dc', border: '#e0b450', emissive: 0.6 }, node);
-        label.position.set(0, 2.52, 0.3); label.rotation.y = 0; label.rotation.x = -0.18;
+        const guide = SHELF_DIRECTORY_BY_ID[p.id];
+        if (!guide) throw new Error(`Missing Arabic shelf title for ${p.id}`);
+        // Two-line, colour-coded in-world signage. Preserve Dewey code so the
+        // existing shelf missions and classification mini-game still match.
+        const label = makeSign(scene, `label_${p.id}`, {
+          w: 1.82, h: 0.48, text: `${guide.code} · ${guide.titleAr}`,
+          sub: guide.topicsAr.slice(0, 3).join(' • '), subDir: 'rtl',
+          px: 128, bg: '#152343', fg: '#fff8e9', border: guide.accent, emissive: 0.55,
+        }, node);
+        label.position.set(0, 2.56, 0.32); label.rotation.y = 0; label.rotation.x = -0.12;
         pickBox(p.id, 'shelf', p, 2.5, node).position.z = 0.25;
         break;
       }
-      case 'lowshelf': place('lowshelf', node); break;
+      case 'lowshelf': {
+        place('lowshelf', node);
+        // Study corners become visible only when their underlying upgrade is bought.
+        const title = p.id === 'low_a' ? 'ركن البرمجة' : 'ركن الذكاء الاصطناعي';
+        const sign = makeSign(scene, `study_${p.id}`, {
+          w: 1.7, h: 0.32, text: title, px: 96, bg: '#152343',
+          fg: '#fff8e9', border: '#d3b466', emissive: 0.45,
+        }, node);
+        sign.position.set(0, 1.4, 0.2);
+        break;
+      }
       case 'backshelf': place('backshelf', node); break;
       case 'table': {
         place('table', node);
