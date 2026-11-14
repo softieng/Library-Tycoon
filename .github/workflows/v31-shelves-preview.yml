@@ -1,0 +1,81 @@
+# Isolated owner-testable shelf wayfinding preview. Does not replace /v30/ or /v31/.
+name: V3.1 Arabic shelf guide playable preview
+on:
+  push:
+    branches: [feature/v31-shelf-wayfinding-hall-collections]
+    paths:
+      - '.github/workflows/v31-shelves-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: library-tycoon-v31-shelves-preview
+  cancel-in-progress: false
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout new shelf-guide source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v30/package-lock.json
+      - name: Install and run typecheck, all unit tests, source-asset integrity and production build
+        working-directory: v30
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npm run assets:verify
+          npm run build
+          test -s dist/index.html
+      - name: Install open-source Chromium browser QA tools
+        working-directory: v30
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Real browser 3D shelf signs, Arabic search and phone-layout verification
+        working-directory: v30
+        run: |
+          npx vite preview --port 4173 --strictPort &
+          sleep 4
+          OUT=qa-shelves node tests/e2e/shelves.mjs
+          MOBILE_OUT=qa-mobile node tests/e2e/mobile.mjs
+      - name: Save screenshot evidence for owner review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-tycoon-shelf-wayfinding-browser-evidence
+          path: |
+            v30/qa-shelves
+            v30/qa-mobile
+          retention-days: 14
+      - name: Publish only /v31-shelves/ on existing Pages preview branch
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAGE_BRANCH='feature/v26-isometric-preview'
+          git fetch origin "$PAGE_BRANCH"
+          WT="$RUNNER_TEMP/tycoon-v31-shelves-preview"
+          git worktree add --detach "$WT" "origin/$PAGE_BRANCH"
+          mkdir -p "$WT/v31-shelves"
+          find "$WT/v31-shelves" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          cp -a v30/dist/. "$WT/v31-shelves/"
+          test -s "$WT/v31-shelves/index.html"
+          git -C "$WT" add -A -- v31-shelves
+          if git -C "$WT" diff --cached --quiet; then
+            echo 'Shelf guide preview already identical.'
+            exit 0
+          fi
+          git -C "$WT" -c user.name='library-tycoon-preview[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'preview: Arabic 3D shelf guide at /v31-shelves/ (preserve other previews)'
+          git -C "$WT" push origin "HEAD:refs/heads/$PAGE_BRANCH"
+      - name: Preview URL
+        run: echo 'https://softieng.github.io/Library-Tycoon/v31-shelves/'
