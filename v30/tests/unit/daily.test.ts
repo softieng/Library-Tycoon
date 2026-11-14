@@ -85,4 +85,25 @@ describe('director daily challenges', () => {
     expect(directorGoals(sim.state).every(g => !g.complete && !g.claimed)).toBe(true);
     expect(directorGoals(sim.state).every(g => g.reward > 0 && g.target > 0)).toBe(true);
   });
+  it('restores borrowing and reading counters after reloading a validated save', () => {
+    const sim = makeSim();
+    sim.state.day = 2;
+    sim.state.ledger.served = 4;
+    sim.state.ledger.byService.borrow = 2;
+    sim.state.ledger.byService.reading = 2;
+    const store = new SaveStore(new MemoryStorage());
+    expect(store.save(sim.state)).toBe(true);
+    const result = store.load();
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.state.ledger.byService.borrow).toBe(2);
+    expect(result.state.ledger.byService.reading).toBe(2);
+    expect(directorGoals(result.state).find(g => g.id === 'borrowing')?.complete).toBe(true);
+    const resumed = new Simulation(result.state);
+    resumed.dispatch({ type: 'claimDirectorGoal', id: 'borrowing' });
+    const paid = resumed.state.money;
+    resumed.dispatch({ type: 'claimDirectorGoal', id: 'borrowing' });
+    expect(resumed.state.money).toBe(paid);
+  });
+
 });
