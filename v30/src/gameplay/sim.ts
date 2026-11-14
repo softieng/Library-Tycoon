@@ -1,4 +1,5 @@
 import { BALANCE } from '../config/balance';
+import { directorGoals } from './daily';
 import { ACHIEVEMENTS, EVENT_BY_ID, EVENTS } from '../config/events';
 import { FLAGS } from '../config/featureFlags';
 import { QUEUES, SHELVES, ZONES } from '../config/layout';
@@ -350,6 +351,20 @@ export class Simulation {
           if (correct >= 5) ctx.signal('dewey_correct', correct);
           else ctx.toast(`${correct} من ٦ فقط. جرّب العربة مرة ثانية`, 'info');
         } else if (correct >= 5) { s.satisfaction = clamp(s.satisfaction + 1, 0, 100); ctx.toast('تصنيف ممتاز! الكتب رجعت لرفوفها', 'good'); }
+        break;
+      }
+      case 'claimDirectorGoal': {
+        const goal = directorGoals(s).find(g => g.id === a.id);
+        if (!goal || !goal.complete || goal.claimed) {
+          ctx.toast('هذا التحدي غير مكتمل أو سبق استلام مكافأته', 'info');
+          break;
+        }
+        // Persist a unique, day-scoped reward token before adding the in-game IQD.
+        // The same token survives save/reload; the goal cannot be paid twice.
+        s.missions.rewardLog.push(goal.token);
+        ctx.earn(goal.reward);
+        out.push({ type: 'directorGoal', id: goal.id }, { type: 'sfx', name: 'good' });
+        ctx.toast(`تحدي المدير اكتمل: ${goal.titleAr}، مكافأة ${goal.reward.toLocaleString('ar-IQ')} د.ع`, 'good');
         break;
       }
       case 'eventChoice': this.resolveEvent(ctx, a.choice); break;
