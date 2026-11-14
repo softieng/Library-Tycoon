@@ -251,33 +251,81 @@ export class SceneHost {
 
   /* ------------------------------------------------------------------ input: pan / zoom / click (rotation is locked) */
   private bindInput() {
-    const c = this.canvas; let down: { x: number; y: number; id: number } | null = null, dragged = false, lastHover = 0;
-    const onDown = (e: PointerEvent) => { down = { x: e.clientX, y: e.clientY, id: e.pointerId }; dragged = false; c.setPointerCapture(e.pointerId); };
+    const c = this.canvas;
+    type TouchPoint = { x: number; y: number };
+    const active = new Map<number, TouchPoint>();
+    let down: { x: number; y: number; id: number } | null = null;
+    let dragged = false, lastHover = 0;
+    const pair = (points: TouchPoint[]) => ({
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2,
+      distance: Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y),
+    });
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      active.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      // A second finger starts a pinch and cancels the single-tap action.
+      if (active.size === 1) { down = { x: e.clientX, y: e.clientY, id: e.pointerId }; dragged = false; }
+      else { down = null; dragged = true; }
+      try { c.setPointerCapture(e.pointerId); } catch { /* synthetic events need no capture */ }
+    };
     const onMove = (e: PointerEvent) => {
-      if (down) {
-        const dx = e.clientX - down.x, dy = e.clientY - down.y;
-        if (!dragged && Math.hypot(dx, dy) > 5) dragged = true;
-        if (dragged) { this.panPixels(e.movementX, e.movementY); c.style.cursor = 'grabbing'; }
+      const previous = active.get(e.pointerId);
+      if (previous) {
+        const before = [...active.values()];
+        active.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (active.size >= 2) {
+          const after = [...active.values()];
+          const a = pair(before), b = pair(after);
+          // Zoom keeps the isometric camera's rotation locked.
+          this.cam.zoomBy(Math.max(-1, Math.min(1, (b.distance - a.distance) / 100)));
+          this.panPixels(b.x - a.x, b.y - a.y);
+          dragged = true; down = null;
+        } else if (down?.id === e.pointerId) {
+          if (!dragged && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) dragged = true;
+          if (dragged) this.panPixels(e.clientX - previous.x, e.clientY - previous.y);
+        }
+        c.style.cursor = dragged ? 'grabbing' : 'grab';
         return;
       }
+      // Hover picking is useful with a mouse, but causes extra work on touch.
+      if (e.pointerType !== 'mouse') return;
       const now = performance.now(); if (now - lastHover < 90) return; lastHover = now;
-      const hit = this.pickAt(e.offsetX, e.offsetY); c.style.cursor = hit && hit.kind !== 'floor' ? 'pointer' : 'grab';
+      const hit = this.pickAt(e.offsetX, e.offsetY);
+      c.style.cursor = hit && hit.kind !== 'floor' ? 'pointer' : 'grab';
     };
-    const onUp = (e: PointerEvent) => { if (down && !dragged) this.click(e.offsetX, e.offsetY); down = null; c.style.cursor = 'grab'; };
+    const onEnd = (e: PointerEvent) => {
+      if (active.has(e.pointerId) && down?.id === e.pointerId && !dragged && e.type === 'pointerup')
+        this.click(e.offsetX, e.offsetY);
+      active.delete(e.pointerId);
+      down = null; // Never turn the remaining finger of a pinch into a tap.
+      if (!active.size) dragged = false;
+      try { if (c.hasPointerCapture(e.pointerId)) c.releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+      c.style.cursor = 'grab';
+    };
     const onWheel = (e: WheelEvent) => { e.preventDefault(); this.cam.zoomBy(-Math.sign(e.deltaY) * 1.2); };
     const onKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement | null)?.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       if (e.type === 'keydown') {
         this.keys.add(e.code);
-        if (e.code === 'Equal' || e.code === 'NumpadAdd') this.cam.zoomBy(1); if (e.code === 'Minus' || e.code === 'NumpadSubtract') this.cam.zoomBy(-1);
+        if (e.code === 'Equal' || e.code === 'NumpadAdd') this.cam.zoomBy(1);
+        if (e.code === 'Minus' || e.code === 'NumpadSubtract') this.cam.zoomBy(-1);
         if (e.code === 'Home' || e.code === 'Digit0') this.cam.reset();
       } else this.keys.delete(e.code);
     };
-    const blur = () => this.keys.clear();
-    c.addEventListener('pointerdown', onDown); c.addEventListener('pointermove', onMove); c.addEventListener('pointerup', onUp); c.addEventListener('pointercancel', onUp);
-    c.addEventListener('wheel', onWheel, { passive: false }); window.addEventListener('keydown', onKey); window.addEventListener('keyup', onKey); window.addEventListener('blur', blur);
+    const blur = () => { this.keys.clear(); active.clear(); down = null; dragged = false; };
+    c.addEventListener('pointerdown', onDown); c.addEventListener('pointermove', onMove);
+    c.addEventListener('pointerup', onEnd); c.addEventListener('pointercancel', onEnd);
+    c.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKey); window.addEventListener('keyup', onKey); window.addEventListener('blur', blur);
     c.style.cursor = 'grab'; c.style.touchAction = 'none';
-    this.cleanup.push(() => { c.removeEventListener('pointerdown', onDown); c.removeEventListener('pointermove', onMove); c.removeEventListener('pointerup', onUp); c.removeEventListener('pointercancel', onUp); c.removeEventListener('wheel', onWheel); window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKey); window.removeEventListener('blur', blur); });
+    this.cleanup.push(() => {
+      c.removeEventListener('pointerdown', onDown); c.removeEventListener('pointermove', onMove);
+      c.removeEventListener('pointerup', onEnd); c.removeEventListener('pointercancel', onEnd);
+      c.removeEventListener('wheel', onWheel);
+      window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKey); window.removeEventListener('blur', blur);
+    });
   }
   private panPixels(dx: number, dy: number) {
     const unitsPerPx = (2 * this.cam.state.zoom) / Math.max(1, this.canvas.clientHeight);
