@@ -1,3 +1,4 @@
+import { browserHardwareHints, recommendedAutoProfile } from '../engine/autoQuality';
 import { Simulation, mascotRewardWait } from '../gameplay/sim';
 import { newGame } from '../gameplay/state';
 import type { Action, GameState, SimEvent } from '../gameplay/types';
@@ -14,7 +15,7 @@ export interface WorldApi {
   project(x: number, y: number, z: number): { x: number; y: number } | null;
 }
 export type Quality = 'low' | 'medium' | 'high';
-export interface Settings { quality: Quality; renderScale: number; sound: boolean; showFps: boolean }
+export interface Settings { quality: Quality; renderScale: number; sound: boolean; showFps: boolean; autoQuality: boolean }
 const SETTINGS_KEY = 'uot-library-tycoon-v30-settings';
 const memory: StorageLike = (() => { const m = new Map<string, string>(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => void m.set(k, v), removeItem: (k) => void m.delete(k) }; })();
 function browserStorage(): StorageLike { try { const s = window.localStorage; s.getItem('x'); return s; } catch { return memory; } }
@@ -50,7 +51,7 @@ export class GameController {
   speed = 1; paused = false;
   selection: Selection | null = null;
   toasts: Toast[] = []; floaters: Floater[] = [];
-  settings: Settings = { quality: 'high', renderScale: 1, sound: true, showFps: false };
+  settings: Settings = { quality: 'medium', renderScale: 0.85, sound: true, showFps: false, autoQuality: true };
   world: WorldApi | null = null;
   loadSource: string = 'new';
   lastSavedAt = 0;
@@ -65,13 +66,26 @@ export class GameController {
     const res = this.saves.load();
     this.sim = new Simulation(res.ok ? res.state : newGame((Date.now() & 0xffff) | 1));
     this.loadSource = res.ok ? res.source : 'new';
-    // Start on a lower-cost preset for a small touch screen, without
-    // overriding a previously saved player preference.
-    if (typeof window !== 'undefined' && window.innerWidth <= 820 &&
-        window.matchMedia?.('(pointer: coarse)').matches) {
-      this.settings = { ...this.settings, quality: 'low', renderScale: 0.72 };
-    }
-    try { const raw = this.storage.getItem(SETTINGS_KEY); if (raw) this.settings = { ...this.settings, ...JSON.parse(raw) }; } catch { /* defaults */ }
+    // Initial conservative browser-based guess. The 3D host refines it after
+    // WebGL starts, and observed FPS adjusts it only while auto mode is on.
+    this.settings = { ...this.settings, ...recommendedAutoProfile(browserHardwareHints()) };
+    try {
+      const raw = this.storage.getItem(SETTINGS_KEY);
+      if (raw) {
+        const stored: unknown = JSON.parse(raw);
+        if (stored && typeof stored === 'object' && !Array.isArray(stored)) {
+          const v = stored as Record<string, unknown>;
+          if (v.quality === 'low' || v.quality === 'medium' || v.quality === 'high') this.settings.quality = v.quality;
+          if (typeof v.renderScale === 'number' && Number.isFinite(v.renderScale))
+            this.settings.renderScale = Math.min(1, Math.max(0.5, v.renderScale));
+          if (typeof v.sound === 'boolean') this.settings.sound = v.sound;
+          if (typeof v.showFps === 'boolean') this.settings.showFps = v.showFps;
+          // Older versions lack autoQuality: honour any quality choice they saved.
+          if (typeof v.autoQuality === 'boolean') this.settings.autoQuality = v.autoQuality;
+          else if ('quality' in v || 'renderScale' in v) this.settings.autoQuality = false;
+        }
+      }
+    } catch { /* malformed settings are ignored; game save is unaffected */ }
   }
   get state(): GameState { return this.sim.state; }
 
@@ -118,10 +132,19 @@ export class GameController {
   rollback(): boolean { return this.adopt(this.saves.rollback()); }
   newGame() { this.saves.reset(); this.adopt({ ok: true, state: newGame((Date.now() & 0xffff) | 1), source: 'save' }); this.save(); }
   updateSettings(patch: Partial<Settings>) {
-    this.settings = { ...this.settings, ...patch };
+    const before = this.settings;
+    // A direct quality or resolution choice always overrides the autopilot.
+    const manualChange = patch.autoQuality !== true && (patch.quality !== undefined || patch.renderScale !== undefined);
+    const autoQuality = patch.autoQuality ?? (manualChange ? false : before.autoQuality);
+    const proposed = patch.autoQuality === true && patch.quality === undefined && patch.renderScale === undefined
+      ? recommendedAutoProfile(browserHardwareHints()) : null;
+    this.settings = {
+      ...before, ...proposed, ...patch, autoQuality,
+      renderScale: Math.min(1, Math.max(0.5, Number.isFinite(patch.renderScale) ? patch.renderScale! : proposed?.renderScale ?? before.renderScale)),
+    };
     try { this.storage.setItem(SETTINGS_KEY, JSON.stringify(this.settings)); } catch { /* ignore */ }
-    if (patch.quality) this.world?.setQuality(patch.quality);
-    if (patch.renderScale) this.world?.setRenderScale(patch.renderScale);
+    if (before.quality !== this.settings.quality) this.world?.setQuality(this.settings.quality);
+    if (before.renderScale !== this.settings.renderScale) this.world?.setRenderScale(this.settings.renderScale);
     this.notify();
   }
 }
