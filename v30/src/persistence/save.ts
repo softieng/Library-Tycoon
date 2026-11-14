@@ -109,7 +109,18 @@ export function sanitize(raw: Record<string, any>): GameState {
   }));
   if (isObj(raw.totals)) for (const k of Object.keys(s.totals) as (keyof GameState['totals'])[]) s.totals[k] = num(raw.totals[k], 0, 0, 1e13);
   if (Array.isArray(raw.achievements)) s.achievements = [...new Set(raw.achievements.filter((x: unknown): x is string => typeof x === 'string'))].slice(0, 100);
-  if (isObj(raw.ledger)) { const l = emptyLedger(); for (const k of ['income', 'expenses', 'served', 'arrivals', 'lost'] as const) l[k] = num(raw.ledger[k], 0, 0, 1e12); s.ledger = l; }
+  if (isObj(raw.ledger)) {
+    const l = emptyLedger();
+    for (const k of ['income', 'expenses', 'served', 'arrivals', 'lost'] as const)
+      l[k] = num(raw.ledger[k], 0, 0, 1e12);
+    // Preserve per-service progress when resuming daily director challenges.
+    // Restrict keys and values explicitly to prevent injecting unrelated fields.
+    if (isObj(raw.ledger.byService)) {
+      for (const k of ['borrow', 'print', 'reading', 'research'] as const)
+        l.byService[k] = Math.floor(num(raw.ledger.byService[k], 0, 0, 1e7));
+    }
+    s.ledger = l;
+  }
   if (Array.isArray(raw.broken)) s.broken = raw.broken.filter((x: unknown) => ['printer', 'pc_1', 'pc_2', 'pc_3', 'pc_4'].includes(x as string));
   if (Array.isArray(raw.log)) s.log = raw.log.filter(isObj).slice(0, 40).map((l: any) => ({ t: num(l.t, 0, 0, 1e6), day: num(l.day, 1, 1, 1e6), text: String(l.text ?? '').slice(0, 200), tone: ['good', 'bad', 'info'].includes(l.tone) ? l.tone : 'info' }));
   return s;
