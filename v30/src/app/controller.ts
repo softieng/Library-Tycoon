@@ -18,6 +18,21 @@ export interface Settings { quality: Quality; renderScale: number; sound: boolea
 const SETTINGS_KEY = 'uot-library-tycoon-v30-settings';
 const memory: StorageLike = (() => { const m = new Map<string, string>(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => void m.set(k, v), removeItem: (k) => void m.delete(k) }; })();
 function browserStorage(): StorageLike { try { const s = window.localStorage; s.getItem('x'); return s; } catch { return memory; } }
+/**
+ * Preview releases under /v31/ must never overwrite the installed /v30/
+ * game save or settings on the same github.io origin. No migration runs
+ * automatically. A user may export/import a save explicitly from Settings.
+ */
+function isolatedPreviewStorage(base: StorageLike): StorageLike {
+  if (typeof window === 'undefined' || !/(?:^|\/)v31(?:\/|$)/.test(window.location.pathname)) return base;
+  const key = (name: string) => 'uot-library-tycoon-v31-preview:' + name;
+  return {
+    getItem: (name) => base.getItem(key(name)),
+    setItem: (name, value) => base.setItem(key(name), value),
+    removeItem: (name) => base.removeItem(key(name)),
+  };
+}
+
 
 /**
  * The single integration layer between React (UI), Babylon.js (world) and the simulation.
@@ -39,11 +54,17 @@ export class GameController {
   private storage: StorageLike;
 
   constructor(storage?: StorageLike) {
-    this.storage = storage ?? browserStorage();
+    this.storage = storage ?? isolatedPreviewStorage(browserStorage());
     this.saves = new SaveStore(this.storage);
     const res = this.saves.load();
     this.sim = new Simulation(res.ok ? res.state : newGame((Date.now() & 0xffff) | 1));
     this.loadSource = res.ok ? res.source : 'new';
+    // Start on a lower-cost preset for a small touch screen, without
+    // overriding a previously saved player preference.
+    if (typeof window !== 'undefined' && window.innerWidth <= 820 &&
+        window.matchMedia?.('(pointer: coarse)').matches) {
+      this.settings = { ...this.settings, quality: 'low', renderScale: 0.72 };
+    }
     try { const raw = this.storage.getItem(SETTINGS_KEY); if (raw) this.settings = { ...this.settings, ...JSON.parse(raw) }; } catch { /* defaults */ }
   }
   get state(): GameState { return this.sim.state; }
@@ -70,7 +91,7 @@ export class GameController {
     for (const e of events) {
       if (e.type === 'toast') { this.toasts.push({ id: this.seq++, text: e.text, tone: e.tone, at: performance.now() }); if (this.toasts.length > 4) this.toasts.shift(); }
       else if (e.type === 'money') { this.floaters.push({ id: this.seq++, amount: e.amount, x: e.x, z: e.z, at: performance.now() }); if (this.floaters.length > 12) this.floaters.shift(); }
-      else if (e.type === 'mission' || e.type === 'upgrade' || e.type === 'dayEnd') this.save();
+      else if (e.type === 'mission' || e.type === 'upgrade' || e.type === 'directorGoal' || e.type === 'dayEnd') this.save();
       for (const l of this.worldListeners) l(e);
     }
   }

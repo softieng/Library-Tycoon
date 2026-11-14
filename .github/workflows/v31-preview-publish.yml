@@ -1,0 +1,81 @@
+# Independent V3.1 browser preview. Existing /v30/, earlier previews and main stay intact.
+# The mobile smoke check measures viewport layout after the panel entrance animation.
+# This workflow runs only for this explicit source branch and preserves all other
+# paths on the existing GitHub Pages preview branch.
+name: V3.1 playable preview at /v31/ (preserve previous releases)
+on:
+  push:
+    branches:
+      - feature/v31-open-source-art-daily-challenges
+    paths:
+      - '.github/workflows/v31-preview-publish.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: library-tycoon-v31-preview-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout V3.1 preview source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v30/package-lock.json
+      - name: Typecheck, unit tests, verify protected assets, build
+        working-directory: v30
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npm run assets:verify
+          npm run build
+          test -s dist/index.html
+      - name: Test real mobile WebGL scene, touch gestures and Arabic layout
+        working-directory: v30
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+          npx vite preview --port 4173 --strictPort &
+          sleep 4
+          MOBILE_OUT=qa-mobile node tests/e2e/mobile.mjs
+      - name: Save actual mobile QA screenshot and report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-tycoon-v31-mobile-qa
+          path: v30/qa-mobile
+          retention-days: 14
+      - name: Publish only /v31/ on the existing GitHub Pages branch
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAGE_BRANCH='feature/v26-isometric-preview'
+          git fetch origin "$PAGE_BRANCH"
+          WT="$RUNNER_TEMP/tycoon-v31-pages"
+          git worktree add --detach "$WT" "origin/$PAGE_BRANCH"
+          mkdir -p "$WT/v31"
+          find "$WT/v31" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          cp -a v30/dist/. "$WT/v31/"
+          test -s "$WT/v31/index.html"
+          git -C "$WT" add -A -- v31
+          if git -C "$WT" diff --cached --quiet; then
+            echo 'V3.1 preview already matches the build.'
+            exit 0
+          fi
+          git -C "$WT" -c user.name='library-tycoon-preview[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'preview: V3.1 gameplay at /v31/, retain earlier versions'
+          git -C "$WT" push origin "HEAD:refs/heads/$PAGE_BRANCH"
+      - name: Link to independent playable preview
+        run: |
+          echo 'Source /v30/ remains unchanged.'
+          echo 'Visit https://softieng.github.io/Library-Tycoon/v31/ after GitHub Pages branch deployment finishes.'

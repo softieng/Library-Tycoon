@@ -1,5 +1,6 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { BALANCE } from '../config/balance';
+import { directorGoals } from '../gameplay/daily';
 import { ACHIEVEMENTS, EVENT_BY_ID, type EventOption } from '../config/events';
 import { HALL_ROADMAP, hallExpansionCost, hallProgress } from '../config/hallRoadmap';
 import { FLAGS } from '../config/featureFlags';
@@ -56,6 +57,27 @@ function Home({ go }: { go: (p: PanelId) => void }) {
         <Bar label="رضا الزوار" value={s.satisfaction} />
         <Bar label="النظافة" value={s.cleanliness} />
         <Bar label="السمعة" value={(s.reputation / 5) * 100} text={`${dec1(s.reputation)} / ٥`} />
+      </Section>
+      <Section title={`🎯 تحديات المدير اليومية · اليوم ${num(s.day)}`}>
+        {directorGoals(s).map(g => (
+          <div className="card" key={g.id} data-testid={`director-goal-${g.id}`}>
+            <div className="row">
+              <b>{g.titleAr}</b>
+              <Pill tone={g.claimed ? 'good' : g.complete ? 'gold' : 'muted'}>
+                {g.claimed ? 'استلمت المكافأة' : g.complete ? 'جاهز للاستلام' : 'قيد التنفيذ'}
+              </Pill>
+            </div>
+            <Bar label={g.descriptionAr} value={g.complete ? 100 : Math.min(94, g.progress / g.target * 100)}
+              text={`${num(Math.min(g.progress, g.target))} / ${num(g.target)}`} />
+            <div className="row">
+              <small>المكافأة الافتراضية: {iqd(g.reward)}</small>
+              {!g.claimed && <Btn kind={g.complete ? 'gold' : 'ghost'} disabled={!g.complete}
+                data-testid={`claim-goal-${g.id}`}
+                onClick={() => c.dispatch({ type: 'claimDirectorGoal', id: g.id })}>استلم المكافأة</Btn>}
+            </div>
+          </div>
+        ))}
+        <p className="note">تتبدل التحديات كل يوم داخل اللعبة. المكافأة لكل تحدٍ مرة واحدة فقط، ويبقى سجل الاستلام محفوظاً.</p>
       </Section>
       <Section title="نصيحة المدير">{tips.map((t) => <p className="tip" key={t}>💡 {t}</p>)}</Section>
       {next && (

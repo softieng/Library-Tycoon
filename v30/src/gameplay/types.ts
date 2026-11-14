@@ -92,6 +92,7 @@ export type SimEvent =
   | { type: 'mission'; id: string; status: 'started' | 'completed' | 'failed' }
   | { type: 'upgrade'; id: string }
   | { type: 'achievement'; id: string }
+  | { type: 'directorGoal'; id: string }
   | { type: 'sfx'; name: 'coin' | 'good' | 'bad' | 'click' | 'fanfare' }
   | { type: 'dayEnd'; report: DayReport }
   | { type: 'layout' };
@@ -114,5 +115,6 @@ export type Action =
   | { type: 'abandonMission' }
   | { type: 'deweyResult'; correct: number; total: number }
   | { type: 'eventChoice'; choice: number }
+  | { type: 'claimDirectorGoal'; id: string }
   | { type: 'mascotReward'; now: number }
   | { type: 'nextDay' };

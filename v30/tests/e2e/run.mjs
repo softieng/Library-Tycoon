@@ -73,6 +73,20 @@ const cover = await T(page, () => { const p = document.querySelector('.panel').g
 check('an open panel leaves the 3D world dominant', cover < 0.2, `${(cover * 100).toFixed(1)}% of the screen`);
 await page.click('[data-testid=dock-settings]'); // collapse
 check('panels collapse', (await page.$('.panel')) === null);
+
+// The director's daily progression must be visible through the real RTL dashboard.
+// Keep it a UI assertion, not an artificial claim, to preserve economy in this suite.
+await page.click('[data-testid=dock-home]');
+const dailyPanels = await T(page, () => ({
+  cards: document.querySelectorAll('[data-testid^="director-goal-"]').length,
+  buttons: document.querySelectorAll('[data-testid^="claim-goal-"]').length,
+  text: document.querySelector('[data-testid="director-goal-service"]')?.textContent ?? '',
+}));
+check('daily director challenges render in the real Arabic dashboard',
+  dailyPanels.cards === 3 && dailyPanels.buttons === 3 && dailyPanels.text.includes('خدمة'),
+  JSON.stringify(dailyPanels).slice(0, 160));
+await page.click('[data-testid=dock-home]');
+
 check('credits name present', await T(page, async () => { document.querySelector('[data-testid=dock-settings]').click(); await new Promise((r) => setTimeout(r, 300)); const t = document.querySelector('.credits')?.textContent ?? ''; document.querySelector('[data-testid=dock-settings]').click(); return t.includes('سامر رعد عزاوي') && t.includes('Samer Raad Azzawi'); }));
 
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */

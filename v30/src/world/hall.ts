@@ -149,6 +149,26 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
   const logoW = makeImagePlane(scene, 'wall_logo_w', 'assets/branding/central-library-logo.png', 1.5, 1.5, root);
   logoW.position.set(HALL.minX + 0.05, 3.4, 7.8); logoW.rotation.y = -Math.PI / 2;
 
+  /* ---------------- architectural detailing: geometry only, no new textures ----------------
+   * A set of deep-set north-wall panels with navy enamel and brass mouldings.
+   * Generated with the existing PBR palette and batched by the static merge pass
+   * below. These stay above the PC desks and do not intersect visitor navigation.
+   */
+  for (const [x, width] of [[5.1, 1.7], [7.55, 1.7], [10.0, 1.7], [12.2, 1.1]] as const) {
+    const z = HALL.maxZ - 0.12, y = 3.56, height = 0.68;
+    box('coffer_walnut', width, height, 0.07, x, y, z, woodDark);
+    box('coffer_navy', width - 0.14, height - 0.14, 0.025, x, y, z - 0.05, navy);
+    for (const sign of [-1, 1]) {
+      box('coffer_brass_side', 0.022, height - 0.04, 0.03, x + sign * (width / 2 - 0.048), y, z - 0.069, brass);
+      box('coffer_brass_horizontal', width - 0.09, 0.021, 0.03, x, y + sign * (height / 2 - 0.041), z - 0.069, brass);
+    }
+  }
+  // Deep entrance threshold. This relief remains flat, non-interactive and
+  // navigation-safe. The official library logos are untouched.
+  for (const dz of [-0.08, 0.08]) {
+    box('threshold_gold_line', 1.9, 0.004, 0.016, 10, 0.019, HALL.minZ + 0.76 + dz, brass);
+  }
+
   /* ---------------- furniture from the layout ---------------- */
   const yawOf = (p: Prop) => Math.PI + (p.rot * Math.PI) / 2;
   const cast = (n: TransformNode) => { for (const m of n.getChildMeshes()) shadowCasters.push(m as Mesh); };
@@ -184,6 +204,11 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
       case 'backshelf': place('backshelf', node); break;
       case 'table': {
         place('table', node);
+        // Real GLB study props give each table a readable purpose at close zoom.
+        // They share loaded source meshes and GPU instances rather than extra assets.
+        place('book_stack', node, -0.55, 0.78, -0.12, 0.28, 0.78);
+        if (p.id === 'table_1' || p.id === 'table_3' || p.id === 'table_5')
+          place('lamp_table', node, 0.64, 0.78, 0, Math.PI, 0.7);
         // real chairs at the real seat positions
         for (const s of SEATS.filter((x) => x.table === p.id)) { const ch = lib.place('chair_read', root); ch.parent = node; ch.position.set(-(s.spot.x - p.x), 0, -(s.spot.z - p.z)); ch.rotation.y = s.spot.z < p.z ? Math.PI : 0; cast(ch); }
         break;
