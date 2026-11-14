@@ -1,0 +1,1 @@
+export{sn as colorPixelShaderWGSL}from"./SceneHost--E08F2zE.js";

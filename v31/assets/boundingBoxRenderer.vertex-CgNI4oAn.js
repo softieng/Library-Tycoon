@@ -1,0 +1,1 @@
+export{Si as boundingBoxRendererVertexShader}from"./SceneHost--E08F2zE.js";

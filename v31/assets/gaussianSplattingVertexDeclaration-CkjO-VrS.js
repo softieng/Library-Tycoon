@@ -1,1 +1,0 @@
-export{Ni as gaussianSplattingVertexDeclaration}from"./SceneHost-8hcDvDom.js";

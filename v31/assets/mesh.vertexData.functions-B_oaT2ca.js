@@ -1,1 +1,0 @@
-export{Ii as OptimizeIndices}from"./SceneHost-8hcDvDom.js";

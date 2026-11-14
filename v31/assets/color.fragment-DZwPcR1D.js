@@ -1,1 +1,0 @@
-export{sn as colorPixelShaderWGSL}from"./SceneHost-8hcDvDom.js";

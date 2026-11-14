@@ -1,1 +1,0 @@
-export{Qi as PBRMaterial,$i as RegisterPBRMaterial,ea as RegisterPbrMaterial}from"./SceneHost-8hcDvDom.js";

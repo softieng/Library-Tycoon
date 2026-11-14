@@ -1,1 +1,0 @@
-export{on as colorVertexShaderWGSL}from"./SceneHost-8hcDvDom.js";

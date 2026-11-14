@@ -1,1 +1,0 @@
-export{W as lightProxyVertexShaderWGSL}from"./SceneHost-8hcDvDom.js";

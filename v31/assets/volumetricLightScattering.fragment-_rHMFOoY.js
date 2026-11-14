@@ -1,0 +1,1 @@
+export{kn as volumetricLightScatteringPixelShader}from"./SceneHost--E08F2zE.js";

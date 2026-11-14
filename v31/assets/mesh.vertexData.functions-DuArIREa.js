@@ -1,0 +1,1 @@
+export{Ii as OptimizeIndices}from"./SceneHost--E08F2zE.js";

@@ -1,1 +1,0 @@
-export{wn as gaussianSplattingFragmentDeclarationWGSL}from"./SceneHost-8hcDvDom.js";

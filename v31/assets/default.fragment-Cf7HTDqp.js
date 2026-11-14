@@ -1,1 +1,0 @@
-export{pi as defaultPixelShader}from"./SceneHost-8hcDvDom.js";

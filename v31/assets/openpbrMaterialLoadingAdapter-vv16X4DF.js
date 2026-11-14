@@ -1,1 +1,0 @@
-export{n as OpenPBRMaterialLoadingAdapter}from"./SceneHost-8hcDvDom.js";

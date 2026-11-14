@@ -1,0 +1,1 @@
+export{Cn as gaussianSplattingVertexDeclarationWGSL}from"./SceneHost--E08F2zE.js";

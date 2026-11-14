@@ -1,0 +1,1 @@
+export{Dn as volumetricLightScatteringPassVertexShader}from"./SceneHost--E08F2zE.js";

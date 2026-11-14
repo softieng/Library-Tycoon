@@ -1,0 +1,1 @@
+export{Pi as gaussianSplattingFragmentDeclaration}from"./SceneHost--E08F2zE.js";

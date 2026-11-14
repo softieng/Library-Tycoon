@@ -1,1 +1,0 @@
-export{er as particlesPixelShader}from"./SceneHost-8hcDvDom.js";
