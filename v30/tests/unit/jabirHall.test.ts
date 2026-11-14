@@ -20,7 +20,7 @@ describe('V3.2 Jabir development foundation, not a released second hall', () => 
     expect(new Set(JABIR_SHELVES.map(s => s.code)).size).toBe(8);
     for (const s of JABIR_SHELVES) {
       expect(s.id).toBe('jabir_shelf_' + s.code);
-      expect(/^\\d{3}$/.test(s.code)).toBe(true);
+      expect(/^[0-9]{3}$/.test(s.code)).toBe(true);
       expect(s.titleAr.length).toBeGreaterThan(6);
       expect(s.topicsAr.length).toBeGreaterThanOrEqual(3);
       expect(inHall(s)).toBe(true);
