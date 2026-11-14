@@ -10,6 +10,7 @@ Status: **review-only**. This work is layered on the green V3.1 director-engagem
 - Rewards range from 25,000 to 45,000 virtual IQD; amounts are an intentional new in-game balance source and bump `BALANCE_VERSION` to 2.
 - Claims write a unique `director-day:<day>:<goal>` token to the existing protected mission reward ledger and save immediately. Rewards are once per goal per game day and survive reload.
 - A missing legacy behavior was fixed: per-service daily counters are now sanitized and restored from existing saves. No new save key, schema, OAuth, cloud service or paid AI model.
+- The service-income goal counts real service transactions from the restored `ledger.byService` values, not bonuses, event payouts or other mission rewards.
 - Bonus goals never replace the twelve existing missions. No real payments.
 
 ### Architectural details
