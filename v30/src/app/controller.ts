@@ -24,8 +24,14 @@ function browserStorage(): StorageLike { try { const s = window.localStorage; s.
  * automatically. A user may export/import a save explicitly from Settings.
  */
 function isolatedPreviewStorage(base: StorageLike): StorageLike {
-  if (typeof window === 'undefined' || !/(?:^|\/)v31(?:\/|$)/.test(window.location.pathname)) return base;
-  const key = (name: string) => 'uot-library-tycoon-v31-preview:' + name;
+  if (typeof window === 'undefined') return base;
+  const path = window.location.pathname;
+  const preview = /(?:^|\\/)v31-shelves(?:\\/|$)/.test(path) ? 'v31-shelves'
+    : /(?:^|\\/)v31(?:\\/|$)/.test(path) ? 'v31' : null;
+  if (!preview) return base;
+  // The v31 prefix remains identical to older previews, preserving those saves.
+  // The shelves preview is an isolated trial, never modifying /v30/ or /v31/.
+  const key = (name: string) => `uot-library-tycoon-${preview}-preview:${name}`;
   return {
     getItem: (name) => base.getItem(key(name)),
     setItem: (name, value) => base.setItem(key(name), value),
