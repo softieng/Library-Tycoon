@@ -106,4 +106,19 @@ describe('director daily challenges', () => {
     expect(resumed.state.money).toBe(paid);
   });
 
+  it('calculates daily income from actual services, not bonuses or mission payouts', () => {
+    const sim = makeSim();
+    sim.state.day = 3;
+    sim.state.ledger.served = 3;
+    sim.dispatch({ type: 'claimDirectorGoal', id: 'service' });
+    // A reward or an ordinary mission can increase ledger income but cannot
+    // satisfy an objective which explicitly requires service revenue.
+    sim.state.ledger.income = 600_000;
+    expect(directorGoals(sim.state).find(g => g.id === 'income')?.progress).toBe(0);
+    sim.state.ledger.byService.borrow = 2;
+    const income = directorGoals(sim.state).find(g => g.id === 'income');
+    expect(income?.progress).toBe(150_000);
+    expect(income?.complete).toBe(true);
+  });
+
 });
