@@ -1,4 +1,5 @@
 # Independent V3.1 browser preview. Existing /v30/, earlier previews and main stay intact.
+# The mobile smoke check measures viewport layout after the panel entrance animation.
 # This workflow runs only for this explicit source branch and preserves all other
 # paths on the existing GitHub Pages preview branch.
 name: V3.1 playable preview at /v31/ (preserve previous releases)

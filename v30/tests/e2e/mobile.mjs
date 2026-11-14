@@ -65,6 +65,11 @@ try {
   check('two-finger pinch zoom works', before.zoomAfterPinch < before.initialZoom, JSON.stringify({before:before.initialZoom,after:before.zoomAfterPinch}));
   check('no horizontal page scroll at 390px', !before.siteOverflow);
   await page.click('[data-testid=dock-home]');
+  // The panel slides in from +14px for 180ms. Measure final layout only after
+  // its CSS entrance animation finishes, rather than reporting transient overflow.
+  await page.locator('.panel').evaluate(async (element) => {
+    await Promise.all(element.getAnimations().map(a => a.finished.catch(() => {})));
+  });
   const panel = await page.evaluate(() => {
     const r = document.querySelector('.panel')?.getBoundingClientRect();
     const dock = document.querySelector('.dock')?.getBoundingClientRect();
