@@ -3,7 +3,7 @@
  * whenever a number here changes. Legacy V2.x values are marked [legacy]; the legacy
  * engine stored money in "units" where 1 unit = 1,000 IQD, V3 stores plain IQD.
  */
-export const BALANCE_VERSION = 1;
+export const BALANCE_VERSION = 2; // Daily director goals add a new, one-time-per-day in-game reward source.
 export const UNIT = 1000; // [legacy] 1 credit unit = 1,000 IQD
 
 export const BALANCE = {
