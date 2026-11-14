@@ -268,7 +268,7 @@ function Library() {
               className={`shelf-directory-link ${selected ? 'is-selected' : ''}`}
               data-testid={`shelf-directory-${entry.code}`}
               aria-label={`حدد رف ${entry.code}: ${entry.titleAr}`}
-              onClick={() => { c.select({ kind: 'shelf', id: sh.id }); c.world?.focus(sh.access.x, sh.access.z, 5.4); }}>
+              onClick={() => { c.select({ kind: 'shelf', id: sh.id }); c.world?.focus(sh.access.x, sh.access.z); }}>
               <span className="shelf-code" style={{ borderColor: entry.accent }}>{entry.code}</span>
               <span className="shelf-info"><b>{entry.titleAr}</b>
                 <small>{entry.topicsAr.join(' · ')}</small></span>
