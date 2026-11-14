@@ -61,7 +61,8 @@ export const HALL_COLLECTIONS: readonly HallCollectionProposal[] = HALL_ROADMAP.
 /** Case- and common Arabic hamza-insensitive matching for the in-game directory. */
 export function normalizeSubjectSearch(text: string): string {
   return text.normalize('NFKC').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي')
-    .replace(/[\u064b-\u065f\u0670\u0640]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+    .replace(/[\u064b-\u065f\u0670\u0640]/g, '').replace(/\s+/g, ' ').trim().toLowerCase()
+    .split(' ').map(word => word.startsWith('ال') && word.length > 3 ? word.slice(2) : word).join(' ');
 }
 
 export function searchShelfDirectory(query: string): ShelfDirectoryEntry[] {
