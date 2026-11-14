@@ -1,0 +1,1 @@
+export{N as outlineVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

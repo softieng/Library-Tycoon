@@ -1,0 +1,1 @@
+export{pi as defaultPixelShader}from"./SceneHost-BiG9xGsd.js";

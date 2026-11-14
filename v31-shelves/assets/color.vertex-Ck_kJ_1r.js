@@ -1,0 +1,1 @@
+export{vi as colorVertexShader}from"./SceneHost-BiG9xGsd.js";

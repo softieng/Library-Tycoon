@@ -1,0 +1,1 @@
+export{$t as depthPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

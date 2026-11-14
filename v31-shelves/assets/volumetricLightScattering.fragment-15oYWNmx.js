@@ -1,0 +1,1 @@
+export{kn as volumetricLightScatteringPixelShader}from"./SceneHost-BiG9xGsd.js";

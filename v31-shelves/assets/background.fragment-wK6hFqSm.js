@@ -1,0 +1,1 @@
+export{ki as backgroundPixelShader}from"./SceneHost-BiG9xGsd.js";

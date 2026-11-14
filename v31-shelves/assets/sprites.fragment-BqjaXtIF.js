@@ -1,0 +1,1 @@
+export{Fn as spritesPixelShader}from"./SceneHost-BiG9xGsd.js";

@@ -1,0 +1,1 @@
+export{Sr as iblVoxelGridPixelShader}from"./SceneHost-BiG9xGsd.js";

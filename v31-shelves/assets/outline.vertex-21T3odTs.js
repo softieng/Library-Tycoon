@@ -1,0 +1,1 @@
+export{tr as outlineVertexShader}from"./SceneHost-BiG9xGsd.js";

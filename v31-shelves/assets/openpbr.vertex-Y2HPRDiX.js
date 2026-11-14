@@ -1,0 +1,1 @@
+export{F as openpbrVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

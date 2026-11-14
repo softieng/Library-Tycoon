@@ -1,0 +1,1 @@
+export{x as rsmGlobalIlluminationPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

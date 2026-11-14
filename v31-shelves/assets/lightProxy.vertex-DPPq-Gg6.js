@@ -1,0 +1,1 @@
+export{W as lightProxyVertexShaderWGSL}from"./SceneHost-BiG9xGsd.js";

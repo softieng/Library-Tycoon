@@ -1,0 +1,1 @@
+export{wn as gaussianSplattingFragmentDeclarationWGSL}from"./SceneHost-BiG9xGsd.js";

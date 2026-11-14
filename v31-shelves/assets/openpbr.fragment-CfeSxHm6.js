@@ -1,0 +1,1 @@
+export{I as openpbrPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";

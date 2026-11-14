@@ -1,0 +1,1 @@
+export{oi as extractHighlightsPixelShader}from"./SceneHost-BiG9xGsd.js";

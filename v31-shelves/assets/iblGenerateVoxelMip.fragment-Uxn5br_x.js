@@ -1,0 +1,1 @@
+export{ot as iblGenerateVoxelMipPixelShaderWGSL}from"./SceneHost-BiG9xGsd.js";
