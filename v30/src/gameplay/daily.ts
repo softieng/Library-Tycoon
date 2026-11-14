@@ -1,4 +1,5 @@
 import type { GameState } from './types';
+import { SERVICES, type ServiceId } from '../config/services';
 
 /**
  * Three deterministic daily objectives. They depend on the existing day,
@@ -23,8 +24,8 @@ const GOALS: Record<DirectorGoalId, GoalDef> = {
     target: 6, reward: 30_000, measure: s => s.ledger.arrivals, eligible: () => true },
   borrowing: { id: 'borrowing', titleAr: 'الإعارة السريعة', descriptionAr: 'أكمل إعارتين خلال اليوم',
     target: 2, reward: 30_000, measure: s => s.ledger.byService.borrow, eligible: () => true },
-  income: { id: 'income', titleAr: 'ميزانية المكتبة', descriptionAr: 'حقق ١٥٠٬٠٠٠ د.ع من إيرادات اليوم',
-    target: 150_000, reward: 35_000, measure: s => s.ledger.income, eligible: () => true },
+  income: { id: 'income', titleAr: 'ميزانية المكتبة', descriptionAr: 'حقق ١٥٠٬٠٠٠ د.ع من الخدمات فقط',
+    target: 150_000, reward: 35_000, measure: s => (Object.keys(SERVICES) as ServiceId[]).reduce((sum, id) => sum + s.ledger.byService[id] * SERVICES[id].reward, 0), eligible: () => true },
   satisfaction: { id: 'satisfaction', titleAr: 'زوار راضون', descriptionAr: 'حافظ على رضا ٨٠٪ مع ٣ خدمات منجزة',
     target: 3, reward: 40_000, measure: s => s.ledger.served, eligible: s => s.satisfaction >= 80 },
   cleanliness: { id: 'cleanliness', titleAr: 'قاعة مرتبة', descriptionAr: 'حافظ على نظافة ٨٥٪ مع ٣ خدمات منجزة',
