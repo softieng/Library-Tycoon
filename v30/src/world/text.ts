@@ -1,7 +1,7 @@
 import { DynamicTexture, Mesh, MeshBuilder, PBRMaterial, Scene, StandardMaterial, Texture, Color3, type TransformNode } from '@babylonjs/core';
 
 const FONT = "'Cairo', 'Segoe UI', Tahoma, sans-serif";
-export interface SignOpts { w: number; h: number; text: string; sub?: string; bg?: string; fg?: string; px?: number; border?: string; emissive?: number; icon?: string }
+export interface SignOpts { w: number; h: number; text: string; sub?: string; subDir?: 'rtl' | 'ltr'; bg?: string; fg?: string; px?: number; border?: string; emissive?: number; icon?: string }
 
 /** A sign plane whose text is drawn by the browser (correct Arabic shaping, RTL). */
 export function makeSign(scene: Scene, name: string, o: SignOpts, parent?: TransformNode | null): Mesh {
@@ -17,7 +17,7 @@ export function makeSign(scene: Scene, name: string, o: SignOpts, parent?: Trans
   while (ctx.measureText(main).width > tw * 0.86 && size > 10) { size *= 0.93; ctx.font = `700 ${size}px ${FONT}`; }
   ctx.fillText(main, tw / 2, o.sub ? th * 0.40 : th * 0.52);
   if (o.sub) {
-    let s2 = th * 0.2; ctx.font = `600 ${s2}px ${FONT}`; ctx.direction = 'ltr';
+    let s2 = th * 0.2; ctx.font = `600 ${s2}px ${FONT}`; ctx.direction = o.subDir ?? 'ltr';
     while (ctx.measureText(o.sub).width > tw * 0.84 && s2 > 8) { s2 *= 0.93; ctx.font = `600 ${s2}px ${FONT}`; }
     ctx.globalAlpha = 0.92; ctx.fillText(o.sub, tw / 2, th * 0.74); ctx.globalAlpha = 1;
   }
