@@ -68,7 +68,8 @@ export class GameController {
     this.loadSource = res.ok ? res.source : 'new';
     // Initial conservative browser-based guess. The 3D host refines it after
     // WebGL starts, and observed FPS adjusts it only while auto mode is on.
-    this.settings = { ...this.settings, ...recommendedAutoProfile(browserHardwareHints()) };
+    const suggested = recommendedAutoProfile(browserHardwareHints());
+    this.settings = { ...this.settings, quality: suggested.quality, renderScale: suggested.renderScale };
     try {
       const raw = this.storage.getItem(SETTINGS_KEY);
       if (raw) {
@@ -139,7 +140,8 @@ export class GameController {
     const proposed = patch.autoQuality === true && patch.quality === undefined && patch.renderScale === undefined
       ? recommendedAutoProfile(browserHardwareHints()) : null;
     this.settings = {
-      ...before, ...proposed, ...patch, autoQuality,
+      ...before, ...patch, autoQuality,
+      quality: proposed?.quality ?? patch.quality ?? before.quality,
       renderScale: Math.min(1, Math.max(0.5, Number.isFinite(patch.renderScale) ? patch.renderScale! : proposed?.renderScale ?? before.renderScale)),
     };
     try { this.storage.setItem(SETTINGS_KEY, JSON.stringify(this.settings)); } catch { /* ignore */ }
