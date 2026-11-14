@@ -1,4 +1,5 @@
 # Isolated owner-testable shelf wayfinding preview. Does not replace /v30/ or /v31/.
+# Tests accept concise, meaningful Arabic labels such as «الآداب».
 name: V3.1 Arabic shelf guide playable preview
 on:
   push:
