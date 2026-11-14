@@ -385,7 +385,9 @@ function Settings() {
   return (
     <>
       <Section title="جودة العرض">
-        <div className="seg">{(['low', 'medium', 'high'] as const).map((q) => <button key={q} className={st.quality === q ? 'is-on' : ''} onClick={() => c.updateSettings({ quality: q })} data-testid={`quality-${q}`}>{q === 'low' ? 'خفيفة (٣٠ إطار)' : q === 'medium' ? 'متوسطة' : 'عالية'}</button>)}</div>
+        <label className="row slim"><span>ضبط الجودة تلقائياً حسب أداء حاسبتك</span><input type="checkbox" checked={st.autoQuality} onChange={(e) => c.updateSettings({ autoQuality: e.target.checked })} data-testid="quality-auto" /></label>
+        <div className="seg">{(['low', 'medium', 'high'] as const).map((q) => <button key={q} className={!st.autoQuality && st.quality === q ? 'is-on' : ''} onClick={() => c.updateSettings({ quality: q })} data-testid={`quality-${q}`}>{q === 'low' ? 'خفيفة' : q === 'medium' ? 'متوسطة' : 'عالية'}</button>)}</div>
+        <p className="note" data-testid="quality-status">{st.autoQuality ? 'تلقائي' : 'يدوي'} · المستوى الحالي: {st.quality === 'low' ? 'خفيف' : st.quality === 'medium' ? 'متوسط' : 'عالٍ'}. يعتمد الضبط التلقائي على قدرات المتصفح ومعدل الإطارات، وليس على قراءة كاملة لمواصفات الجهاز.</p>
         <label className="row slim"><span>دقة العرض {pct(st.renderScale * 100)}</span><input type="range" min={0.5} max={1} step={0.05} value={st.renderScale} onChange={(e) => c.updateSettings({ renderScale: Number(e.target.value) })} /></label>
         <label className="row slim"><span>المؤثرات الصوتية</span><input type="checkbox" checked={st.sound} onChange={(e) => c.updateSettings({ sound: e.target.checked })} /></label>
         <label className="row slim"><span>إظهار عدّاد الإطارات</span><input type="checkbox" checked={st.showFps} onChange={(e) => c.updateSettings({ showFps: e.target.checked })} /></label>
