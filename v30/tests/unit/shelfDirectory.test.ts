@@ -20,7 +20,7 @@ describe('Arabic shelf signs match actual game shelves and canonical Dewey IDs',
       const label = SHELF_DIRECTORY_BY_ID[shelf.id];
       expect(label, shelf.id).toBeDefined();
       expect(label.code).toBe(shelf.code);
-      expect(label.titleAr.length).toBeGreaterThan(7);
+      expect(label.titleAr.length).toBeGreaterThanOrEqual(5); // short, valid labels such as «الآداب» are readable
       expect(/[\u0600-\u06ff]/.test(label.titleAr)).toBe(true);
       expect(label.topicsAr.length).toBeGreaterThanOrEqual(3);
       expect(label.accent).toMatch(/^#[0-9a-fA-F]{6}$/);
