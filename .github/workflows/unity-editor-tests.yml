@@ -1,0 +1,35 @@
+name: unity-editor-tests
+# Manual only. Needs repository secrets UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD (set by the owner).
+# Never publishes anything; uploads test results only.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  editmode:
+    runs-on: ubuntu-latest
+    env:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+    steps:
+      - name: Check license secret
+        run: |
+          if [ -z "$UNITY_LICENSE" ]; then echo "::error::UNITY_LICENSE secret missing - Unity compilation BLOCKED"; exit 1; fi
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: UnityComparison/Library
+          key: Library-${{ hashFiles('UnityComparison/Packages/manifest.json') }}
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: UnityComparison
+          unityVersion: 6000.3.0f1
+          testMode: editmode
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unity-editmode-results
+          path: artifacts

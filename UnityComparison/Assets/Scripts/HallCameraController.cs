@@ -30,10 +30,13 @@ namespace UOT.LibraryTycoon.UnityComparison
             _lastMouse = Input.mousePosition;
 
             float dt = Time.unscaledDeltaTime;
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) pan.x -= dt*7;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) pan.x += dt*7;
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) pan.z += dt*7;
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) pan.z -= dt*7;
+            // Keyboard pan follows the fixed isometric view, not raw world axes.
+            Vector3 right = Vector3.ProjectOnPlane(_fixedRotation * Vector3.right, Vector3.up).normalized;
+            Vector3 forward = Vector3.ProjectOnPlane(_fixedRotation * Vector3.forward, Vector3.up).normalized;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) pan -= right * (dt * 7f);
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) pan += right * (dt * 7f);
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) pan += forward * (dt * 7f);
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) pan -= forward * (dt * 7f);
             Focus += pan;
             Focus = new Vector3(Mathf.Clamp(Focus.x,-4.7f,4.7f),1.2f,Mathf.Clamp(Focus.z,-3f,3f));
 
