@@ -76,7 +76,7 @@ tile[joint] = np.array([176, 163, 138])
 for cy in (0, half):
     for cx in (0, half):
         d = np.abs(((jx - cx + half // 2) % n) - half // 2) + np.abs(((jy - cy + half // 2) % n) - half // 2)
-        tile[d < 30] = np.array([201, 162, 58]); tile[d < 24] = np.array([28, 44, 86])
+        inner = tile[d < 17].copy(); tile[(d >= 17) & (d < 21)] = np.array([201, 162, 58]); tile[d < 17] = inner * 0.80 + np.array([22, 18, 8])  # brass-ringed marble inset (no dark pegs)
 save(tile, 'floor_tiles.jpg', pub, q=90)
 frough = np.full((n, n), 52.0) + (cloud - 0.5) * 30; frough[joint] = 190
 save(np.dstack([frough] * 3), 'floor_rough.jpg', pub, q=85)

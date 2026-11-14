@@ -5,7 +5,7 @@ import {
 import type { GameController, Quality, WorldApi } from '../app/controller';
 import { AssetLibrary } from '../assets/library';
 import { STAFF_MODEL } from '../assets/manifest';
-import { CharacterView, clipForStaff, clipForVisitor } from '../characters/CharacterView';
+import { CharacterView, clipForStaff, clipForVisitor, expressionFor } from '../characters/CharacterView';
 import { PROPS, PROP_BY_ID, QUEUES, SHELVES, zoneAt } from '../config/layout';
 import type { EmoteKind, GameState } from '../gameplay/types';
 import { MascotView } from '../mascot/MascotView';
@@ -98,7 +98,7 @@ export class SceneHost {
       project: (x, y, z) => this.project(x, y, z),
     };
     this.controller.world = this.api = api;
-    scene.onAfterAnimationsObservable.add(() => { for (const a of [...this.visitors.values(), ...this.staff.values()]) a.view.layer(engine.getDeltaTime() / 1000); });
+    scene.onAfterAnimationsObservable.add(() => { for (const a of [...this.visitors.values(), ...this.staff.values()]) a.view.layer(engine.getDeltaTime() / 1000); this.mascotLayer(engine.getDeltaTime() / 1000); });
     engine.runRenderLoop(() => {
       if (this.disposed) return;
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
@@ -110,6 +110,11 @@ export class SceneHost {
     await scene.whenReadyAsync();
   }
 
+  private mascotLayer(dt: number) {
+    const s = this.controller.state, mm = s.mascot; let best: { x: number; z: number } | null = null, bd = 1e9;
+    for (const v of s.visitors) { const d = Math.hypot(v.x - mm.x, v.z - mm.z); if (d < bd) { bd = d; best = v; } }
+    this.mascot.lookTarget = best; this.mascot.layer(Math.min(dt, 0.1), mm);
+  }
   /* ------------------------------------------------------------------ quality presets */
   setQuality(q: Quality) {
     this.quality = q;
@@ -170,8 +175,8 @@ export class SceneHost {
     for (const v of s.visitors) {
       const a = this.agent(this.visitors, v.id, v.model, false, v.x, v.z, v.yaw);
       const sitting = v.state === 'sit';
-      a.view.follow(v.x, v.z, v.yaw, dt, sitting ? 0.2 : 0);
-      a.view.activity = v.activity;
+      a.view.follow(v.x, v.z, v.yaw, dt, sitting ? (a.view.v2 ? 0.0 : 0.2) : 0);
+      a.view.activity = v.activity; a.view.moving = v.moving; a.view.mood = expressionFor(v.emote?.kind) ?? (v.state === 'served' ? 'happy' : null);
       a.view.play(clipForVisitor(v), v.moving ? v.speed / 1.5 : 1);
       a.view.setCarrying(v.carrying && !sitting);
       this.setIcon(a, v.emote?.kind ?? null);
@@ -180,7 +185,7 @@ export class SceneHost {
     this.sweep(this.visitors);
     for (const st of s.staff) {
       const a = this.agent(this.staff, st.id, STAFF_MODEL[st.role] ?? 0, true, st.x, st.z, st.yaw);
-      a.view.follow(st.x, st.z, st.yaw, dt);
+      a.view.follow(st.x, st.z, st.yaw, dt); a.view.moving = st.moving; a.view.mood = expressionFor(st.emote?.kind) ?? (st.state === 'serving' ? 'happy' : null);
       a.view.play(clipForStaff(st));
       this.setIcon(a, st.emote?.kind ?? null);
     }

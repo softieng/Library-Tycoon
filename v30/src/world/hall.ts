@@ -1,4 +1,4 @@
-import { Color3, Mesh, MeshBuilder, PBRMaterial, Scene, Texture, TransformNode, Vector3 } from '@babylonjs/core';
+import { Color3, Constants, DynamicTexture, Mesh, MeshBuilder, PBRMaterial, Scene, StandardMaterial, Texture, TransformNode, Vector3, VertexData } from '@babylonjs/core';
 import type { AssetLibrary } from '../assets/library';
 import { TEXTURE_DIR } from '../assets/manifest';
 import { DEWEY } from '../config/dewey';
@@ -102,6 +102,23 @@ export function buildHall(scene: Scene, lib: AssetLibrary): HallBuild {
     for (const dz of [-0.33, 0.33]) box('mullion', 0.05, 2.3, 0.045, HALL.minX + 0.14, 2.75, z + dz, woodDark);
     for (const y of [2.2, 3.2]) box('transom', 0.05, 0.045, 1.3, HALL.minX + 0.14, y, z, woodDark);
     box('sill', 0.3, 0.07, 1.7, HALL.minX + 0.15, 1.5, z, wood);
+  }
+  // soft volumetric daylight shafts falling from each arched window across the floor (additive, no depth write)
+  {
+    const gt = new DynamicTexture('shaft_grad', { width: 64, height: 128 }, scene, true); gt.hasAlpha = true;
+    const g = gt.getContext() as unknown as CanvasRenderingContext2D; const lg = g.createLinearGradient(0, 0, 0, 128);
+    lg.addColorStop(0, 'rgba(255,236,190,0.55)'); lg.addColorStop(0.55, 'rgba(255,226,170,0.2)'); lg.addColorStop(1, 'rgba(255,220,160,0)');
+    g.fillStyle = lg; g.fillRect(0, 0, 64, 128); g.globalCompositeOperation = 'destination-in';
+    const hg = g.createLinearGradient(0, 0, 64, 0); hg.addColorStop(0, 'rgba(0,0,0,0)'); hg.addColorStop(0.22, 'rgba(0,0,0,1)'); hg.addColorStop(0.78, 'rgba(0,0,0,1)'); hg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = hg; g.fillRect(0, 0, 64, 128); gt.update();
+    const sm = new StandardMaterial('shaft', scene); sm.disableLighting = true; sm.emissiveColor = new Color3(1, 0.88, 0.62); sm.opacityTexture = gt; sm.backFaceCulling = false;
+    sm.alphaMode = Constants.ALPHA_ADD; sm.disableDepthWrite = true; sm.alpha = 0.9;
+    for (const z of [-7.2, -4.4, -1.6]) {
+      const x0 = HALL.minX + 0.12, top = 3.7, w = 0.62, dx = 2.9, dz = 1.2;
+      const pos = [x0, top, z - w, x0, top, z + w, x0 + dx, 0.02, z + w + dz, x0 + dx, 0.02, z - w + dz];
+      const m = new Mesh('shaft', scene); const vd = new VertexData(); vd.positions = pos; vd.indices = [0, 1, 2, 0, 2, 3]; vd.uvs = [0.5 - 0.5, 0, 1, 0, 1, 1, 0, 1]; vd.normals = [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0]; vd.applyToMesh(m);
+      m.material = sm; m.parent = root; m.isPickable = false; m.renderingGroupId = 0; m.alphaIndex = 5;
+    }
   }
   // wall sconces between the north shelves and on the east part of the north wall
   const glow = P('lamp_glow');
