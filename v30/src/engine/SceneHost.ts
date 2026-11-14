@@ -12,6 +12,7 @@ import { MascotView } from '../mascot/MascotView';
 import { buildHall, type HallBuild } from '../world/hall';
 import { IconFactory, type IconKind } from '../world/markers';
 import { IsoCamera } from './camera';
+import { AutoQualitySampler, browserHardwareHints, recommendedAutoProfile } from './autoQuality';
 import { createEnvironment } from './environment';
 
 interface Agent { view: CharacterView; icon: Mesh; iconKind: string; seen: number }
@@ -35,6 +36,7 @@ export class SceneHost {
   private keys = new Set<string>(); private frame = 0; private disposed = false;
   private instr!: SceneInstrumentation; private cleanup: (() => void)[] = [];
   private brokenMat!: PBRMaterial; private okScreen!: PBRMaterial;
+  private readonly autoQualitySampler = new AutoQualitySampler();
   quality: Quality = 'high'; private api: WorldApi | null = null;
   onUiRequest: (req: { type: 'dewey' }) => void = () => {};
 
@@ -85,6 +87,12 @@ export class SceneHost {
     // static world never moves: freeze it
     for (const m of this.hall.root.getChildMeshes()) { if (!m.metadata?.pick) m.freezeWorldMatrix(); m.doNotSyncBoundingInfo = true; }
     this.applyLayout();
+    if (this.controller.settings.autoQuality) {
+      // WebGL renderer names are only hints; FPS remains the decisive signal.
+      const renderer = engine.getGlInfo?.()?.renderer ?? '';
+      const startup = recommendedAutoProfile(browserHardwareHints(renderer));
+      this.controller.updateSettings({ quality: startup.quality, renderScale: startup.renderScale, autoQuality: true });
+    }
     this.setQuality(this.controller.settings.quality);
     this.setRenderScale(this.controller.settings.renderScale);
     this.bindInput();
@@ -106,6 +114,13 @@ export class SceneHost {
       this.sync(dt);
       this.pan(dt); this.cam.update(dt);
       scene.render(); this.frame++;
+      if (this.controller.settings.autoQuality) {
+        const current = { quality: this.controller.settings.quality, renderScale: this.controller.settings.renderScale };
+        const next = this.autoQualitySampler.sample(engine.getFps(), performance.now(), current, document.visibilityState !== 'hidden');
+        if (next) this.controller.updateSettings({ ...next, autoQuality: true });
+      } else {
+        this.autoQualitySampler.reset();
+      }
     });
     await scene.whenReadyAsync();
   }
