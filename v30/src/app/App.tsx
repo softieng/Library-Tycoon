@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DeweyGame } from '../ui/DeweyGame';
 import { GameCanvas, type SceneStatus } from '../ui/GameCanvas';
+import { JabirTourPanel } from '../ui/JabirTour';
 import { GameContext, num, useGame } from '../ui/hooks';
 import { CameraControls, Dialogs, Floaters, Inspector, MissionResult, MissionTracker, Toasts, TopBar } from '../ui/Hud';
 import { PANELS, PanelBody, type PanelId } from '../ui/panels';
@@ -26,7 +27,7 @@ function Panel({ id, close, go }: { id: PanelId; close: () => void; go: (p: Pane
   return (
     <aside className="panel" data-testid={`panel-${id}`} aria-label={meta.title}>
       <header><h2>{meta.icon} {meta.title}</h2><button className="x" onClick={close} aria-label="إغلاق اللوحة">✕</button></header>
-      <div className="panel__body"><PanelBody id={id} go={go} /></div>
+      <div className="panel__body"><PanelBody id={id} go={go} close={close} /></div>
     </aside>
   );
 }
@@ -67,6 +68,7 @@ export function App({ controller }: { controller: GameController }) {
         <Dock panel={panel} setPanel={setPanel} />
         {panel && <Panel id={panel} close={() => setPanel(null)} go={setPanel} />}
         <MissionTracker open={setPanel} />
+        <JabirTourPanel />
         <Inspector />
         <CameraControls />
         <Floaters />
