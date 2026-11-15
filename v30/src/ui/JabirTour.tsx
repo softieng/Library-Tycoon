@@ -22,6 +22,11 @@ export function JabirTourPanel() {
         <button type="button" onClick={() => c.exitJabirTour()} data-testid="jabir-exit" aria-label="الرجوع إلى قاعة الخوارزمي">✕</button>
       </header>
       <p className="jabir-tour__note">اضغط على الرفوف والمكاتب داخل المشهد. المهمات تجريبية ولا تغيّر الرصيد أو الحفظ.</p>
+      <div className="jabir-tour__overall" data-testid="jabir-overall-progress" role="status">
+        <strong>المهمات المكتملة: {num(state.completedIds.length)} من {num(JABIR_MISSIONS.length)}</strong>
+        <progress value={state.completedIds.length} max={JABIR_MISSIONS.length}
+          aria-label="تقدم مهمات قاعة جابر" />
+      </div>
       <div className="jabir-tour__missions">
         {JABIR_MISSIONS.map(m => (
           <button type="button" key={m.id}
@@ -37,6 +42,16 @@ export function JabirTourPanel() {
         <strong>{mission.titleAr}</strong>
         <p>{mission.storyAr}</p>
         <small>التقدم: {num(Math.min(state.mission.nextIndex, mission.sequence.length))} / {num(mission.sequence.length)}</small>
+        <ol className="jabir-tour__steps" aria-label="مراحل المهمة" data-testid="jabir-mission-steps">
+          {mission.sequence.map((id, index) => {
+            const done = index < state.mission!.nextIndex;
+            const current = index === state.mission!.nextIndex && !state.mission!.finished;
+            return <li key={id} className={done ? 'is-done' : current ? 'is-current' : ''} aria-current={current ? 'step' : undefined}>
+              <span aria-hidden="true">{done ? '✓' : current ? '◉' : '○'}</span>
+              <span>{jabirTargetName(id)}</span>
+            </li>;
+          })}
+        </ol>
         {nextId ? (
           <div className="jabir-tour__next">
             <span>الخطوة التالية: <b>{jabirTargetName(nextId)}</b></span>
