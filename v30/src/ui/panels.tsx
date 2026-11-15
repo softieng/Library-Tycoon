@@ -249,7 +249,7 @@ function Visitors() {
 }
 
 /* ------------------------------------------------------------------ Library overview */
-function Library() {
+function Library({ close }: { close: () => void }) {
   const c = useGame(), s = c.state, [query, setQuery] = useState('');
   const matches = searchShelfDirectory(query);
   return (
@@ -296,6 +296,12 @@ function Library() {
                 {collection.subjectsAr.map(topic => <span key={topic}>{topic}</span>)}
               </div>
               <small>{collection.noteAr}</small>
+              {h.id === 'jabir' && <div className="row">
+                <Btn kind="ghost" disabled={!c.world?.setHallView}
+                  onClick={() => { if (c.enterJabirTour()) close(); }}
+                  data-testid="preview-jabir-enter">زيارة تجريبية ثلاثية الأبعاد</Btn>
+                <small>ثلاث مهمات تفاعلية · بدون فتح أو خصم أو مكافآت</small>
+              </div>}
               {h.upgradeId && <small>تكلفة الفتح المخططة: {iqd(cost)} · {status === 'in-development' ? 'لا تُخصم أي أموال قبل جاهزية القاعة.' : 'تتم إدارة التوسعة من الترقيات.'}</small>}
             </div>
           );
@@ -426,7 +432,7 @@ function Settings() {
   );
 }
 
-export function PanelBody({ id, go }: { id: PanelId; go: (p: PanelId) => void }): ReactNode {
+export function PanelBody({ id, go, close }: { id: PanelId; go: (p: PanelId) => void; close: () => void }): ReactNode {
   switch (id) {
     case 'home': return <Home go={go} />;
     case 'missions': return <Missions />;
@@ -434,7 +440,7 @@ export function PanelBody({ id, go }: { id: PanelId; go: (p: PanelId) => void })
     case 'staff': return <StaffPanel />;
     case 'services': return <Services />;
     case 'visitors': return <Visitors />;
-    case 'library': return <Library />;
+    case 'library': return <Library close={close} />;
     case 'events': return <Events />;
     case 'achievements': return <Achievements />;
     case 'finance': return <Finance />;
