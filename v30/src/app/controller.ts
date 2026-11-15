@@ -120,7 +120,11 @@ export class GameController {
     if (this.uiAcc >= 0.2) { this.uiAcc = 0; this.notify(); }
     if (this.saveAcc >= 12) { this.saveAcc = 0; this.save(); }
   }
-  dispatch(a: Action) { this.handle(this.sim.dispatch(a)); this.notify(); }
+  dispatch(a: Action) {
+    // Keep the main campaign immutable while the separate Jabir trial is open.
+    if (this.jabirTour.active) return;
+    this.handle(this.sim.dispatch(a)); this.notify();
+  }
   private handle(events: SimEvent[]) {
     for (const e of events) {
       if (e.type === 'toast') { this.toasts.push({ id: this.seq++, text: e.text, tone: e.tone, at: performance.now() }); if (this.toasts.length > 4) this.toasts.shift(); }
@@ -130,7 +134,10 @@ export class GameController {
     }
   }
   select(sel: Selection | null) { this.selection = sel; this.notify(); }
-  setSpeed(s: number) { this.speed = s; this.paused = s === 0; this.notify(); }
+  setSpeed(s: number) {
+    if (this.jabirTour.active) return;
+    this.speed = s; this.paused = s === 0; this.notify();
+  }
   mascotWait() { return mascotRewardWait(this.state, Date.now()); }
 
   enterJabirTour(): boolean {
