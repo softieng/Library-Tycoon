@@ -69,6 +69,19 @@ describe('Jabir Hall V3.2 3D preview and isolated mission logic', () => {
     expect(exit.mission).toBeNull();
     expect(exit.completedIds).toEqual([m.id]);
   });
+  it('rejects main-campaign actions and speed changes during a Jabir visit', () => {
+    const { c } = controllerWithWorld();
+    const original = JSON.stringify(c.state);
+    const originalSpeed = c.speed;
+    expect(c.enterJabirTour()).toBe(true);
+    c.dispatch({ type: 'mascotReward', now: Date.now() });
+    c.setSpeed(3);
+    c.tick(10);
+    expect(JSON.stringify(c.state)).toBe(original);
+    expect(c.speed).toBe(originalSpeed);
+    c.exitJabirTour();
+    expect(c.jabirTour.active).toBe(false);
+  });
   it('never modifies the real game economy, save state, or simulation during a tour', () => {
     const { c, visited } = controllerWithWorld();
     const original = JSON.stringify(c.state);
