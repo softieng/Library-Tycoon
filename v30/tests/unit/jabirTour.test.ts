@@ -89,7 +89,7 @@ describe('Jabir Hall V3.2 3D preview and isolated mission logic', () => {
   it('does not persist preview mission progress in the established V3 save', () => {
     const store = localStore();
     const c = new GameController(store);
-    c.world = { setHallView: () => true } as WorldApi;
+    c.world = { setHallView: () => true } as unknown as WorldApi;
     expect(c.enterJabirTour()).toBe(true);
     c.startJabirMission(JABIR_MISSIONS[0].id);
     for (const id of JABIR_MISSIONS[0].sequence) c.interactJabirTarget(id);
