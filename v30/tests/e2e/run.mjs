@@ -100,6 +100,10 @@ check('Jabir camera snaps to hall center on first frame', await T(page, () => {
   const camera = window.__TYCOON__.host.cam.state;
   return Math.abs(camera.x - 46) < 0.01 && Math.abs(camera.z) < 0.01 && Math.abs(camera.zoom - 11.6) < 0.01;
 }));
+check('Jabir view hides the main campaign dock and unrelated quest tracker', await T(page, () =>
+  !document.querySelector('[data-testid=dock-library]')
+  && !document.querySelector('[data-testid=tracker]')
+  && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => button.disabled)));
 await T(page, () => window.__TYCOON__.host.cam.jump(46, 0, 12));
 await shot(page, '00-jabir-3d-hall-overview.png');
 
@@ -153,6 +157,10 @@ check('return to original hall restores 3D scene and camera constraints', await 
     && Math.abs(camera.z - 0.9) < 0.01
     && Math.abs(camera.zoom - 11.6) < 0.01;
 }));
+
+check('main campaign controls return after leaving Jabir', await T(page, () =>
+  !!document.querySelector('[data-testid=dock-library]')
+  && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => !button.disabled)));
 
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */
 const cam0 = await T(page, () => { const { host } = window.__TYCOON__; return { ...host.cam.state, dir: host.cam.camera.getForwardRay().direction.asArray() }; });
