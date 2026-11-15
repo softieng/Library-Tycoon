@@ -31,7 +31,7 @@ export function TopBar() {
         {chip('⏳', 'الطابور', num(queue), 'queue', queue >= 5 ? 'chip--bad' : '')}
       </div>
       <div className="speed" role="group" aria-label="سرعة اللعبة">
-        {[0, 1, 2, 3].map((v) => <button key={v} className={(c.paused ? 0 : c.speed) === v ? 'is-on' : ''} onClick={() => c.setSpeed(v)} aria-label={v ? `سرعة ${v}` : 'إيقاف مؤقت'} data-testid={`speed-${v}`}>{v === 0 ? '⏸' : `${num(v)}×`}</button>)}
+        {[0, 1, 2, 3].map((v) => <button key={v} className={(c.paused ? 0 : c.speed) === v ? 'is-on' : ''} onClick={() => c.setSpeed(v)} disabled={c.jabirTour.active} title={c.jabirTour.active ? 'تتوقف حملة الخوارزمي أثناء معاينة جابر' : undefined} aria-label={v ? `سرعة ${v}` : 'إيقاف مؤقت'} data-testid={`speed-${v}`}>{v === 0 ? '⏸' : `${num(v)}×`}</button>)}
       </div>
     </header>
   );
@@ -40,7 +40,8 @@ export function TopBar() {
 export function MissionTracker({ open }: { open: (p: PanelId) => void }) {
   const c = useGame(), s = c.state, run = s.missions.active, [collapsed, setCollapsed] = useState(false);
   const next = !run ? nextMainMission(s) : null, last = s.missions.lastResult;
-  if (!run && !next) return null;
+  // Do not display the paused Khwarizmi quest inside the Jabir preview.
+  if (c.jabirTour.active || (!run && !next)) return null;
   const d = MISSION_BY_ID[(run?.id ?? next!.id)];
   return (
     <aside className={`tracker ${collapsed ? 'is-collapsed' : ''}`} data-testid="tracker">

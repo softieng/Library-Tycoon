@@ -96,8 +96,20 @@ check('Jabir preview opens from the six-hall directory', await T(page, () =>
   window.__TYCOON__.controller.jabirTour.active
   && !!window.__TYCOON__.host.jabirPreview?.root.isEnabled()
   && !!document.querySelector('[data-testid=jabir-tour]')));
+check('Jabir camera snaps to hall center on first frame', await T(page, () => {
+  const camera = window.__TYCOON__.host.cam.state;
+  return Math.abs(camera.x - 46) < 0.01 && Math.abs(camera.z) < 0.01 && Math.abs(camera.zoom - 11.6) < 0.01;
+}));
+check('Jabir view hides the main campaign dock and unrelated quest tracker', await T(page, () =>
+  !document.querySelector('[data-testid=dock-library]')
+  && !document.querySelector('[data-testid=tracker]')
+  && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => button.disabled)));
+await T(page, () => window.__TYCOON__.host.cam.jump(46, 0, 12));
+await shot(page, '00-jabir-3d-hall-overview.png');
+
 const jabirBefore = await T(page, () => JSON.stringify(window.__TYCOON__.controller.state));
 await page.click('[data-testid=jabir-mission-jabir_research_request]');
+await shot(page, '00a-jabir-3d-research-mission.png', 'medium');
 const clickJabir = async (id) => {
   const pos = await T(page, async (id) => {
     const h = window.__TYCOON__.host, target = h.jabirPreview?.targets.get(id);
@@ -119,13 +131,36 @@ check('Jabir narrative mission completes without economic rewards', await T(page
   return c.jabirTour.completedIds.includes('jabir_research_request')
     && JSON.stringify(c.state) === before;
 }, jabirBefore));
+// Cover every mission through Babylon's real object picking, not direct controller dispatch.
+const jabirOtherMissions = [
+  ['jabir_materials_exhibition', ['jabir_materials_exhibit', 'jabir_shelf_620', 'jabir_reception']],
+  ['jabir_classification_challenge', ['jabir_library_desk', 'jabir_shelf_660', 'jabir_reception']],
+];
+for (const [missionId, targets] of jabirOtherMissions) {
+  await page.click(`[data-testid=jabir-mission-${missionId}]`);
+  let realPicks = true;
+  for (const target of targets) realPicks = (await clickJabir(target)) && realPicks;
+  check(missionId + ' completes by 3D mouse clicks', realPicks && await T(page, id =>
+    window.__TYCOON__.controller.jabirTour.completedIds.includes(id), missionId));
+}
+check('all three Jabir missions leave the campaign unchanged', await T(page, before => {
+  const c = window.__TYCOON__.controller;
+  return c.jabirTour.completedIds.length === 3 && JSON.stringify(c.state) === before;
+}, jabirBefore));
 await page.click('[data-testid=jabir-exit]');
 check('return to original hall restores 3D scene and camera constraints', await T(page, () => {
   const h = window.__TYCOON__.host;
+  const camera = h.cam.state;
   return !window.__TYCOON__.controller.jabirTour.active
     && !h.jabirPreview.root.isEnabled()
-    && h.cam.state.x <= 48;
+    && Math.abs(camera.x - 0.6) < 0.01
+    && Math.abs(camera.z - 0.9) < 0.01
+    && Math.abs(camera.zoom - 11.6) < 0.01;
 }));
+
+check('main campaign controls return after leaving Jabir', await T(page, () =>
+  !!document.querySelector('[data-testid=dock-library]')
+  && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => !button.disabled)));
 
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */
 const cam0 = await T(page, () => { const { host } = window.__TYCOON__; return { ...host.cam.state, dir: host.cam.camera.getForwardRay().direction.asArray() }; });

@@ -24,15 +24,20 @@ const SETTINGS_KEY = 'uot-library-tycoon-v30-settings';
 const memory: StorageLike = (() => { const m = new Map<string, string>(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => void m.set(k, v), removeItem: (k) => void m.delete(k) }; })();
 function browserStorage(): StorageLike { try { const s = window.localStorage; s.getItem('x'); return s; } catch { return memory; } }
 /**
- * Preview releases under /v31/ must never overwrite the installed /v30/
- * game save or settings on the same github.io origin. No migration runs
- * automatically. A user may export/import a save explicitly from Settings.
+ * All development-preview paths receive separate save AND settings namespaces.
+ * The production /v30/ campaign is never written by a V3.1/V3.2 preview.
+ * Explicit export/import remains the only transfer route.
  */
+export function previewStorageNamespace(pathname: string): string | null {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.includes('v32-jabir')) return 'v32-jabir';
+  if (segments.includes('v32')) return 'v32';
+  if (segments.includes('v31-shelves')) return 'v31-shelves';
+  return segments.includes('v31') ? 'v31' : null;
+}
 function isolatedPreviewStorage(base: StorageLike): StorageLike {
   if (typeof window === 'undefined') return base;
-  const segments = window.location.pathname.split('/').filter(Boolean);
-  const preview = segments.includes('v31-shelves') ? 'v31-shelves'
-    : segments.includes('v31') ? 'v31' : null;
+  const preview = previewStorageNamespace(window.location.pathname);
   if (!preview) return base;
   // The v31 prefix remains identical to older previews, preserving those saves.
   // The shelves preview is an isolated trial, never modifying /v30/ or /v31/.
@@ -115,7 +120,11 @@ export class GameController {
     if (this.uiAcc >= 0.2) { this.uiAcc = 0; this.notify(); }
     if (this.saveAcc >= 12) { this.saveAcc = 0; this.save(); }
   }
-  dispatch(a: Action) { this.handle(this.sim.dispatch(a)); this.notify(); }
+  dispatch(a: Action) {
+    // Keep the main campaign immutable while the separate Jabir trial is open.
+    if (this.jabirTour.active) return;
+    this.handle(this.sim.dispatch(a)); this.notify();
+  }
   private handle(events: SimEvent[]) {
     for (const e of events) {
       if (e.type === 'toast') { this.toasts.push({ id: this.seq++, text: e.text, tone: e.tone, at: performance.now() }); if (this.toasts.length > 4) this.toasts.shift(); }
@@ -125,7 +134,10 @@ export class GameController {
     }
   }
   select(sel: Selection | null) { this.selection = sel; this.notify(); }
-  setSpeed(s: number) { this.speed = s; this.paused = s === 0; this.notify(); }
+  setSpeed(s: number) {
+    if (this.jabirTour.active) return;
+    this.speed = s; this.paused = s === 0; this.notify();
+  }
   mascotWait() { return mascotRewardWait(this.state, Date.now()); }
 
   enterJabirTour(): boolean {

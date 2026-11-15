@@ -11,6 +11,8 @@ import type { GameController } from './controller';
 function Dock({ panel, setPanel }: { panel: PanelId | null; setPanel: (p: PanelId | null) => void }) {
   const c = useGame(), s = c.state;
   const badge: Partial<Record<PanelId, number>> = { events: (s.event ? 1 : 0) + s.broken.length, missions: s.missions.active ? 1 : 0 };
+  // The main campaign dock is not actionable while visiting the isolated hall.
+  if (c.jabirTour.active) return null;
   return (
     <nav className="dock" aria-label="لوحات الإدارة">
       {PANELS.map((p) => (
