@@ -134,20 +134,24 @@ export class SceneHost {
     if (hall === 'khwarizmi') {
       this.jabirPreview?.root.setEnabled(false);
       this.cam.setBounds(HALL);
-      this.cam.reset();
+      // Switching halls is not a cinematic pan. The old 46 m camera journey
+      // persisted into the next frame and broke player zoom/pan input.
+      this.cam.reset(true);
       return true;
     }
     try {
       if (!this.jabirPreview) this.jabirPreview = buildJabirPreview(this.scene, this.lib);
       this.jabirPreview.root.setEnabled(true);
       this.cam.setBounds(JABIR_WORLD_BOUNDS);
-      this.cam.focus(JABIR_PREVIEW_OFFSET_X, 0, 11.6);
+      // Snap the first visible frame to this hall, instead of easing in from
+      // Khwarizmi and making clicks hit the wrong scene during the transition.
+      this.cam.jump(JABIR_PREVIEW_OFFSET_X, 0, IsoCamera.HOME_ZOOM);
       return true;
     } catch (err) {
       console.error('Unable to open Jabir preview', err);
       this.jabirPreview?.root.setEnabled(false);
       this.cam.setBounds(HALL);
-      this.cam.reset();
+      this.cam.reset(true);
       return false;
     }
   }
