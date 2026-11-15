@@ -6,10 +6,11 @@ import type { GameController, Quality, WorldApi } from '../app/controller';
 import { AssetLibrary } from '../assets/library';
 import { STAFF_MODEL } from '../assets/manifest';
 import { CharacterView, clipForStaff, clipForVisitor, expressionFor } from '../characters/CharacterView';
-import { PROPS, PROP_BY_ID, QUEUES, SHELVES, zoneAt } from '../config/layout';
+import { HALL, PROPS, PROP_BY_ID, QUEUES, SHELVES, zoneAt } from '../config/layout';
 import type { EmoteKind, GameState } from '../gameplay/types';
 import { MascotView } from '../mascot/MascotView';
 import { buildHall, type HallBuild } from '../world/hall';
+import { buildJabirPreview, JABIR_PREVIEW_OFFSET_X, JABIR_WORLD_BOUNDS, type JabirPreviewBuild } from '../world/jabirPreview';
 import { IconFactory, type IconKind } from '../world/markers';
 import { IsoCamera } from './camera';
 import { AutoQualitySampler, browserHardwareHints, recommendedAutoProfile } from './autoQuality';
@@ -36,6 +37,7 @@ export class SceneHost {
   private keys = new Set<string>(); private frame = 0; private disposed = false;
   private instr!: SceneInstrumentation; private cleanup: (() => void)[] = [];
   private brokenMat!: PBRMaterial; private okScreen!: PBRMaterial;
+  private jabirPreview: JabirPreviewBuild | null = null;
   private readonly autoQualitySampler = new AutoQualitySampler();
   quality: Quality = 'high'; private api: WorldApi | null = null;
   onUiRequest: (req: { type: 'dewey' }) => void = () => {};
@@ -102,6 +104,8 @@ export class SceneHost {
     const api: WorldApi = {
       zoom: (d) => this.cam.zoomBy(d), resetCamera: () => this.cam.reset(), focus: (x, z) => this.cam.focus(x, z),
       setQuality: (q) => this.setQuality(q), setRenderScale: (s) => this.setRenderScale(s),
+      setHallView: (hall) => this.setHallView(hall),
+      focusJabirTarget: (id) => this.focusJabirTarget(id),
       stats: () => ({ fps: engine.getFps(), drawCalls: this.instr.drawCallsCounter.current, activeMeshes: scene.getActiveMeshes().length, triangles: scene.getActiveIndices() / 3 }),
       project: (x, y, z) => this.project(x, y, z),
     };
@@ -123,6 +127,34 @@ export class SceneHost {
       }
     });
     await scene.whenReadyAsync();
+  }
+
+  /** A separate, disabled-by-default 3D hall. No save, upgrade or economy side effects. */
+  setHallView(hall: 'khwarizmi' | 'jabir'): boolean {
+    if (hall === 'khwarizmi') {
+      this.jabirPreview?.root.setEnabled(false);
+      this.cam.setBounds(HALL);
+      this.cam.reset();
+      return true;
+    }
+    try {
+      if (!this.jabirPreview) this.jabirPreview = buildJabirPreview(this.scene, this.lib);
+      this.jabirPreview.root.setEnabled(true);
+      this.cam.setBounds(JABIR_WORLD_BOUNDS);
+      this.cam.focus(JABIR_PREVIEW_OFFSET_X, 0, 11.6);
+      return true;
+    } catch (err) {
+      console.error('Unable to open Jabir preview', err);
+      this.jabirPreview?.root.setEnabled(false);
+      this.cam.setBounds(HALL);
+      this.cam.reset();
+      return false;
+    }
+  }
+  focusJabirTarget(id: string) {
+    if (!this.controller.jabirTour.active) return;
+    const p = this.jabirPreview?.targets.get(id);
+    if (p) this.cam.focus(p.x, p.z, 7);
   }
 
   private mascotLayer(dt: number) {
@@ -364,6 +396,7 @@ export class SceneHost {
     const c = this.controller;
     switch (hit.kind) {
       case 'shelf': c.select({ kind: 'shelf', id: hit.id }); c.dispatch({ type: 'clickShelf', id: String(hit.id) }); break;
+      case 'jabir': if (c.jabirTour.active) c.interactJabirTarget(String(hit.id)); break;
       case 'visitor': c.select({ kind: 'visitor', id: hit.id }); c.dispatch({ type: 'clickVisitor', id: Number(hit.id) }); break;
       case 'staff': c.select({ kind: 'staff', id: hit.id }); break;
       case 'mascot': c.select({ kind: 'mascot', id: 'mascot' }); c.dispatch({ type: 'mascotReward', now: Date.now() }); break;
@@ -389,6 +422,10 @@ export class SceneHost {
     if (kind === 'mascot') return this.project(s.mascot.x, 0.5, s.mascot.z);
     if (kind === 'dirt') { const d = s.dirt.find((x) => x.id === id); return d ? this.project(d.x, 0.1, d.z) : null; }
     if (kind === 'misplaced') { const d = s.missions.misplaced.find((x) => x.id === id); return d ? this.project(d.x, 1.0, d.z) : null; }
+    if (kind === 'jabir') {
+      const p = this.jabirPreview?.targets.get(String(id));
+      return p ? this.project(p.x, 1.3, p.z) : null;
+    }
     const p = PROP_BY_ID[String(id)]; return p ? this.project(p.x, kind === 'shelf' ? 1.4 : 0.8, p.z) : null;
   }
   dispose() {

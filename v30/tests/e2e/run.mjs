@@ -89,6 +89,44 @@ await page.click('[data-testid=dock-home]');
 
 check('credits name present', await T(page, async () => { document.querySelector('[data-testid=dock-settings]').click(); await new Promise((r) => setTimeout(r, 300)); const t = document.querySelector('.credits')?.textContent ?? ''; document.querySelector('[data-testid=dock-settings]').click(); return t.includes('سامر رعد عزاوي') && t.includes('Samer Raad Azzawi'); }));
 
+/* ------------------------------------------------------------------ 2b. Actual second-hall 3D preview: mouse hits on scene meshes */
+await page.click('[data-testid=dock-library]');
+await page.click('[data-testid=preview-jabir-enter]');
+check('Jabir preview opens from the six-hall directory', await T(page, () =>
+  window.__TYCOON__.controller.jabirTour.active
+  && !!window.__TYCOON__.host.jabirPreview?.root.isEnabled()
+  && !!document.querySelector('[data-testid=jabir-tour]')));
+const jabirBefore = await T(page, () => JSON.stringify(window.__TYCOON__.controller.state));
+await page.click('[data-testid=jabir-mission-jabir_research_request]');
+const clickJabir = async (id) => {
+  const pos = await T(page, async (id) => {
+    const h = window.__TYCOON__.host, target = h.jabirPreview?.targets.get(id);
+    if (!target) return null;
+    h.cam.jump(target.x, target.z, 6);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    return h.locate('jabir', id);
+  }, id);
+  if (!pos) return false;
+  await page.mouse.click(pos.x, pos.y);
+  return true;
+};
+const jabirActions = ['jabir_reception', 'jabir_shelf_543', 'jabir_library_desk'];
+let jabirClicked = true;
+for (const id of jabirActions) jabirClicked = (await clickJabir(id)) && jabirClicked;
+check('Jabir mission uses three real mouse picks in the 3D hall', jabirClicked);
+check('Jabir narrative mission completes without economic rewards', await T(page, before => {
+  const c = window.__TYCOON__.controller;
+  return c.jabirTour.completedIds.includes('jabir_research_request')
+    && JSON.stringify(c.state) === before;
+}, jabirBefore));
+await page.click('[data-testid=jabir-exit]');
+check('return to original hall restores 3D scene and camera constraints', await T(page, () => {
+  const h = window.__TYCOON__.host;
+  return !window.__TYCOON__.controller.jabirTour.active
+    && !h.jabirPreview.root.isEnabled()
+    && h.cam.state.x <= 48;
+}));
+
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */
 const cam0 = await T(page, () => { const { host } = window.__TYCOON__; return { ...host.cam.state, dir: host.cam.camera.getForwardRay().direction.asArray() }; });
 await page.click('[data-testid=zoom-in]'); await page.click('[data-testid=zoom-in]');

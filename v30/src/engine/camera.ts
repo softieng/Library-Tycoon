@@ -13,6 +13,7 @@ export class IsoCamera {
   // View direction: from the south-east corner toward the north-west back walls, 36° above the floor.
   private static readonly DIR = new Vector3(1, 0.98, -1).normalize();
   private right = new Vector3(1, 0, 1).normalize(); private fwd = new Vector3(-1, 0, 1).normalize();
+  private bounds: { minX: number; maxX: number; minZ: number; maxZ: number } = HALL;
 
   constructor(private scene: Scene) {
     this.camera = new FreeCamera('iso', Vector3.Zero(), scene);
@@ -22,6 +23,11 @@ export class IsoCamera {
   }
   reset(immediate = false) { this.goal.set(0.6, 0, 0.9); this.zoomGoal = IsoCamera.HOME_ZOOM; if (immediate) { this.target.copyFrom(this.goal); this.zoom = this.zoomGoal; this.apply(); } }
   zoomBy(steps: number) { this.zoomGoal = Math.min(IsoCamera.MAX_ZOOM, Math.max(IsoCamera.MIN_ZOOM, this.zoomGoal * Math.pow(0.86, steps))); }
+  /** Constrain panning to the currently previewed hall, leaving the old default unchanged. */
+  setBounds(bounds: { minX: number; maxX: number; minZ: number; maxZ: number }) {
+    this.bounds = { ...bounds };
+    this.panWorld(0, 0);
+  }
   /** Pan by screen pixels. */
   panPixels(dx: number, dy: number) {
     const h = this.scene.getEngine().getRenderHeight() / this.scene.getEngine().getHardwareScalingLevel() || 1;
@@ -30,7 +36,8 @@ export class IsoCamera {
   }
   panWorld(rightUnits: number, fwdUnits: number) {
     this.goal.addInPlace(this.right.scale(rightUnits)).addInPlace(this.fwd.scale(fwdUnits));
-    this.goal.x = Math.min(HALL.maxX, Math.max(HALL.minX, this.goal.x)); this.goal.z = Math.min(HALL.maxZ, Math.max(HALL.minZ, this.goal.z));
+    this.goal.x = Math.min(this.bounds.maxX, Math.max(this.bounds.minX, this.goal.x));
+    this.goal.z = Math.min(this.bounds.maxZ, Math.max(this.bounds.minZ, this.goal.z));
   }
   focus(x: number, z: number, zoom?: number) { this.goal.set(x, 0, z); this.panWorld(0, 0); if (zoom) this.zoomGoal = zoom; }
   /** Used by QA/photo hooks: jump without easing. */

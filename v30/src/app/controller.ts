@@ -1,6 +1,7 @@
 import { browserHardwareHints, recommendedAutoProfile } from '../engine/autoQuality';
 import { Simulation, mascotRewardWait } from '../gameplay/sim';
 import { newGame } from '../gameplay/state';
+import { beginJabirTour, interactJabirTour, leaveJabirTour, newJabirTour, startJabirTourMission, type JabirTourState } from '../gameplay/jabirTour';
 import type { Action, GameState, SimEvent } from '../gameplay/types';
 import { SaveStore, type LoadResult, type StorageLike } from '../persistence/save';
 
@@ -13,6 +14,9 @@ export interface WorldApi {
   setQuality(q: Quality): void; setRenderScale(s: number): void;
   stats(): { fps: number; drawCalls: number; activeMeshes: number; triangles: number };
   project(x: number, y: number, z: number): { x: number; y: number } | null;
+  /** Optional until a Babylon scene with a second hall is attached. */
+  setHallView?(hall: 'khwarizmi' | 'jabir'): boolean;
+  focusJabirTarget?(id: string): void;
 }
 export type Quality = 'low' | 'medium' | 'high';
 export interface Settings { quality: Quality; renderScale: number; sound: boolean; showFps: boolean; autoQuality: boolean }
@@ -53,6 +57,8 @@ export class GameController {
   toasts: Toast[] = []; floaters: Floater[] = [];
   settings: Settings = { quality: 'medium', renderScale: 0.85, sound: true, showFps: false, autoQuality: true };
   world: WorldApi | null = null;
+  /** Review-only hall visit, not persisted or counted in the live game ledger. */
+  jabirTour: JabirTourState = newJabirTour();
   loadSource: string = 'new';
   lastSavedAt = 0;
   private version = 0; private listeners = new Set<() => void>();
@@ -99,8 +105,10 @@ export class GameController {
   /** Called once per rendered frame by the scene host (or by a timer when WebGL is unavailable). */
   tick(realDt: number) {
     const dt = Math.min(realDt, 0.25);
-    if (!this.paused) this.handle(this.sim.advance(dt * this.speed));
-    this.uiAcc += dt; this.saveAcc += dt;
+    // A trial visit freezes the actual campaign. No salaries, revenue, quest timers,
+    // background game time or automatic save writes while visiting the second hall.
+    if (!this.paused && !this.jabirTour.active) this.handle(this.sim.advance(dt * this.speed));
+    this.uiAcc += dt; if (!this.jabirTour.active) this.saveAcc += dt;
     const now = performance.now();
     if (this.toasts.length && now - this.toasts[0].at > 4200) { this.toasts.shift(); this.uiAcc = 1; }
     if (this.floaters.length && now - this.floaters[0].at > 1600) this.floaters.shift();
@@ -120,11 +128,32 @@ export class GameController {
   setSpeed(s: number) { this.speed = s; this.paused = s === 0; this.notify(); }
   mascotWait() { return mascotRewardWait(this.state, Date.now()); }
 
+  enterJabirTour(): boolean {
+    if (!this.world?.setHallView?.('jabir')) return false;
+    this.jabirTour = beginJabirTour(this.jabirTour);
+    this.selection = null; this.notify(); return true;
+  }
+  exitJabirTour() {
+    if (!this.jabirTour.active) return;
+    this.world?.setHallView?.('khwarizmi');
+    this.jabirTour = leaveJabirTour(this.jabirTour);
+    this.selection = null; this.notify();
+  }
+  startJabirMission(id: string) {
+    const next = startJabirTourMission(this.jabirTour, id);
+    if (next !== this.jabirTour) { this.jabirTour = next; this.notify(); }
+  }
+  interactJabirTarget(id: string) {
+    const next = interactJabirTour(this.jabirTour, id);
+    if (next !== this.jabirTour) { this.jabirTour = next; this.notify(); }
+  }
+
   /* ---- persistence ---- */
   save(): boolean { const ok = this.saves.save(this.state); if (ok) this.lastSavedAt = Date.now(); return ok; }
   private adopt(res: LoadResult): boolean {
     if (!res.ok) return false;
     this.sim.setState(res.state); this.selection = null;
+    this.jabirTour = newJabirTour(); this.world?.setHallView?.('khwarizmi');
     for (const l of this.worldListeners) l({ type: 'layout' });
     this.notify(); return true;
   }
