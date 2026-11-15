@@ -105,8 +105,10 @@ export class GameController {
   /** Called once per rendered frame by the scene host (or by a timer when WebGL is unavailable). */
   tick(realDt: number) {
     const dt = Math.min(realDt, 0.25);
-    if (!this.paused) this.handle(this.sim.advance(dt * this.speed));
-    this.uiAcc += dt; this.saveAcc += dt;
+    // A trial visit freezes the actual campaign. No salaries, revenue, quest timers,
+    // background game time or automatic save writes while visiting the second hall.
+    if (!this.paused && !this.jabirTour.active) this.handle(this.sim.advance(dt * this.speed));
+    this.uiAcc += dt; if (!this.jabirTour.active) this.saveAcc += dt;
     const now = performance.now();
     if (this.toasts.length && now - this.toasts[0].at > 4200) { this.toasts.shift(); this.uiAcc = 1; }
     if (this.floaters.length && now - this.floaters[0].at > 1600) this.floaters.shift();
