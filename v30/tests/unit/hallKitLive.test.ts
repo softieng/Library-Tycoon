@@ -88,6 +88,25 @@ describe('hallKit shared navigation and live visitor service', () => {
     expect(b.queue).toBeLessThanOrEqual(6);
   });
 
+  it('does not expose mutable visitor state through snapshots', () => {
+    const live = new HallLiveEngine('biruni', 17);
+    for (let i = 0; i < 25; i++) live.advance(0.1);
+    const original = live.snapshot;
+    expect(original.visitors.length).toBeGreaterThan(0);
+    const visitor = original.visitors[0]!;
+    const x = visitor.x;
+    const phase = visitor.phase;
+    visitor.x = 999;
+    visitor.phase = 'exit';
+    visitor.route.push({ x: 999, z: 999 });
+    if (visitor.destination) visitor.destination.x = 999;
+    const fresh = live.snapshot.visitors[0]!;
+    expect(fresh.x).toBe(x);
+    expect(fresh.phase).toBe(phase);
+    expect(fresh.route.some(p => p.x === 999)).toBe(false);
+    expect(fresh.destination?.x).not.toBe(999);
+  });
+
   it('does not advance simulation time when paused or supplied invalid time', () => {
     const s = new HallLiveEngine('theses');
     expect(s.advance(0).seconds).toBe(0);
