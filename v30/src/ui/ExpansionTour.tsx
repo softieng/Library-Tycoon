@@ -12,6 +12,7 @@ export function ExpansionTourPanel() {
   const currentId = quest && state.quest && !state.quest.finished
     ? quest.sequence[state.quest.nextIndex] : null;
   const completed = state.progress.completed[hall.id];
+  const live = c.liveHall?.snapshot;
   return (
     <aside className="jabir-tour expansion-tour" dir="rtl" data-testid="expansion-tour"
       aria-label={'المعاينة التفاعلية ل' + hall.nameAr}>
@@ -30,6 +31,16 @@ export function ExpansionTourPanel() {
         </div>
       </header>
       <p className="jabir-tour__note">اختر تحدياً، ثم انقر المجسمات المطلوبة بالترتيب. المصادر والمهمات خيالية خاصة باللعبة، ولا تمثل بيانات فهرس Koha.</p>
+      {live && <section className="expansion-live" data-testid="expansion-live-status" aria-label="محاكاة خدمات القاعة">
+        <strong>👥 حركة الزوار الحية</strong>
+        <div className="expansion-live__metrics">
+          <span>داخل القاعة <b>{num(live.visitors.length)}</b></span>
+          <span>في الطابور <b>{num(live.queue)}</b></span>
+          <span>خدمات أُنجزت <b>{num(live.served)}</b></span>
+          <span>غادروا <b>{num(live.departed)}</b></span>
+        </div>
+        <small>محاكاة مستقلة، لا تغير رواتب أو رصيد الخوارزمي. الموظف ثابت في موقعه.</small>
+      </section>}
       <div className="jabir-tour__overall" role="status" data-testid="expansion-progress">
         <strong>المهمات المكتملة: {num(completed.length)} من {num(hall.quests.length)}</strong>
         <progress max={hall.quests.length} value={completed.length} aria-label="تقدم مهمات القاعة"/>
