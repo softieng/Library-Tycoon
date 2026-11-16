@@ -99,6 +99,41 @@ describe('Jabir Hall V3.2 3D preview and isolated mission logic', () => {
     expect(visited).toEqual(['jabir', 'khwarizmi']);
     expect(c.jabirTour.active).toBe(false);
   });
+  it('plays service and first-time goal cues only after ordered world interactions', () => {
+    const { c } = controllerWithWorld();
+    const cues: string[] = [];
+    c.onSimEvent(event => { if (event.type === 'sfx') cues.push(event.name); });
+    expect(c.enterJabirTour()).toBe(true);
+    const mission = JABIR_MISSIONS[0];
+    c.startJabirMission(mission.id);
+    c.interactJabirTarget(mission.sequence[1]); // incorrect order: silent
+    c.interactJabirTarget('nonexistent'); // unknown: silent
+    expect(cues).toEqual([]);
+    c.interactJabirTarget(mission.sequence[0]);
+    c.interactJabirTarget(mission.sequence[0]); // duplicate: silent
+    c.interactJabirTarget(mission.sequence[1]);
+    c.interactJabirTarget(mission.sequence[2]);
+    c.interactJabirTarget(mission.sequence[2]); // completed: silent
+    expect(cues).toEqual(['service', 'service', 'goal']);
+    // Replay is allowed for practice but cannot celebrate a reward twice.
+    c.startJabirMission(mission.id);
+    for (const target of mission.sequence) c.interactJabirTarget(target);
+    expect(cues).toEqual(['service', 'service', 'goal', 'service', 'service', 'service']);
+    expect(c.jabirTour.completedIds).toEqual([mission.id]);
+  });
+  it('preserves the existing audio preference when the Jabir preview is opened or closed', () => {
+    const store = localStore();
+    const c = new GameController(store);
+    c.world = { setHallView: () => true } as unknown as WorldApi;
+    c.updateSettings({ sound: false });
+    expect(c.enterJabirTour()).toBe(true);
+    c.startJabirMission(JABIR_MISSIONS[0].id);
+    for (const target of JABIR_MISSIONS[0].sequence) c.interactJabirTarget(target);
+    c.exitJabirTour();
+    expect(c.settings.sound).toBe(false);
+    expect(new GameController(store).settings.sound).toBe(false);
+  });
+
   it('does not persist preview mission progress in the established V3 save', () => {
     const store = localStore();
     const c = new GameController(store);
