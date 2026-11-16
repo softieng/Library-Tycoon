@@ -129,3 +129,24 @@
 @media(max-height:800px) {
   .expansion-tour { top:74px; max-height:calc(100vh - 150px); }
 }
+
+.expansion-live__policy {
+  border: 1px solid #6d829d;
+  border-radius: 8px;
+  margin: 9px 0;
+  padding: 9px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.expansion-live__policy legend { color: #e9d29e; font-weight: 700; padding: 0 5px; }
+.expansion-live__policy button {
+  padding: 5px 9px; min-height: 34px;
+  border: 1px solid #9aabc3; border-radius: 7px;
+  background: #273d5b; color: #fff;
+}
+.expansion-live__policy button[aria-pressed="true"] {
+  background: #a97e40; color: #191714;
+  border-color: #e4c283; font-weight: 800;
+}
+.expansion-live__policy button:focus-visible { outline: 3px solid #fbe6b4; }
