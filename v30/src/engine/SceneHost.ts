@@ -11,6 +11,8 @@ import type { EmoteKind, GameState } from '../gameplay/types';
 import { MascotView } from '../mascot/MascotView';
 import { buildHall, type HallBuild } from '../world/hall';
 import { buildJabirPreview, JABIR_PREVIEW_OFFSET_X, JABIR_WORLD_BOUNDS, type JabirPreviewBuild } from '../world/jabirPreview';
+import { EXPANSION_BY_ID, type ExpansionHallId } from '../config/expansionHalls';
+import { buildExpansionHall, expansionBounds, type ExpansionHallBuild } from '../world/expansionHall';
 import { IconFactory, type IconKind } from '../world/markers';
 import { IsoCamera, wheelZoomSteps } from './camera';
 import { AutoQualitySampler, browserHardwareHints, recommendedAutoProfile } from './autoQuality';
@@ -38,6 +40,7 @@ export class SceneHost {
   private instr!: SceneInstrumentation; private cleanup: (() => void)[] = [];
   private brokenMat!: PBRMaterial; private okScreen!: PBRMaterial;
   private jabirPreview: JabirPreviewBuild | null = null;
+  private extraPreviews = new Map<ExpansionHallId, ExpansionHallBuild>();
   private readonly autoQualitySampler = new AutoQualitySampler();
   quality: Quality = 'high'; private api: WorldApi | null = null;
   onUiRequest: (req: { type: 'dewey' }) => void = () => {};
@@ -102,10 +105,11 @@ export class SceneHost {
     const ro = new ResizeObserver(() => engine.resize()); ro.observe(this.canvas); this.cleanup.push(() => ro.disconnect());
 
     const api: WorldApi = {
-      zoom: (d) => this.cam.zoomBy(d), resetCamera: () => this.cam.reset(), focus: (x, z) => this.cam.focus(x, z),
+      zoom: (d) => this.cam.zoomBy(d), resetCamera: () => this.resetHallCamera(), focus: (x, z) => this.cam.focus(x, z),
       setQuality: (q) => this.setQuality(q), setRenderScale: (s) => this.setRenderScale(s),
       setHallView: (hall) => this.setHallView(hall),
       focusJabirTarget: (id) => this.focusJabirTarget(id),
+      focusExtraHallTarget: (hall, id) => this.focusExtraHallTarget(hall, id),
       stats: () => ({ fps: engine.getFps(), drawCalls: this.instr.drawCallsCounter.current, activeMeshes: scene.getActiveMeshes().length, triangles: scene.getActiveIndices() / 3 }),
       project: (x, y, z) => this.project(x, y, z),
     };
@@ -113,7 +117,7 @@ export class SceneHost {
     scene.onAfterAnimationsObservable.add(() => {
       // The Khwarizmi campaign is frozen while visiting Jabir. Avoid animating
       // offscreen models and allocating an array of all agents each frame.
-      if (this.controller.jabirTour.active) return;
+      if (this.controller.isInHallPreview) return;
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
       for (const a of this.visitors.values()) a.view.layer(dt);
       for (const a of this.staff.values()) a.view.layer(dt);
@@ -125,7 +129,7 @@ export class SceneHost {
       this.controller.tick(dt);
       // Do not run full main-hall sprite/mesh sync while its simulation is
       // paused and its camera is in the distant Jabir preview.
-      if (!this.controller.jabirTour.active) this.sync(dt);
+      if (!this.controller.isInHallPreview) this.sync(dt);
       this.pan(dt); this.cam.update(dt);
       scene.render(); this.frame++;
       if (this.controller.settings.autoQuality) {
@@ -139,36 +143,61 @@ export class SceneHost {
     await scene.whenReadyAsync();
   }
 
-  /** A separate, disabled-by-default 3D hall. No save, upgrade or economy side effects. */
-  setHallView(hall: 'khwarizmi' | 'jabir'): boolean {
+  /** Hall switching is immediate and does not change money or the campaign. */
+  setHallView(hall: 'khwarizmi' | 'jabir' | ExpansionHallId): boolean {
+    this.jabirPreview?.root.setEnabled(false);
+    for (const view of this.extraPreviews.values()) view.root.setEnabled(false);
     if (hall === 'khwarizmi') {
-      this.jabirPreview?.root.setEnabled(false);
       this.cam.setBounds(HALL);
-      // Switching halls is not a cinematic pan. The old 46 m camera journey
-      // persisted into the next frame and broke player zoom/pan input.
       this.cam.reset(true);
       return true;
     }
     try {
-      if (!this.jabirPreview) this.jabirPreview = buildJabirPreview(this.scene, this.lib);
-      this.jabirPreview.root.setEnabled(true);
-      this.cam.setBounds(JABIR_WORLD_BOUNDS);
-      // Snap the first visible frame to this hall, instead of easing in from
-      // Khwarizmi and making clicks hit the wrong scene during the transition.
-      this.cam.jump(JABIR_PREVIEW_OFFSET_X, 0, IsoCamera.HOME_ZOOM);
+      if (hall === 'jabir') {
+        if (!this.jabirPreview) this.jabirPreview = buildJabirPreview(this.scene, this.lib);
+        this.jabirPreview.root.setEnabled(true);
+        this.cam.setBounds(JABIR_WORLD_BOUNDS);
+        this.cam.jump(JABIR_PREVIEW_OFFSET_X, 0, IsoCamera.HOME_ZOOM);
+      } else {
+        let extra = this.extraPreviews.get(hall);
+        if (!extra) {
+          extra = buildExpansionHall(this.scene, this.lib, hall);
+          this.extraPreviews.set(hall, extra);
+        }
+        extra.root.setEnabled(true);
+        this.cam.setBounds(expansionBounds(hall));
+        this.cam.jump(EXPANSION_BY_ID[hall].offsetX, 0, IsoCamera.HOME_ZOOM);
+      }
       return true;
     } catch (err) {
-      console.error('Unable to open Jabir preview', err);
+      console.error('Unable to open 3D hall preview', err);
       this.jabirPreview?.root.setEnabled(false);
+      for (const view of this.extraPreviews.values()) view.root.setEnabled(false);
       this.cam.setBounds(HALL);
       this.cam.reset(true);
       return false;
     }
   }
+  /** The home key always returns to the hall being visited, not Khwarizmi. */
+  private resetHallCamera() {
+    const extraId = this.controller.extraTour.active;
+    if (extraId) this.cam.jump(EXPANSION_BY_ID[extraId].offsetX, 0, IsoCamera.HOME_ZOOM);
+    else if (this.controller.jabirTour.active) this.cam.jump(JABIR_PREVIEW_OFFSET_X, 0, IsoCamera.HOME_ZOOM);
+    else this.cam.reset();
+  }
+  private hallForExpansionTarget(targetId: string): ExpansionHallId | null {
+    const hall = this.controller.extraTour.active;
+    return hall && this.extraPreviews.get(hall)?.targets.has(targetId) ? hall : null;
+  }
   focusJabirTarget(id: string) {
     if (!this.controller.jabirTour.active) return;
     const p = this.jabirPreview?.targets.get(id);
     if (p) this.cam.focus(p.x, p.z, 7);
+  }
+  focusExtraHallTarget(hall: ExpansionHallId, id: string) {
+    if (this.controller.extraTour.active !== hall) return;
+    const target = this.extraPreviews.get(hall)?.targets.get(id);
+    if (target) this.cam.focus(target.x, target.z, 7);
   }
 
   private mascotLayer(dt: number) {
@@ -377,7 +406,7 @@ export class SceneHost {
         this.keys.add(e.code);
         if (e.code === 'Equal' || e.code === 'NumpadAdd') this.cam.zoomBy(1);
         if (e.code === 'Minus' || e.code === 'NumpadSubtract') this.cam.zoomBy(-1);
-        if (e.code === 'Home' || e.code === 'Digit0') this.cam.reset();
+        if (e.code === 'Home' || e.code === 'Digit0') this.resetHallCamera();
       } else this.keys.delete(e.code);
     };
     const blur = () => { this.keys.clear(); active.clear(); down = null; dragged = false; };
@@ -416,6 +445,10 @@ export class SceneHost {
     switch (hit.kind) {
       case 'shelf': c.select({ kind: 'shelf', id: hit.id }); c.dispatch({ type: 'clickShelf', id: String(hit.id) }); break;
       case 'jabir': if (c.jabirTour.active) c.interactJabirTarget(String(hit.id)); break;
+      case 'expansion':
+        if (c.extraTour.active && c.extraTour.active === this.hallForExpansionTarget(String(hit.id)))
+          c.interactExtraTarget(String(hit.id));
+        break;
       case 'visitor': c.select({ kind: 'visitor', id: hit.id }); c.dispatch({ type: 'clickVisitor', id: Number(hit.id) }); break;
       case 'staff': c.select({ kind: 'staff', id: hit.id }); break;
       case 'mascot': c.select({ kind: 'mascot', id: 'mascot' }); c.dispatch({ type: 'mascotReward', now: Date.now() }); break;
@@ -443,6 +476,10 @@ export class SceneHost {
     if (kind === 'misplaced') { const d = s.missions.misplaced.find((x) => x.id === id); return d ? this.project(d.x, 1.0, d.z) : null; }
     if (kind === 'jabir') {
       const p = this.jabirPreview?.targets.get(String(id));
+      return p ? this.project(p.x, 1.3, p.z) : null;
+    }
+    if (kind === 'expansion' && this.controller.extraTour.active) {
+      const p = this.extraPreviews.get(this.controller.extraTour.active)?.targets.get(String(id));
       return p ? this.project(p.x, 1.3, p.z) : null;
     }
     const p = PROP_BY_ID[String(id)]; return p ? this.project(p.x, kind === 'shelf' ? 1.4 : 0.8, p.z) : null;
