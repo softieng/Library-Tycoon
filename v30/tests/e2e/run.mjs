@@ -181,6 +181,7 @@ check('main campaign controls return after leaving Jabir', await T(page, () =>
   && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => !button.disabled)));
 
 /* ---------------------------------------------------- 2c. Four real clickable 3D hall previews */
+await T(page, () => window.__TYCOON__.controller.setSpeed(0));
 const extendedBefore = await T(page, () => JSON.stringify(window.__TYCOON__.controller.state));
 const expansionVisits = [
   ['biruni', 'biruni_search', ['biruni_help', 'biruni_programming', 'biruni_pc_1']],
@@ -234,6 +235,7 @@ check('four expansion hall quests never change Khwarizmi campaign economy', awai
 check('four expansion halls persist independent first-visit XP without rewriting campaign saves',
   await T(page, () => Object.values(window.__TYCOON__.controller.extraTour.progress.earnedXp)
     .every(v => v >= 100)));
+await T(page, () => window.__TYCOON__.controller.setSpeed(1));
 
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */
 const cam0 = await T(page, () => { const { host } = window.__TYCOON__; return { ...host.cam.state, dir: host.cam.camera.getForwardRay().direction.asArray() }; });
