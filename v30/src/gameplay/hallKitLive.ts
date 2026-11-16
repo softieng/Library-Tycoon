@@ -74,7 +74,7 @@ export class HallLiveEngine {
       throw new Error('hall_queue_or_door_blocked');
   }
   setServicePolicy(policy: ServicePolicy): boolean {
-    if (!(policy in SERVICE_POLICIES)) return false;
+    if (!Object.prototype.hasOwnProperty.call(SERVICE_POLICIES, policy)) return false;
     this.policy = policy;
     return true;
   }
