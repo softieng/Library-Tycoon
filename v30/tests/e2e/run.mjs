@@ -214,7 +214,7 @@ for (const [hall, questId, sequence] of expansionVisits) {
   await page.click(`[data-testid=expansion-quest-${questId}]`);
   let physicallyClicked = true;
   for (const id of sequence) physicallyClicked = (await clickExpansion(hall, id)) && physicallyClicked;
-  check(hall + ' mission completes with 3 physical Babylon mouse picks', physicallyClicked && await T(page, [hall, questId] => {
+  check(hall + ' mission completes with 3 physical Babylon mouse picks', physicallyClicked && await T(page, ([hall, questId]) => {
     const c = window.__TYCOON__.controller;
     return c.extraTour.progress.completed[hall].includes(questId)
       && c.extraTour.progress.earnedXp[hall] > 0;
