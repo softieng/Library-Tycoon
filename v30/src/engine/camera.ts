@@ -1,6 +1,19 @@
 import { Camera, FreeCamera, Scene, Vector3 } from '@babylonjs/core';
 import { HALL } from '../config/layout';
 
+/** A stable exponential camera interpolation factor at any render frame rate. */
+export function cameraDampingFactor(dt: number, response = 9): number {
+  if (!Number.isFinite(dt) || dt <= 0 || !Number.isFinite(response) || response <= 0) return 0;
+  return 1 - Math.exp(-response * Math.min(dt, 0.25));
+}
+
+/** Normalize a mouse wheel notch and the much smaller trackpad deltas. */
+export function wheelZoomSteps(deltaY: number, deltaMode = 0, viewportHeight = 800): number {
+  if (!Number.isFinite(deltaY) || deltaY === 0) return 0;
+  const multiplier = deltaMode === 1 ? 40 : deltaMode === 2 ? Math.max(1, viewportHeight) : 1;
+  return Math.max(-1.2, Math.min(1.2, -deltaY * multiplier / 100));
+}
+
 /**
  * Fixed-rotation orthographic "isometric" camera. The player may pan and zoom only;
  * rotation is locked by construction (there is no input that changes the view direction).
@@ -8,10 +21,13 @@ import { HALL } from '../config/layout';
 export class IsoCamera {
   readonly camera: FreeCamera;
   private target = new Vector3(0, 0, 0); private goal = new Vector3(0, 0, 0);
+  // Reuse vector storage each frame instead of allocating during camera easing.
+  private readonly travel = new Vector3();
   private zoom = 10.5; private zoomGoal = 10.5;
   static readonly MIN_ZOOM = 3.2; static readonly MAX_ZOOM = 14.5; static readonly HOME_ZOOM = 11.6;
   // View direction: from the south-east corner toward the north-west back walls, 36° above the floor.
   private static readonly DIR = new Vector3(1, 0.98, -1).normalize();
+  private static readonly OFFSET = IsoCamera.DIR.scale(60);
   private right = new Vector3(1, 0, 1).normalize(); private fwd = new Vector3(-1, 0, 1).normalize();
   private bounds: { minX: number; maxX: number; minZ: number; maxZ: number } = HALL;
 
@@ -35,7 +51,8 @@ export class IsoCamera {
     this.panWorld(-dx * unitsPerPx, dy * unitsPerPx / Math.sin(Math.asin(IsoCamera.DIR.y)));
   }
   panWorld(rightUnits: number, fwdUnits: number) {
-    this.goal.addInPlace(this.right.scale(rightUnits)).addInPlace(this.fwd.scale(fwdUnits));
+    this.goal.x += this.right.x * rightUnits + this.fwd.x * fwdUnits;
+    this.goal.z += this.right.z * rightUnits + this.fwd.z * fwdUnits;
     this.goal.x = Math.min(this.bounds.maxX, Math.max(this.bounds.minX, this.goal.x));
     this.goal.z = Math.min(this.bounds.maxZ, Math.max(this.bounds.minZ, this.goal.z));
   }
@@ -43,14 +60,18 @@ export class IsoCamera {
   /** Used by QA/photo hooks: jump without easing. */
   jump(x: number, z: number, zoom: number) { this.goal.set(x, 0, z); this.zoomGoal = zoom; this.target.copyFrom(this.goal); this.zoom = zoom; this.apply(); }
   update(dt: number) {
-    const k = Math.min(1, dt * 9);
-    this.target.addInPlace(this.goal.subtract(this.target).scale(k)); this.zoom += (this.zoomGoal - this.zoom) * k;
+    // Framerate-independent movement: the camera travels the same distance
+    // in one second at 30, 60, or 120 FPS, without an abrupt final snap.
+    const k = cameraDampingFactor(dt);
+    this.goal.subtractToRef(this.target, this.travel);
+    this.target.addInPlace(this.travel.scaleInPlace(k));
+    this.zoom += (this.zoomGoal - this.zoom) * k;
     this.apply();
   }
   private apply() {
     const e = this.scene.getEngine(), aspect = e.getRenderWidth() / Math.max(1, e.getRenderHeight());
     this.camera.orthoTop = this.zoom; this.camera.orthoBottom = -this.zoom; this.camera.orthoLeft = -this.zoom * aspect; this.camera.orthoRight = this.zoom * aspect;
-    this.camera.position.copyFrom(this.target.add(IsoCamera.DIR.scale(60)));
+    this.camera.position.copyFrom(this.target).addInPlace(IsoCamera.OFFSET);
     this.camera.setTarget(this.target);
   }
   get state() { return { x: this.target.x, z: this.target.z, zoom: this.zoom }; }
