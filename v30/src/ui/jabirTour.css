@@ -98,3 +98,34 @@
 .jabir-tour__steps li.is-done {
   color: #c3efd2;
 }
+
+/* Independent live service readout for four expansion halls. */
+.expansion-live {
+  margin: 10px 0;
+  padding: 10px 11px;
+  border: 1px solid #617390;
+  border-radius: 10px;
+  background: rgba(21, 47, 75, 0.85);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.expansion-live > strong { color: #f8d99c; }
+.expansion-live__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 10px;
+  margin: 8px 0;
+}
+.expansion-live__metrics span {
+  background: rgba(9, 19, 43, 0.56);
+  border-radius: 6px;
+  padding: 5px 7px;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.expansion-live__metrics b { font-variant-numeric: tabular-nums; color: #f8db9c; }
+.expansion-live small { color: #cedaf0; }
+@media(max-height:800px) {
+  .expansion-tour { top:74px; max-height:calc(100vh - 150px); }
+}
