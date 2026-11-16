@@ -92,6 +92,32 @@ describe('hallKit shared navigation and live visitor service', () => {
     expect(b.queue).toBeLessThanOrEqual(6);
   });
 
+  it('locks satisfaction to the policy active when a visitor starts service', () => {
+    const unchanged = new HallLiveEngine('biruni', 31);
+    const switched = new HallLiveEngine('biruni', 31);
+    unchanged.setServicePolicy('careful');
+    switched.setServicePolicy('careful');
+    let started = false;
+    for (let i = 0; i < 500; i++) {
+      unchanged.advance(0.1);
+      const state = switched.advance(0.1);
+      if (state.visitors.some(v => v.phase === 'service')) {
+        started = true;
+        break;
+      }
+    }
+    expect(started).toBe(true);
+    expect(switched.setServicePolicy('rapid')).toBe(true);
+    for (let i = 0; i < 100; i++) {
+      unchanged.advance(0.1);
+      switched.advance(0.1);
+      if (unchanged.served > 0 && switched.served > 0) break;
+    }
+    expect(unchanged.served).toBe(1);
+    expect(switched.served).toBe(1);
+    expect(switched.snapshot.satisfaction).toBe(unchanged.snapshot.satisfaction);
+  });
+
   it('does not expose mutable visitor state through snapshots', () => {
     const live = new HallLiveEngine('biruni', 17);
     for (let i = 0; i < 25; i++) live.advance(0.1);

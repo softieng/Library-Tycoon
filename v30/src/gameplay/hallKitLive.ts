@@ -54,6 +54,7 @@ export class HallLiveEngine {
   private readonly people: HallLiveVisitor[] = [];
   private readonly line: number[] = [];
   private serviceId: number | null = null;
+  private activeServiceSatisfaction = SERVICE_POLICIES.balanced.satisfaction;
   private accumulator = 0;
   private nextSpawn = 2.0;
   private randomState: number;
@@ -164,13 +165,15 @@ export class HallLiveEngine {
         if (ready && index === 0 && this.serviceId === null) {
           this.serviceId = v.id; v.phase = 'service';
           v.privateTimer = SERVICE_POLICIES[this.policy].seconds;
+          // Lock the service outcome when service begins, not after a policy switch.
+          this.activeServiceSatisfaction = SERVICE_POLICIES[this.policy].satisfaction;
           v.moving = false;
         }
       } else if (v.phase === 'service') {
         v.privateTimer -= STEP;
         if (v.privateTimer <= 0) {
           this.served++;
-          this.satisfactionSum += Math.max(0, SERVICE_POLICIES[this.policy].satisfaction
+          this.satisfactionSum += Math.max(0, this.activeServiceSatisfaction
             - Math.max(0, this.line.length - 2) * 3);
           this.line.shift();
           this.serviceId = null;
