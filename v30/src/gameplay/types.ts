@@ -93,7 +93,7 @@ export type SimEvent =
   | { type: 'upgrade'; id: string }
   | { type: 'achievement'; id: string }
   | { type: 'directorGoal'; id: string }
-  | { type: 'sfx'; name: 'coin' | 'good' | 'bad' | 'click' | 'fanfare' }
+  | { type: 'sfx'; name: 'coin' | 'good' | 'bad' | 'click' | 'fanfare' | 'service' | 'goal' }
   | { type: 'dayEnd'; report: DayReport }
   | { type: 'layout' };
 
