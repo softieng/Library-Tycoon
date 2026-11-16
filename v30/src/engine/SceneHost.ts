@@ -12,7 +12,7 @@ import { MascotView } from '../mascot/MascotView';
 import { buildHall, type HallBuild } from '../world/hall';
 import { buildJabirPreview, JABIR_PREVIEW_OFFSET_X, JABIR_WORLD_BOUNDS, type JabirPreviewBuild } from '../world/jabirPreview';
 import { IconFactory, type IconKind } from '../world/markers';
-import { IsoCamera } from './camera';
+import { IsoCamera, wheelZoomSteps } from './camera';
 import { AutoQualitySampler, browserHardwareHints, recommendedAutoProfile } from './autoQuality';
 import { createEnvironment } from './environment';
 
@@ -110,12 +110,22 @@ export class SceneHost {
       project: (x, y, z) => this.project(x, y, z),
     };
     this.controller.world = this.api = api;
-    scene.onAfterAnimationsObservable.add(() => { for (const a of [...this.visitors.values(), ...this.staff.values()]) a.view.layer(engine.getDeltaTime() / 1000); this.mascotLayer(engine.getDeltaTime() / 1000); });
+    scene.onAfterAnimationsObservable.add(() => {
+      // The Khwarizmi campaign is frozen while visiting Jabir. Avoid animating
+      // offscreen models and allocating an array of all agents each frame.
+      if (this.controller.jabirTour.active) return;
+      const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
+      for (const a of this.visitors.values()) a.view.layer(dt);
+      for (const a of this.staff.values()) a.view.layer(dt);
+      this.mascotLayer(dt);
+    });
     engine.runRenderLoop(() => {
       if (this.disposed) return;
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
       this.controller.tick(dt);
-      this.sync(dt);
+      // Do not run full main-hall sprite/mesh sync while its simulation is
+      // paused and its camera is in the distant Jabir preview.
+      if (!this.controller.jabirTour.active) this.sync(dt);
       this.pan(dt); this.cam.update(dt);
       scene.render(); this.frame++;
       if (this.controller.settings.autoQuality) {
@@ -354,7 +364,12 @@ export class SceneHost {
       try { if (c.hasPointerCapture(e.pointerId)) c.releasePointerCapture(e.pointerId); } catch { /* ignore */ }
       c.style.cursor = 'grab';
     };
-    const onWheel = (e: WheelEvent) => { e.preventDefault(); this.cam.zoomBy(-Math.sign(e.deltaY) * 1.2); };
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      // A trackpad emits dozens of small wheel deltas. Interpreting each as
+      // one physical wheel notch caused large, jerky jumps in camera zoom.
+      this.cam.zoomBy(wheelZoomSteps(e.deltaY, e.deltaMode, this.canvas.clientHeight));
+    };
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
