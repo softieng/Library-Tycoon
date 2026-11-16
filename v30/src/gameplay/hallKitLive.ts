@@ -6,6 +6,12 @@ import { HallGrid, type HallPoint } from './hallKitNav';
  * Runs IN MEMORY only. No salary, financial transaction or campaign save effects.
  * Workers remain at their designed desks. No unrestricted cleaner movement.
  */
+export type ServicePolicy = 'careful' | 'balanced' | 'rapid';
+export const SERVICE_POLICIES: Readonly<Record<ServicePolicy, { seconds: number; satisfaction: number }>> = {
+  careful: { seconds: 6.2, satisfaction: 91 },
+  balanced: { seconds: 3.8, satisfaction: 79 },
+  rapid: { seconds: 2.4, satisfaction: 65 },
+};
 export type HallVisitorPhase = 'queue' | 'service' | 'shelf' | 'browse' | 'read' | 'reading' | 'exit';
 export interface HallLiveVisitor {
   id: number;
@@ -28,6 +34,8 @@ export interface HallLiveStatus {
   readonly departed: number;
   readonly rejected: number;
   readonly queue: number;
+  readonly policy: ServicePolicy;
+  readonly satisfaction: number;
   readonly visitors: readonly HallLiveVisitor[];
   readonly staff: Readonly<HallPoint>;
 }
@@ -35,7 +43,6 @@ const ENTRY: HallPoint = { x: 0, z: -7.5 };
 const FRONT: HallPoint = { x: -7.5, z: -6.0 };
 const QUEUE_SPACING = 1.0;
 const READ_TIME = 6;
-const SERVICE_TIME = 3.8;
 const MAX_QUEUE = 6;
 const MAX_VISITORS = 15;
 const STEP = 0.1;
@@ -52,6 +59,8 @@ export class HallLiveEngine {
   private randomState: number;
   private nextId = 1;
   private t = 0;
+  private policy: ServicePolicy = 'balanced';
+  private satisfactionSum = 0;
   arrivals = 0;
   served = 0;
   departed = 0;
@@ -64,6 +73,11 @@ export class HallLiveEngine {
     if (!this.nav.isClear(ENTRY) || !this.nav.isClear(FRONT))
       throw new Error('hall_queue_or_door_blocked');
   }
+  setServicePolicy(policy: ServicePolicy): boolean {
+    if (!(policy in SERVICE_POLICIES)) return false;
+    this.policy = policy;
+    return true;
+  }
   private rand() {
     let n = this.randomState;
     n ^= n << 13; n ^= n >>> 17; n ^= n << 5;
@@ -75,6 +89,8 @@ export class HallLiveEngine {
       hall: this.hall, seconds: this.t,
       arrivals: this.arrivals, served: this.served, departed: this.departed,
       rejected: this.rejected, queue: this.line.length,
+      policy: this.policy, satisfaction: this.served
+        ? Math.round(this.satisfactionSum / this.served) : 75,
       visitors: this.people, staff: HALL_STAFF_STATION,
     };
   }
@@ -132,7 +148,9 @@ export class HallLiveEngine {
     this.nextSpawn -= STEP;
     if (this.nextSpawn <= 0) {
       this.trySpawn();
-      this.nextSpawn = 6.2 + this.rand() * 2.2;
+      // Occasional pressure forces a real management choice between throughput
+      // and satisfaction instead of making every service policy equivalent.
+      this.nextSpawn = 4.0 + this.rand() * 1.8;
     }
     for (const v of this.people) {
       if (v.phase === 'queue') {
@@ -142,13 +160,16 @@ export class HallLiveEngine {
         if (!this.plan(v, desired)) { this.rejected++; continue; }
         const ready = this.march(v, STEP);
         if (ready && index === 0 && this.serviceId === null) {
-          this.serviceId = v.id; v.phase = 'service'; v.privateTimer = SERVICE_TIME;
+          this.serviceId = v.id; v.phase = 'service';
+          v.privateTimer = SERVICE_POLICIES[this.policy].seconds;
           v.moving = false;
         }
       } else if (v.phase === 'service') {
         v.privateTimer -= STEP;
         if (v.privateTimer <= 0) {
           this.served++;
+          this.satisfactionSum += Math.max(0, SERVICE_POLICIES[this.policy].satisfaction
+            - Math.max(0, this.line.length - 2) * 3);
           this.line.shift();
           this.serviceId = null;
           const sh = EXPANSION_BY_ID[this.hall].targets.find(t => t.id === v.shelfId)!;
