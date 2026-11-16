@@ -91,7 +91,9 @@ export class HallLiveEngine {
       rejected: this.rejected, queue: this.line.length,
       policy: this.policy, satisfaction: this.served
         ? Math.round(this.satisfactionSum / this.served) : 75,
-      visitors: this.people, staff: HALL_STAFF_STATION,
+      visitors: this.people.map(v => ({ ...v, route: v.route.map(p => ({ ...p })),
+        destination: v.destination ? { ...v.destination } : null })),
+      staff: HALL_STAFF_STATION,
     };
   }
   private queuePoint(index: number): HallPoint { return { x: FRONT.x + index * QUEUE_SPACING, z: FRONT.z }; }
