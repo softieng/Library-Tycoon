@@ -4,6 +4,7 @@ import { newGame } from '../gameplay/state';
 import { beginJabirTour, interactJabirTour, leaveJabirTour, newJabirTour, startJabirTourMission, type JabirTourState } from '../gameplay/jabirTour';
 import { HALL_PROGRESS_KEY, interactExtraHall, leaveExtraHall, newExtraHallState, readExtraHallProgress, startExtraHallQuest, visitExtraHall, writeExtraHallProgress, type ExtraHallState } from '../gameplay/extraHallTour';
 import type { ExpansionHallId } from '../config/expansionHalls';
+import { HallLiveEngine } from '../gameplay/hallKitLive';
 import type { Action, GameState, SimEvent } from '../gameplay/types';
 import { SaveStore, type LoadResult, type StorageLike } from '../persistence/save';
 
@@ -69,6 +70,7 @@ export class GameController {
   /** Review-only hall visit, not persisted or counted in the live game ledger. */
   jabirTour: JabirTourState = newJabirTour();
   extraTour: ExtraHallState = newExtraHallState();
+  liveHall: HallLiveEngine | null = null;
   get isInHallPreview(): boolean { return this.jabirTour.active || this.extraTour.active !== null; }
   loadSource: string = 'new';
   lastSavedAt = 0;
@@ -121,6 +123,7 @@ export class GameController {
     const dt = Math.min(realDt, 0.25);
     // A trial visit freezes the actual campaign. No salaries, revenue, quest timers,
     // background game time or automatic save writes while visiting the second hall.
+    if (this.extraTour.active && this.liveHall) this.liveHall.advance(dt);
     if (!this.paused && !this.isInHallPreview) this.handle(this.sim.advance(dt * this.speed));
     this.uiAcc += dt; if (!this.isInHallPreview) this.saveAcc += dt;
     const now = performance.now();
@@ -185,7 +188,11 @@ export class GameController {
 
   /** Enter only a real on-demand Babylon preview, never charge a hall unlock. */
   enterExtraHall(hall: ExpansionHallId): boolean {
-    if (this.isInHallPreview || !this.world?.setHallView?.(hall)) return false;
+    if (this.isInHallPreview) return false;
+    let live: HallLiveEngine;
+    try { live = new HallLiveEngine(hall); } catch { return false; }
+    if (!this.world?.setHallView?.(hall)) return false;
+    this.liveHall = live;
     this.extraTour = visitExtraHall(this.extraTour, hall);
     this.selection = null;
     this.notify();
@@ -194,6 +201,7 @@ export class GameController {
   exitExtraHall() {
     if (this.extraTour.active === null) return;
     this.world?.setHallView?.('khwarizmi');
+    this.liveHall = null;
     this.extraTour = leaveExtraHall(this.extraTour);
     this.selection = null;
     this.notify();
@@ -228,7 +236,7 @@ export class GameController {
   private adopt(res: LoadResult): boolean {
     if (!res.ok) return false;
     this.sim.setState(res.state); this.selection = null;
-    this.jabirTour = newJabirTour(); this.extraTour = leaveExtraHall(this.extraTour);
+    this.jabirTour = newJabirTour(); this.liveHall = null; this.extraTour = leaveExtraHall(this.extraTour);
     this.world?.setHallView?.('khwarizmi');
     for (const l of this.worldListeners) l({ type: 'layout' });
     this.notify(); return true;
