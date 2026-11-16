@@ -69,6 +69,25 @@ describe('hallKit shared navigation and live visitor service', () => {
     expect(one.visitors.map(v => [v.id, v.phase, v.x, v.z]))
       .toEqual(two.visitors.map(v => [v.id, v.phase, v.x, v.z]));
   });
+  it('service strategy changes throughput and satisfaction with deterministic tradeoffs', () => {
+    const careful = new HallLiveEngine('biruni', 88);
+    const rapid = new HallLiveEngine('biruni', 88);
+    expect(careful.setServicePolicy('careful')).toBe(true);
+    expect(rapid.setServicePolicy('rapid')).toBe(true);
+    expect(careful.setServicePolicy('untrusted' as never)).toBe(false);
+    for (let i = 0; i < 4000; i++) {
+      careful.advance(0.1);
+      rapid.advance(0.1);
+    }
+    const a = careful.snapshot, b = rapid.snapshot;
+    expect(b.served).toBeGreaterThan(a.served);
+    expect(b.satisfaction).toBeLessThan(a.satisfaction);
+    expect(a.rejected).toBe(0);
+    expect(b.rejected).toBe(0);
+    expect(a.queue).toBeLessThanOrEqual(6);
+    expect(b.queue).toBeLessThanOrEqual(6);
+  });
+
   it('does not advance simulation time when paused or supplied invalid time', () => {
     const s = new HallLiveEngine('theses');
     expect(s.advance(0).seconds).toBe(0);
