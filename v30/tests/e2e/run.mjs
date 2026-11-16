@@ -220,6 +220,19 @@ for (const [hall, questId, sequence] of expansionVisits) {
     return c.extraTour.progress.completed[hall].includes(questId)
       && c.extraTour.progress.earnedXp[hall] > 0;
   }, [hall, questId]));
+  await T(page, () => {
+    const live = window.__TYCOON__.controller.liveHall;
+    for (let i = 0; i < 400; i++) live?.advance(0.1);
+  });
+  await page.waitForTimeout(1500);
+  check(hall + ' hallKit visitors render, queue and receive real services', await T(page, () => {
+    const { host: h, controller: c } = window.__TYCOON__;
+    const s = c.liveHall?.snapshot;
+    return !!s && s.arrivals >= 4 && s.served >= 2 && s.rejected === 0
+      && s.queue <= 6 && s.visitors.length > 0 && h.expansionActors?.size > 0
+      && s.staff.x === -8.7 && s.staff.z === -4.7
+      && !!document.querySelector('[data-testid=expansion-live-status]');
+  }));
   await page.click('[data-testid=expansion-exit]');
   check(hall + ' returns to Khwarizmi and resets camera immediately', await T(page, hall => {
     const { controller: c, host: h } = window.__TYCOON__;

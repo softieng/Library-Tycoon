@@ -41,6 +41,7 @@ export class SceneHost {
   private brokenMat!: PBRMaterial; private okScreen!: PBRMaterial;
   private jabirPreview: JabirPreviewBuild | null = null;
   private extraPreviews = new Map<ExpansionHallId, ExpansionHallBuild>();
+  private expansionActors = new Map<number, CharacterView>();
   private readonly autoQualitySampler = new AutoQualitySampler();
   quality: Quality = 'high'; private api: WorldApi | null = null;
   onUiRequest: (req: { type: 'dewey' }) => void = () => {};
@@ -115,10 +116,13 @@ export class SceneHost {
     };
     this.controller.world = this.api = api;
     scene.onAfterAnimationsObservable.add(() => {
-      // The Khwarizmi campaign is frozen while visiting Jabir. Avoid animating
-      // offscreen models and allocating an array of all agents each frame.
-      if (this.controller.isInHallPreview) return;
+      // Only the visible hall receives procedural face and pose updates.
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
+      if (this.controller.extraTour.active) {
+        for (const view of this.expansionActors.values()) view.layer(dt);
+        return;
+      }
+      if (this.controller.jabirTour.active) return;
       for (const a of this.visitors.values()) a.view.layer(dt);
       for (const a of this.staff.values()) a.view.layer(dt);
       this.mascotLayer(dt);
@@ -127,9 +131,10 @@ export class SceneHost {
       if (this.disposed) return;
       const dt = Math.min(0.1, engine.getDeltaTime() / 1000);
       this.controller.tick(dt);
-      // Do not run full main-hall sprite/mesh sync while its simulation is
-      // paused and its camera is in the distant Jabir preview.
-      if (!this.controller.isInHallPreview) this.sync(dt);
+      // Update only whichever hall is visible. The offscreen campaign stays
+      // frozen and never pays wages or advances visitor quests.
+      if (this.controller.extraTour.active) this.syncExpansionActors(dt);
+      else if (!this.controller.jabirTour.active) this.sync(dt);
       this.pan(dt); this.cam.update(dt);
       scene.render(); this.frame++;
       if (this.controller.settings.autoQuality) {
@@ -145,6 +150,7 @@ export class SceneHost {
 
   /** Hall switching is immediate and does not change money or the campaign. */
   setHallView(hall: 'khwarizmi' | 'jabir' | ExpansionHallId): boolean {
+    this.clearExpansionActors();
     this.jabirPreview?.root.setEnabled(false);
     for (const view of this.extraPreviews.values()) view.root.setEnabled(false);
     if (hall === 'khwarizmi') {
@@ -217,6 +223,7 @@ export class SceneHost {
       for (const m of this.hall.shadowCasters) sg.addShadowCaster(m, false);
       for (const m of this.mascot.meshes) sg.addShadowCaster(m, false);
       for (const a of [...this.visitors.values(), ...this.staff.values()]) for (const m of a.view.meshes) sg.addShadowCaster(m, false);
+      for (const v of this.expansionActors.values()) for (const m of v.meshes) sg.addShadowCaster(m, false);
       const p = this.pipeline = new DefaultRenderingPipeline('post', true, scene, [this.cam.camera]);
       p.samples = q === 'high' ? 4 : 1; p.fxaaEnabled = true;
       p.bloomEnabled = true; p.bloomThreshold = 0.82; p.bloomWeight = 0.28; p.bloomKernel = 48; p.bloomScale = 0.5;
@@ -259,6 +266,43 @@ export class SceneHost {
   }
   private sweep(map: Map<number, Agent>) {
     for (const [id, a] of map) if (a.seen !== this.frame) { if (this.shadow) for (const m of a.view.meshes) this.shadow.removeShadowCaster(m, false); a.icon.dispose(); a.view.dispose(); map.delete(id); }
+  }
+  private clearExpansionActors() {
+    for (const view of this.expansionActors.values()) {
+      if (this.shadow) for (const mesh of view.meshes) this.shadow.removeShadowCaster(mesh, false);
+      view.dispose();
+    }
+    this.expansionActors.clear();
+  }
+  private syncExpansionActors(dt: number) {
+    const hall = this.controller.extraTour.active;
+    const live = this.controller.liveHall?.snapshot;
+    if (!hall || !live || live.hall !== hall) return;
+    const seen = new Set<number>();
+    const offset = EXPANSION_BY_ID[hall].offsetX;
+    for (const visitor of live.visitors) {
+      seen.add(visitor.id);
+      let view = this.expansionActors.get(visitor.id);
+      if (!view) {
+        view = new CharacterView(this.scene, this.lib, visitor.model, false, 'visitor', visitor.id + 99000);
+        view.root.position.set(offset + visitor.x, 0, visitor.z);
+        view.root.rotation.y = visitor.yaw;
+        view.pick.isPickable = false;
+        if (this.shadow) for (const mesh of view.meshes) this.shadow.addShadowCaster(mesh, false);
+        this.expansionActors.set(visitor.id, view);
+      }
+      const sitting = visitor.phase === 'reading';
+      view.follow(offset + visitor.x, visitor.z, visitor.yaw, dt, sitting && !view.v2 ? 0.2 : 0);
+      view.moving = visitor.moving;
+      view.activity = sitting ? 'read' : null;
+      view.mood = visitor.phase === 'service' ? 'happy' : null;
+      view.play(sitting ? 'sit' : visitor.moving ? 'walk' : visitor.phase === 'service' ? 'interact-right' : 'idle');
+    }
+    for (const [id, view] of this.expansionActors) {
+      if (seen.has(id)) continue;
+      if (this.shadow) for (const mesh of view.meshes) this.shadow.removeShadowCaster(mesh, false);
+      view.dispose(); this.expansionActors.delete(id);
+    }
   }
   private sync(dt: number) {
     const s = this.controller.state, t = performance.now() / 1000;
@@ -488,6 +532,7 @@ export class SceneHost {
     if (this.disposed) return; this.disposed = true;
     if (this.controller.world === this.api) this.controller.world = null;
     for (const f of this.cleanup) f();
+    this.clearExpansionActors();
     this.engine.stopRenderLoop(); this.scene.dispose(); this.engine.dispose();
   }
 }
