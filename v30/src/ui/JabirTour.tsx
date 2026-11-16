@@ -19,7 +19,14 @@ export function JabirTourPanel() {
           <strong>🧪 قاعة جابر بن حيان</strong>
           <small>معاينة تفاعلية ثلاثية الأبعاد، غير معتمدة للفتح</small>
         </div>
-        <button type="button" onClick={() => c.exitJabirTour()} data-testid="jabir-exit" aria-label="الرجوع إلى قاعة الخوارزمي">✕</button>
+        <div className="jabir-tour__actions">
+          <button type="button" onClick={() => c.updateSettings({ sound: !c.settings.sound })}
+            data-testid="jabir-sound-toggle" aria-label={c.settings.sound ? 'كتم مؤثرات اللعبة' : 'تشغيل مؤثرات اللعبة'}
+            aria-pressed={c.settings.sound} title={c.settings.sound ? 'كتم الصوت' : 'تشغيل الصوت'}>
+            {c.settings.sound ? '🔊' : '🔇'}
+          </button>
+          <button type="button" onClick={() => c.exitJabirTour()} data-testid="jabir-exit" aria-label="الرجوع إلى قاعة الخوارزمي">✕</button>
+        </div>
       </header>
       <p className="jabir-tour__note">اضغط على الرفوف والمكاتب داخل المشهد. المهمات تجريبية ولا تغيّر الرصيد أو الحفظ.</p>
       <div className="jabir-tour__overall" data-testid="jabir-overall-progress" role="status">
