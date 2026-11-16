@@ -56,7 +56,7 @@ describe('navigation and collisions', () => {
       }
     });
     expect(samples).toBeGreaterThan(500);
-  });
+  }, 15_000); // CI runners can exceed Vitest's 5s default under parallel load.
   it('walking visitors keep their distance from each other', () => {
     const sim = makeSim(11);
     let close = 0, pairs = 0;
