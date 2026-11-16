@@ -180,6 +180,63 @@ check('main campaign controls return after leaving Jabir', await T(page, () =>
   !!document.querySelector('[data-testid=dock-library]')
   && [...document.querySelectorAll('[data-testid^=speed-]')].every(button => !button.disabled)));
 
+/* ---------------------------------------------------- 2c. Four real clickable 3D hall previews */
+await T(page, () => window.__TYCOON__.controller.setSpeed(0));
+const extendedBefore = await T(page, () => JSON.stringify(window.__TYCOON__.controller.state));
+const expansionVisits = [
+  ['biruni', 'biruni_search', ['biruni_help', 'biruni_programming', 'biruni_pc_1']],
+  ['reference', 'reference_encyclopedia_quest', ['reference_reception', 'reference_encyclopedia', 'reference_table_1']],
+  ['thabit', 'thabit_geometry_quest', ['thabit_guidance', 'thabit_geometry', 'thabit_table_1']],
+  ['theses', 'theses_masters_quest', ['theses_reception', 'theses_masters', 'theses_table_1']],
+];
+const clickExpansion = async (hall, id) => {
+  const pos = await T(page, async ([hall, id]) => {
+    const h = window.__TYCOON__.host;
+    const p = h.extraPreviews?.get(hall)?.targets.get(id);
+    if (!p) return null;
+    h.cam.jump(p.x, p.z, 6);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    return h.locate('expansion', id);
+  }, [hall, id]);
+  if (!pos) return false;
+  await page.mouse.click(pos.x, pos.y);
+  return true;
+};
+for (const [hall, questId, sequence] of expansionVisits) {
+  await page.click('[data-testid=dock-library]');
+  await page.click(`[data-testid=preview-${hall}-enter]`);
+  check(hall + ' 3D scene loads on demand and hides campaign panels', await T(page, hall => {
+    const c = window.__TYCOON__.controller;
+    const h = window.__TYCOON__.host;
+    return c.extraTour.active === hall && h.extraPreviews?.get(hall)?.root.isEnabled()
+      && !!document.querySelector('[data-testid=expansion-tour]')
+      && !document.querySelector('[data-testid=dock-library]');
+  }, hall));
+  await page.click(`[data-testid=expansion-quest-${questId}]`);
+  let physicallyClicked = true;
+  for (const id of sequence) physicallyClicked = (await clickExpansion(hall, id)) && physicallyClicked;
+  check(hall + ' mission completes with 3 physical Babylon mouse picks', physicallyClicked && await T(page, ([hall, questId]) => {
+    const c = window.__TYCOON__.controller;
+    return c.extraTour.progress.completed[hall].includes(questId)
+      && c.extraTour.progress.earnedXp[hall] > 0;
+  }, [hall, questId]));
+  await page.click('[data-testid=expansion-exit]');
+  check(hall + ' returns to Khwarizmi and resets camera immediately', await T(page, hall => {
+    const { controller: c, host: h } = window.__TYCOON__;
+    return c.extraTour.active === null
+      && !h.extraPreviews.get(hall).root.isEnabled()
+      && Math.abs(h.cam.state.x - 0.6) < 0.01
+      && Math.abs(h.cam.state.z - 0.9) < 0.01
+      && Math.abs(h.cam.state.zoom - 11.6) < 0.01;
+  }, hall));
+}
+check('four expansion hall quests never change Khwarizmi campaign economy', await T(page, before =>
+  JSON.stringify(window.__TYCOON__.controller.state) === before, extendedBefore));
+check('four expansion halls persist independent first-visit XP without rewriting campaign saves',
+  await T(page, () => Object.values(window.__TYCOON__.controller.extraTour.progress.earnedXp)
+    .every(v => v >= 100)));
+await T(page, () => window.__TYCOON__.controller.setSpeed(1));
+
 /* ------------------------------------------------------------------ 3. camera: pan + zoom only, rotation locked */
 const cam0 = await T(page, () => { const { host } = window.__TYCOON__; return { ...host.cam.state, dir: host.cam.camera.getForwardRay().direction.asArray() }; });
 await page.click('[data-testid=zoom-in]'); await page.click('[data-testid=zoom-in]');

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { DeweyGame } from '../ui/DeweyGame';
 import { GameCanvas, type SceneStatus } from '../ui/GameCanvas';
 import { JabirTourPanel } from '../ui/JabirTour';
+import { ExpansionTourPanel } from '../ui/ExpansionTour';
 import { GameContext, num, useGame } from '../ui/hooks';
 import { CameraControls, Dialogs, Floaters, Inspector, MissionResult, MissionTracker, Toasts, TopBar } from '../ui/Hud';
 import { PANELS, PanelBody, type PanelId } from '../ui/panels';
@@ -12,7 +13,7 @@ function Dock({ panel, setPanel }: { panel: PanelId | null; setPanel: (p: PanelI
   const c = useGame(), s = c.state;
   const badge: Partial<Record<PanelId, number>> = { events: (s.event ? 1 : 0) + s.broken.length, missions: s.missions.active ? 1 : 0 };
   // The main campaign dock is not actionable while visiting the isolated hall.
-  if (c.jabirTour.active) return null;
+  if (c.isInHallPreview) return null;
   return (
     <nav className="dock" aria-label="لوحات الإدارة">
       {PANELS.map((p) => (
@@ -71,6 +72,7 @@ export function App({ controller }: { controller: GameController }) {
         {panel && <Panel id={panel} close={() => setPanel(null)} go={setPanel} />}
         <MissionTracker open={setPanel} />
         <JabirTourPanel />
+        <ExpansionTourPanel />
         <Inspector />
         <CameraControls />
         <Floaters />
