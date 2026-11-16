@@ -302,6 +302,17 @@ function Library({ close }: { close: () => void }) {
                   data-testid="preview-jabir-enter">زيارة تجريبية ثلاثية الأبعاد</Btn>
                 <small>ثلاث مهمات تفاعلية · بدون فتح أو خصم أو مكافآت</small>
               </div>}
+              {(['biruni', 'reference', 'thabit', 'theses'] as const).some(id => id === h.id) &&
+                <div className="row">
+                  <Btn kind="ghost" disabled={!c.world?.setHallView}
+                    onClick={() => {
+                      const id = h.id as 'biruni' | 'reference' | 'thabit' | 'theses';
+                      if (c.enterExtraHall(id)) close();
+                    }} data-testid={`preview-${h.id}-enter`}>
+                    تجربة ثلاثية الأبعاد ومهمات القاعة
+                  </Btn>
+                  <small>٣ تحديات قصصية، XP مستقل · المعاينة لا تفتح القاعة داخل الحملة</small>
+                </div>}
               {h.upgradeId && <small>تكلفة الفتح المخططة: {iqd(cost)} · {status === 'in-development' ? 'لا تُخصم أي أموال قبل جاهزية القاعة.' : 'تتم إدارة التوسعة من الترقيات.'}</small>}
             </div>
           );
