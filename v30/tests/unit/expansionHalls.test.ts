@@ -35,7 +35,7 @@ describe('four new 3D educational halls', () => {
   });
 
   it('never overlaps hall previews, independent from the Jabir preview center', () => {
-    const bounds = EXPANSION_HALL_IDS.map(expansionBounds);
+    const bounds = EXPANSION_HALL_IDS.map((hall: ExpansionHallId) => expansionBounds(hall));
     for (let i = 1; i < bounds.length; i++)
       expect(bounds[i].minX - bounds[i - 1].maxX).toBeGreaterThan(5);
     expect(bounds[0].minX).toBeGreaterThan(46 + 11);
