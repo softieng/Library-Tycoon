@@ -224,7 +224,7 @@ for (const [hall, questId, sequence] of expansionVisits) {
     const live = window.__TYCOON__.controller.liveHall;
     for (let i = 0; i < 400; i++) live?.advance(0.1);
   });
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(1500);
   check(hall + ' hallKit visitors render, queue and receive real services', await T(page, () => {
     const { host: h, controller: c } = window.__TYCOON__;
     const s = c.liveHall?.snapshot;
