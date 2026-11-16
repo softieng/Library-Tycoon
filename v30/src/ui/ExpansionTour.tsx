@@ -38,7 +38,25 @@ export function ExpansionTourPanel() {
           <span>في الطابور <b>{num(live.queue)}</b></span>
           <span>خدمات أُنجزت <b>{num(live.served)}</b></span>
           <span>غادروا <b>{num(live.departed)}</b></span>
+          <span>رضا الزوار <b>{num(live.satisfaction)}%</b></span>
         </div>
+        <fieldset className="expansion-live__policy" data-testid="expansion-policy">
+          <legend>قرار إداري: سرعة الخدمة</legend>
+          {([
+            ['careful', 'جودة أعلى'],
+            ['balanced', 'متوازنة'],
+            ['rapid', 'سريعة'],
+          ] as const).map(([policy, label]) =>
+            <button type="button" key={policy}
+              data-testid={'expansion-policy-' + policy}
+              aria-pressed={live.policy === policy}
+              disabled={live.policy === policy}
+              onClick={() => { c.liveHall?.setServicePolicy(policy); c.notify(); }}>
+              {label}
+            </button>
+          )}
+        </fieldset>
+        <small>الخدمة الدقيقة ترفع الرضا وتبطئ الطابور. السريعة تقلل الانتظار لكن تؤثر على الرضا. هذا الاختيار تجريبي ومنفصل عن أموال الحملة.</small>
         <small>محاكاة مستقلة، لا تغير رواتب أو رصيد الخوارزمي. الموظف ثابت في موقعه.</small>
       </section>}
       <div className="jabir-tour__overall" role="status" data-testid="expansion-progress">
