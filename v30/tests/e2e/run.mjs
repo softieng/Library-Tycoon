@@ -107,6 +107,20 @@ check('Jabir view hides the main campaign dock and unrelated quest tracker', awa
 await T(page, () => window.__TYCOON__.host.cam.jump(46, 0, 12));
 await shot(page, '00-jabir-3d-hall-overview.png');
 
+const initialSound = await T(page, () => window.__TYCOON__.controller.settings.sound);
+await page.click('[data-testid=jabir-sound-toggle]');
+check('Jabir sound toggle mutes without leaving the hall', await T(page, original =>
+  window.__TYCOON__.controller.settings.sound === !original
+  && !!document.querySelector('[data-testid=jabir-tour]'), initialSound));
+await page.click('[data-testid=jabir-sound-toggle]');
+check('Jabir sound toggle restores the previous setting',
+  await T(page, original => window.__TYCOON__.controller.settings.sound === original, initialSound));
+await T(page, () => {
+  window.__jabirAudioCues = [];
+  window.__TYCOON__.controller.onSimEvent(event => {
+    if (event.type === 'sfx' && (event.name === 'service' || event.name === 'goal')) window.__jabirAudioCues.push(event.name);
+  });
+});
 const jabirBefore = await T(page, () => JSON.stringify(window.__TYCOON__.controller.state));
 await page.click('[data-testid=jabir-mission-jabir_research_request]');
 await shot(page, '00a-jabir-3d-research-mission.png', 'medium');
@@ -147,6 +161,10 @@ check('all three Jabir missions leave the campaign unchanged', await T(page, bef
   const c = window.__TYCOON__.controller;
   return c.jabirTour.completedIds.length === 3 && JSON.stringify(c.state) === before;
 }, jabirBefore));
+check('3D mission audio emits six service bells and three unique goals', await T(page, () =>
+  window.__jabirAudioCues.length === 9
+  && window.__jabirAudioCues.filter(name => name === 'service').length === 6
+  && window.__jabirAudioCues.filter(name => name === 'goal').length === 3));
 await page.click('[data-testid=jabir-exit]');
 check('return to original hall restores 3D scene and camera constraints', await T(page, () => {
   const h = window.__TYCOON__.host;
