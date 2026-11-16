@@ -75,6 +75,10 @@ describe('hallKit shared navigation and live visitor service', () => {
     expect(careful.setServicePolicy('careful')).toBe(true);
     expect(rapid.setServicePolicy('rapid')).toBe(true);
     expect(careful.setServicePolicy('untrusted' as never)).toBe(false);
+    // Inherited Object.prototype names must not become selectable strategies.
+    expect(careful.setServicePolicy('toString' as never)).toBe(false);
+    expect(careful.setServicePolicy('constructor' as never)).toBe(false);
+    expect(careful.snapshot.policy).toBe('careful');
     for (let i = 0; i < 4000; i++) {
       careful.advance(0.1);
       rapid.advance(0.1);
