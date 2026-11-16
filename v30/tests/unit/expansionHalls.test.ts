@@ -45,7 +45,7 @@ describe('four new 3D educational halls', () => {
     const c = new GameController(memory());
     expect(c.enterExtraHall('biruni')).toBe(false);
     const visited: string[] = [];
-    c.world = { setHallView: hall => { visited.push(hall); return true; } } as unknown as WorldApi;
+    c.world = { setHallView: (hall: string) => { visited.push(hall); return true; } } as unknown as WorldApi;
     expect(c.enterExtraHall('biruni')).toBe(true);
     expect(c.enterExtraHall('reference')).toBe(false);
     expect(c.enterJabirTour()).toBe(false);
