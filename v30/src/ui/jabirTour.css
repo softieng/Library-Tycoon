@@ -19,6 +19,7 @@
 .jabir-tour__head { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
 .jabir-tour__head strong { display: block; font-size: 1.1rem; }
 .jabir-tour__head small { color: #d7caac; display: block; font-size: 0.78rem; padding-top: 3px; }
+.jabir-tour__actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .jabir-tour__head button {
   background: #293d60; color: #fff; border: 1px solid #8391a8; border-radius: 8px;
   min-width: 36px; min-height: 36px;

@@ -156,8 +156,21 @@ export class GameController {
     if (next !== this.jabirTour) { this.jabirTour = next; this.notify(); }
   }
   interactJabirTarget(id: string) {
-    const next = interactJabirTour(this.jabirTour, id);
-    if (next !== this.jabirTour) { this.jabirTour = next; this.notify(); }
+    const before = this.jabirTour;
+    const next = interactJabirTour(before, id);
+    if (next === before) return;
+    // Sound only follows a genuine ordered 3D interaction. Incorrect clicks
+    // show a text hint but never ring a service bell or celebrate.
+    const advanced = before.mission && next.mission
+      && before.mission.missionId === next.mission.missionId
+      && next.mission.nextIndex > before.mission.nextIndex;
+    this.jabirTour = next;
+    if (advanced && next.mission) {
+      const firstCompletion = next.mission.finished
+        && !before.completedIds.includes(next.mission.missionId);
+      this.handle([{ type: 'sfx', name: firstCompletion ? 'goal' : 'service' }]);
+    }
+    this.notify();
   }
 
   /* ---- persistence ---- */
