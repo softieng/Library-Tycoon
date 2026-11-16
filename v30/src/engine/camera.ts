@@ -9,7 +9,7 @@ export function cameraDampingFactor(dt: number, response = 9): number {
 
 /** Normalize a mouse wheel notch and the much smaller trackpad deltas. */
 export function wheelZoomSteps(deltaY: number, deltaMode = 0, viewportHeight = 800): number {
-  if (!Number.isFinite(deltaY)) return 0;
+  if (!Number.isFinite(deltaY) || deltaY === 0) return 0;
   const multiplier = deltaMode === 1 ? 40 : deltaMode === 2 ? Math.max(1, viewportHeight) : 1;
   return Math.max(-1.2, Math.min(1.2, -deltaY * multiplier / 100));
 }
