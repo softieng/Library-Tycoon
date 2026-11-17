@@ -166,7 +166,12 @@ export class HallLiveEngine {
         const index = this.line.indexOf(v.id);
         if (index === -1) { this.beginNext(v, 'exit', ENTRY); continue; }
         const desired = this.queuePoint(index);
-        if (!this.plan(v, desired)) { this.rejected++; continue; }
+        if (!this.plan(v, desired)) {
+          // Remove unreachable visitors from the queue so later arrivals cannot deadlock.
+          this.line.splice(index, 1);
+          this.beginNext(v, 'exit', ENTRY);
+          continue;
+        }
         const ready = this.march(v, STEP);
         if (ready && index === 0 && this.serviceId === null) {
           this.serviceId = v.id; v.phase = 'service';
