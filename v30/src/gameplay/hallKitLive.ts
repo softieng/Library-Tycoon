@@ -54,6 +54,7 @@ export class HallLiveEngine {
   // Hall definitions are static; avoid allocating filtered target arrays each tick.
   private readonly shelves: readonly (typeof EXPANSION_BY_ID)[ExpansionHallId]['targets'][number][];
   private readonly tables: readonly (typeof EXPANSION_BY_ID)[ExpansionHallId]['targets'][number][];
+  private readonly shelfById: ReadonlyMap<string, (typeof EXPANSION_BY_ID)[ExpansionHallId]['targets'][number]>;
   private readonly people: HallLiveVisitor[] = [];
   private readonly line: number[] = [];
   private serviceId: number | null = null;
@@ -74,6 +75,7 @@ export class HallLiveEngine {
     this.hall = hall;
     this.shelves = EXPANSION_BY_ID[hall].targets.filter(t => t.kind === 'shelf');
     this.tables = EXPANSION_BY_ID[hall].targets.filter(t => t.kind === 'study');
+    this.shelfById = new Map(this.shelves.map(t => [t.id, t]));
     this.nav = new HallGrid(hall);
     this.randomState = (seed | 0) || 17;
     if (!this.nav.isClear(ENTRY) || !this.nav.isClear(FRONT))
@@ -181,7 +183,7 @@ export class HallLiveEngine {
             - Math.max(0, this.line.length - 2) * 3);
           this.line.shift();
           this.serviceId = null;
-          const sh = EXPANSION_BY_ID[this.hall].targets.find(t => t.id === v.shelfId)!;
+          const sh = this.shelfById.get(v.shelfId)!;
           this.beginNext(v, 'shelf', { x: sh.x, z: sh.z - 1.2 });
         }
       } else if (v.phase === 'shelf') {
