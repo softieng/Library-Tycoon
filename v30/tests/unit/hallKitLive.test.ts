@@ -144,7 +144,6 @@ describe('hallKit shared navigation and live visitor service', () => {
     const original = live.nav.path.bind(live.nav);
     live.nav.path = (() => null) as typeof live.nav.path;
     // Force replanning, rather than reusing the cached destination.
-    const visitor = live.snapshot.visitors[0]!;
     const internal = (live as unknown as { people: typeof live.snapshot.visitors }).people[0]!;
     internal.destination = null;
     live.advance(0.1);
