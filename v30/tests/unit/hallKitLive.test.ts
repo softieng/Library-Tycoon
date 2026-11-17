@@ -137,6 +137,22 @@ describe('hallKit shared navigation and live visitor service', () => {
     expect(fresh.destination?.x).not.toBe(999);
   });
 
+  it('releases a visitor when its queue route becomes unreachable', () => {
+    const live = new HallLiveEngine('biruni', 17);
+    for (let i = 0; i < 25; i++) live.advance(0.1);
+    expect(live.snapshot.queue).toBe(1);
+    const original = live.nav.path.bind(live.nav);
+    live.nav.path = (() => null) as typeof live.nav.path;
+    // Force replanning, rather than reusing the cached destination.
+    const visitor = live.snapshot.visitors[0]!;
+    const internal = (live as unknown as { people: typeof live.snapshot.visitors }).people[0]!;
+    internal.destination = null;
+    live.advance(0.1);
+    expect(live.snapshot.queue).toBe(0);
+    expect(live.snapshot.rejected).toBe(1);
+    expect(live.snapshot.visitors[0]?.phase).toBe('exit');
+    live.nav.path = original;
+  });
   it('does not advance simulation time when paused or supplied invalid time', () => {
     const s = new HallLiveEngine('theses');
     expect(s.advance(0).seconds).toBe(0);
