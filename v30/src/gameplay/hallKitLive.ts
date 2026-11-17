@@ -51,6 +51,9 @@ export const HALL_STAFF_STATION: Readonly<HallPoint> = Object.freeze({ x: -8.7, 
 export class HallLiveEngine {
   readonly nav: HallGrid;
   readonly hall: ExpansionHallId;
+  // Hall definitions are static; avoid allocating filtered target arrays each tick.
+  private readonly shelves: readonly (typeof EXPANSION_BY_ID)[ExpansionHallId]['targets'][number][];
+  private readonly tables: readonly (typeof EXPANSION_BY_ID)[ExpansionHallId]['targets'][number][];
   private readonly people: HallLiveVisitor[] = [];
   private readonly line: number[] = [];
   private serviceId: number | null = null;
@@ -69,6 +72,8 @@ export class HallLiveEngine {
 
   constructor(hall: ExpansionHallId, seed = 17) {
     this.hall = hall;
+    this.shelves = EXPANSION_BY_ID[hall].targets.filter(t => t.kind === 'shelf');
+    this.tables = EXPANSION_BY_ID[hall].targets.filter(t => t.kind === 'study');
     this.nav = new HallGrid(hall);
     this.randomState = (seed | 0) || 17;
     if (!this.nav.isClear(ENTRY) || !this.nav.isClear(FRONT))
@@ -128,8 +133,7 @@ export class HallLiveEngine {
   }
   private trySpawn() {
     if (this.line.length >= MAX_QUEUE || this.people.length >= MAX_VISITORS) return;
-    const shelf = EXPANSION_BY_ID[this.hall].targets.filter(t => t.kind === 'shelf');
-    const pick = shelf[Math.floor(this.rand() * shelf.length)]!;
+    const pick = this.shelves[Math.floor(this.rand() * this.shelves.length)]!;
     const v: HallLiveVisitor = {
       id: this.nextId++, model: Math.floor(this.rand() * 12),
       x: ENTRY.x, z: ENTRY.z, yaw: 0, moving: false,
@@ -185,8 +189,7 @@ export class HallLiveEngine {
       } else if (v.phase === 'browse') {
         v.privateTimer -= STEP;
         if (v.privateTimer <= 0) {
-          const tables = EXPANSION_BY_ID[this.hall].targets.filter(t => t.kind === 'study');
-          const table = tables[Math.floor(this.rand() * tables.length)]!;
+          const table = this.tables[Math.floor(this.rand() * this.tables.length)]!;
           this.beginNext(v, 'read', { x: table.x + 0.5, z: table.z - 1.2 });
         }
       } else if (v.phase === 'read') {
