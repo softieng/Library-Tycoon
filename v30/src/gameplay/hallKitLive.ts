@@ -150,7 +150,10 @@ export class HallLiveEngine {
     // A missing route is a reported service failure, never a teleported visitor.
     this.rejected++;
     v.phase = 'exit'; v.destination = null; v.route = [];
-    return this.plan(v, ENTRY);
+    if (this.plan(v, ENTRY)) return true;
+    // Even an unreachable exit must not leave a permanent invisible queue blocker.
+    v.privateTimer = -1;
+    return false;
   }
   private tickOne() {
     this.t += STEP;
@@ -166,7 +169,12 @@ export class HallLiveEngine {
         const index = this.line.indexOf(v.id);
         if (index === -1) { this.beginNext(v, 'exit', ENTRY); continue; }
         const desired = this.queuePoint(index);
-        if (!this.plan(v, desired)) { this.rejected++; continue; }
+        if (!this.plan(v, desired)) {
+          // Remove unreachable visitors from the queue so later arrivals cannot deadlock.
+          this.line.splice(index, 1);
+          this.beginNext(v, 'exit', ENTRY);
+          continue;
+        }
         const ready = this.march(v, STEP);
         if (ready && index === 0 && this.serviceId === null) {
           this.serviceId = v.id; v.phase = 'service';
