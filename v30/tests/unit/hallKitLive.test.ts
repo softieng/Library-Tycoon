@@ -149,7 +149,8 @@ describe('hallKit shared navigation and live visitor service', () => {
     live.advance(0.1);
     expect(live.snapshot.queue).toBe(0);
     expect(live.snapshot.rejected).toBe(1);
-    expect(live.snapshot.visitors[0]?.phase).toBe('exit');
+    expect(live.snapshot.departed).toBe(1);
+    expect(live.snapshot.visitors).toHaveLength(0);
     live.nav.path = original;
   });
   it('does not advance simulation time when paused or supplied invalid time', () => {
