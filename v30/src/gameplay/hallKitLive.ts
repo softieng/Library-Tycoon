@@ -150,7 +150,10 @@ export class HallLiveEngine {
     // A missing route is a reported service failure, never a teleported visitor.
     this.rejected++;
     v.phase = 'exit'; v.destination = null; v.route = [];
-    return this.plan(v, ENTRY);
+    if (this.plan(v, ENTRY)) return true;
+    // Even an unreachable exit must not leave a permanent invisible queue blocker.
+    v.privateTimer = -1;
+    return false;
   }
   private tickOne() {
     this.t += STEP;
